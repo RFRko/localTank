@@ -10,58 +10,29 @@ using System.Threading;
 
 namespace Tanki
 {
-    //заглушки
-    public interface IProtoclol
+    public interface IListener
     {
+        IListeningClient Client { get; }
+        Socket ipv4_listener { get; }
+        Socket ipv6_listener { get; }
 
-    }
-
-    public interface IGamer
-    {
-        String id { get; set; }
-        Socket Socket { get; set; }
-    }
-
-    public interface IGameRoom
-    {
-        String RoomId { get; set; }
-        Socket RoomListner { get; }
-        IEnumerable<IGamer> Gamers { get; }
-        void AddGamer(IGamer newGamer);
-
-        IMessageQueue MessageQueue { get; }
-        ISender Sender { get; }
         void RUN();
-
+        event EventHandler<NewConnectionData> OnNewConnection;
+        void NotifyListenerRegisterHandler(Object Sender, NotifyListenerRegData evntData);
     }
 
-
-    public interface IMessageQueue : IDisposable
+    public interface IListeningClient
     {
-        //IEnumerable<IProtoclol> Queue {get;}
-        //Timer Timer { get; }
-        void Enqueue(IPackage msg);
+        void RegisterListener(IListener listener);
+        event EventHandler<NotifyListenerRegData> NotifyListenerRegister;
+        void OnNewConnectionHandler(Object Sender, NewConnectionData evntData);
+    }
+
+    public interface IServer:IListeningClient
+    {
+        IListener ServerListner { get; }
+        IEnumerable<IRoom> Rooms { get; }
         void RUN();
-
-    }
-
-    public enum MsgQueueType
-    {
-        mqOneByOneProcc,
-        mqByTimerProcc
-    }
-
-    public interface IMessageQueueFabric
-    {
-        IMessageQueue CreateMessageQueue(MsgQueueType queueType, IServerEngine withEngine);
-    }
-
-
-    public interface IServer
-    {
-        Socket ServerListner { get; }
-        IEnumerable<IGameRoom> Rooms { get; }
-
 
     }
 }

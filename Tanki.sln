@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer", "GameServer\GameServer.csproj", "{FD87445B-5F4D-40C1-BE21-44008685853C}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerEngine", "ServerEngine\ServerEngine.csproj", "{77656AEE-7BAC-40E8-8A66-48C361EFB599}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientEngine", "ClientEngine\ClientEngine.csproj", "{23C61106-9BB5-4C74-A206-96CAD867AE34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankiViewOpenPage", "TankiViewOpenPage\TankiViewOpenPage.csproj", "{C293651E-C7F1-4B7C-9082-D9D464EDE0F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,8 +41,15 @@ Global
 		{23C61106-9BB5-4C74-A206-96CAD867AE34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23C61106-9BB5-4C74-A206-96CAD867AE34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23C61106-9BB5-4C74-A206-96CAD867AE34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C293651E-C7F1-4B7C-9082-D9D464EDE0F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C293651E-C7F1-4B7C-9082-D9D464EDE0F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C293651E-C7F1-4B7C-9082-D9D464EDE0F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C293651E-C7F1-4B7C-9082-D9D464EDE0F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0263730C-286F-4465-A8E4-7A741807983B}
 	EndGlobalSection
 EndGlobal

@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMPL_ServerEngine.cs" />
+    <Compile Include="IMPL_ServerEngineFabric.cs" />
+    <Compile Include="IMPL_ServerManageEngine.cs" />
     <Compile Include="INTF_BattleCityRemix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameClient
+namespace Common
 {
-    public class Class1
+    class IMPL_MessageQueue
     {
     }
 }
