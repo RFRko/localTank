@@ -12,11 +12,20 @@ namespace Tanki
         private MessageQueueAbs() { }
         public MessageQueueAbs(IEngine withEngine) { _serverEngine = withEngine; }
 
+        public IMessageQueueClient Owner { get; protected set; }
         protected IEngine _serverEngine;
+
         public abstract void RUN();
         public abstract void Enqueue(IPackage msg);
         public abstract void Dispose();
 
+        public void OnRegistered_EventHandler(object Sender, RegMsgQueueData evntData)
+        {
+            Owner = evntData.MsgQueueOwner;
+
+            if (Owner.Engine == null) throw new Exception("Engine объекта IMessageQueueClient - еще не зарегистрирован..");
+            _serverEngine = Owner.Engine;
+        }
     }
 
 

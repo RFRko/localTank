@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    public class ServerGameEngine : ServerEngineAbs
+    public class ServerGameEngine : EngineAbs
     {
         public override ProcessMessageHandler ProcessMessage { get; protected set; }
         public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 		//private IRoom _room;
 		private IList<IPackage> processList = new List<IPackage>();
 		private List<IEntity> objects;
-		public ServerGameEngine(IRoom room):base(room)
+
+        public ServerGameEngine() : base() { }
+        public ServerGameEngine(IRoom room):base(room)  //room будет значение Owner базового абстрактного класса
 		{
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
@@ -52,7 +54,10 @@ namespace Tanki
 			int rowIndMin = 0;
 			int rowIndMax = 20;
 			int decorCount = 10;
-			int players = this.Room.Gamers.Count();
+
+            var Room = Owner as IRoom;
+
+			int players = Room.Gamers.Count();
 			while(players>0&&decorCount>0)
 			{
 				Random colInd = new Random(DateTime.Now.Millisecond - 15);

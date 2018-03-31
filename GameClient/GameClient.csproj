@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMPL_Receiver.cs" />
-    <Compile Include="IMPL_Sender.cs" />
     <Compile Include="INTF_GameClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

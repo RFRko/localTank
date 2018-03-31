@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    class ServerManageEngine:ServerEngineAbs
+    class ServerManageEngine:EngineAbs
     {
+        public ServerManageEngine():base() { }
         public ServerManageEngine(IRoom inRoom) : base(inRoom)
         {
             this.ProcessMessage = ProcessMessage;

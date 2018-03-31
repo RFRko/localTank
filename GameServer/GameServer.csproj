@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="IMPL_Gamer.cs" />
     <Compile Include="IMPL_GameRoom.cs" />
+    <Compile Include="IMPL_Listener.cs" />
     <Compile Include="mustdel_IMPL_MessageQueue.cs" />
     <Compile Include="IMPL_Server.cs" />
     <Compile Include="INTF_GameServer.cs" />
