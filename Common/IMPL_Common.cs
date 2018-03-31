@@ -86,6 +86,8 @@ namespace Common
             get { return this._speed; }
             set { this._speed = value; }
         }
+
+        public EntityAction Command { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
     /// <summary>
