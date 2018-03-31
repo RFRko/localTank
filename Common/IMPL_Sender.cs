@@ -82,5 +82,8 @@ namespace Tanki
             this.RemotePort = rp;
             this.Pack = p;
         }
+
+        public Sender() { }
+
     }
 }

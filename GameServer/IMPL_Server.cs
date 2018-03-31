@@ -28,7 +28,7 @@ namespace Tanki
 
         public void RUN()
         {
-            IRoom managerRoom = null;
+            IRoom managerRoom = (new RoomFabric()).CreateRoom("", RoomType.rtMngRoom);
             _rooms.Add(managerRoom);
             managerRoom.RUN();
 

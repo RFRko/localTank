@@ -29,14 +29,29 @@ namespace Tanki
     public interface IRoom
     {
         String RoomId { get; set; }
-        Socket RoomListner { get; }
+        IReceiver RoomReciever { get; }
+        IMessageQueue MessageQueue { get; }
+        IEngine Engine { get; }
+        ISender Sender { get; }
+
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
 
-        IMessageQueue MessageQueue { get; }
-        ISender Sender { get; }
         void RUN();
 
     }
+
+
+    public enum RoomType
+    {
+        rtMngRoom,
+        rtGameRoom
+    }
+
+    public interface IRoomFabric
+    {
+        IRoom CreateRoom(String roomId, RoomType roomType);
+    }
+
 
 }
