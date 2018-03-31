@@ -22,7 +22,7 @@ namespace Tanki
 
     public interface IServerEngine:IEngine
     {
-        IRoom Room { get; }
+        
     }
 
  //   public interface IServerEngine: IEngine
@@ -50,7 +50,9 @@ namespace Tanki
 
     public interface IServerEngineFabric
     {
+        IServerEngine CreateEngine(SrvEngineType engineType);
         IServerEngine CreateEngine(SrvEngineType engineType, IRoom inRoom);
+
     }
 
 

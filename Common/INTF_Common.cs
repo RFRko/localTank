@@ -117,8 +117,11 @@ namespace Tanki
     /// <summary> Интерфейс описывает очередь сообщений клиента/сервера </summary>
     public interface IMessageQueue : IDisposable
     {
+        IMessageQueueClient Owner { get; }
         void Enqueue(IPackage msg);
         void RUN();
+        void OnRegistered_EventHandler(Object Sender, RegMsgQueueData evntData);
+
     }
 
     public enum MsgQueueType
@@ -130,6 +133,14 @@ namespace Tanki
     public interface IMessageQueueFabric
     {
         IMessageQueue CreateMessageQueue(MsgQueueType queueType, IEngine withEngine);
+    }
+
+    public interface IMessageQueueClient
+    {
+        IReceiver Reciever { get; }
+        IEngine Engine { get; }
+        void RegisterDependcy(IMessageQueue regMsqQueue);
+        event EventHandler<RegMsgQueueData> OnRegisterMessageQueue;
     }
 
     #endregion MessageQueue Interfaces
@@ -145,12 +156,39 @@ namespace Tanki
 
     public interface IEngine
     {
+        IEngineClient Owner { get; }
         ProcessMessageHandler ProcessMessage { get; }
         ProcessMessagesHandler ProcessMessages { get; }
+        void OnRegistered_EventHandler(Object Sender, RegEngineData evntData);
+    }
+
+
+    public interface IEngineClient
+    {
+        IMessageQueue MessageQueue { get; }
+        ISender Sender { get; }
+
+        void RegisterDependcy(IEngine regEngine);
+        event EventHandler<RegEngineData> OnRegisterEngine;
     }
 
     #endregion
 
+
+    ///<summary> Реализует общую абстракцию сетевой обработки - 
+    /// Итнерфейс, имеющий Enumerable of IReciver, IMessageQueue, IEngine, ISender
+    /// может использоваться для GameServer и GameClient
+    /// </summary>
+    #region INetProcessor
+    public interface INetProcessor:IMessageQueueClient, IEngineClient
+    {
+        //IMessageQueueClient - предоставляет IEnumerable of IReciever (использующие IMessageQueue), IEngine (нужный для IMessageQueue), 
+        //                      а также механизм регистрации dependency IMessageQueue
+        //IEngineClient - предоставляет IMessageQueue (использующий IEngine), и ISender (Нужный для IEngine)
+        //                      а также механизм регистрации dependency IEngine
+        void RUN();
+    }
+    #endregion INetProcessor
 
 
 

@@ -26,14 +26,9 @@ namespace Tanki
     /// -IServer (библиотека GameServer)
     /// -ServerGameEngine (библиотека ServerEngine)
     /// </summary>
-    public interface IRoom
+    public interface IRoom: INetProcessor
     {
         String RoomId { get; set; }
-        IReceiver RoomReciever { get; }
-        IMessageQueue MessageQueue { get; }
-        IEngine Engine { get; }
-        ISender Sender { get; }
-
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
 

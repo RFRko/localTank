@@ -61,14 +61,14 @@ namespace Tanki
             {
                 while(true)
                 {
-                    Serializator obj = new Serializator();
+                    ISerializator obj = new BinSerializator();
                     byte[] data = obj.Serialize(Pack);
                     sender.Send(data, data.Length, RemoteAdress, RemotePort);   // отправка пакета
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
             }
             finally
             {

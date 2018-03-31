@@ -49,7 +49,7 @@ namespace Tanki
                 while (Alive)
                 {
                     byte[] data = Client.Receive(ref remoteIp);
-                    Serializator obj = new Serializator();
+                    ISerializator obj = new BinSerializator();
                     IPackage p = obj.Deserialize(data);
                     return p;
                 }

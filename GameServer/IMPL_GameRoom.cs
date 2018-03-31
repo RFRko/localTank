@@ -7,23 +7,19 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    public abstract class RoomAbs : IRoom
+    public abstract class RoomAbs : NetProcessorAbs, IRoom
     {
         private RoomAbs() { }
         public RoomAbs(String id)
         {
             RoomId = id;
-            RoomReciever = new Receiver();
+            Reciever = new Receiver();
             Sender = new Sender();
         }
 
         private List<IGamer> _gamers = new List<IGamer>();
 
         public string RoomId { get; set; }        
-        public IReceiver RoomReciever { get; protected set; }
-        public IMessageQueue MessageQueue { get; protected set; }
-        public IEngine Engine { get; protected set; }
-        public ISender Sender { get; protected set; }
 
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
 
@@ -32,13 +28,14 @@ namespace Tanki
             _gamers.Add(newGamer);
         }
 
-        public virtual void RUN()
+        public virtual new void RUN()
         {
-            if (MessageQueue == null) throw new Exception("MessageQueue object not valid");
-            if (Engine == null) throw new Exception("Engine object not valid");
+            base.RUN();
+            //if (MessageQueue == null) throw new Exception("MessageQueue object not valid");
+            //if (Engine == null) throw new Exception("Engine object not valid");
 
-            MessageQueue.RUN();
-            RoomReciever.Run();
+            //MessageQueue.RUN();
+            //Reciever.Run();
         }
     }
 
