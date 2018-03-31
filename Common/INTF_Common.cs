@@ -42,7 +42,8 @@ namespace Tanki
 	{
 		Point Position { get; set; }
 		Direction Direction { get; set; }
-		bool Can_Shoot { get; set; }
+        EntityAction Command { get; set; }
+        bool Can_Shoot { get; set; }
 		bool Is_Alive { get; set; }
 		bool Can_Be_Destroyed { get; set; }
         int Speed { get; set; }

@@ -19,7 +19,7 @@
             <ColumnDefinition Width="80*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
-        <ListView Grid.Column="0" Grid.Row="1" Name="ConnectionList" Margin="10" Background="Transparent">
+        <ListView Grid.Column="0" Grid.Row="1" Opacity="50" Name="ConnectionList" Margin="10" Background="White" BorderBrush="#FF828790" Foreground="#FF042271">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=RoomID}" Width="50">Room</GridViewColumn>
