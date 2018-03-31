@@ -47,6 +47,16 @@
     <Compile Include="INTF_GameServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{b8a2415b-ad82-4c99-ae00-f9c1fd5abdd3}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServerEngine\ServerEngine.csproj">
+      <Project>{77656aee-7bac-40e8-8a66-48c361efb599}</Project>
+      <Name>ServerEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

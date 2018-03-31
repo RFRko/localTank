@@ -5,89 +5,136 @@ using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace ServerEngine
+namespace Tanki
 {
 	public class ServerEngine : IServerEngine
 	{
 		public ProcessMessageHandler ProcessMessage { get; }
 		private IRoom _room;
-		private IList<IProtocol> processList = new List<IProtocol>();
+		private IList<IPackage> processList = new List<IPackage>();
 		private List<IEntity> objects;
+		private int width = 20;
+		private int height = 20;
+		private List<ITank> tanks = new List<ITank>();
+		private List<IBlock> blocks = new List<IBlock>();
+		private List<IBullet> bullets = new List<IBullet>();
+		private int objectCount = 10;
+		private ISender sender;
 		public ServerEngine(IRoom room)
 		{
 			this.ProcessMessage = MessageHandler;
 			this._room = room;
+
 		}
 
-		public IProtocol CheckWin()
+		private void CheckWin()
 		{
 			throw new NotImplementedException();
 		}
-		private void MessageHandler(IEnumerable<IProtocol> list)
+		private void MessageHandler(IEnumerable<IPackage> list)
 		{
-			processList = new List<IProtocol>();
+			processList = new List<IPackage>();
 			foreach(var t in list)
 			{
-				
+				var tmp = t.Data as IEntity;
+				if (tmp.Command==EntityAction.Move)
+				{
+					this.Move(t.Sender_id);
+				}
+				if(tmp.Command==EntityAction.Fire)
+				{
+					this.Fire(t.Sender_id);
+				}
 			}
 		}
 
-		public IProtocol Death(int id)
+		private void Death(string id)
 		{
-			throw new NotImplementedException();
+			var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+			tmp.Is_Alive = false;
+			
 		}
 
-		public IProtocol Fire(int id)
+		private void Fire(string id)
 		{
-			throw new NotImplementedException();
+			var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+			var bullet = new object() as IBullet;
+			bullet.Direction = tmp.Direction;
+			bullet.Parent_Id = id;
+			//tanks.FirstOrDefault()
+			bullet.Is_Alive = true;
+			bullet.Can_Be_Destroyed = false;
+			bullet.Can_Shoot = false;
+			bullet.Position = tmp.Position;
+			bullet.Command = EntityAction.Move;
+			bullets.Add(bullet);
 		}
 
-		public IProtocol GenerateMap()
+		private void GenerateMap()
 		{
-			objects = new List<IEntity>();
-			int colIndMin = 0;
-			int colIndMax = 20;
-			int rowIndMin = 0;
-			int rowIndMax = 20;
-			int decorCount = 10;
-			int players = _room.gamerList.Count();
-			while(players>0&&decorCount>0)
+			foreach(var t in _room.gamerList)
 			{
-				Random colInd = new Random(DateTime.Now.Millisecond - 15);
-				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
-				int columnIndex = colInd.Next(colIndMin, colIndMax);
-				int rowIndex = rowInd.Next(rowIndMin, rowIndMax);
-				bool state = false;
-				foreach(var z in objects)
+
+			}
+		}
+
+		private void Move(string id)
+		{
+			var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+			if(tmp is ITank)
+			{
+				var tank = tmp as ITank;
+				switch (tank.Direction)
 				{
-					if(z.Position==new Point(columnIndex,rowIndex))
-					{
-						state =true;
-					}
-				}
-				if(!state)
-				{
-					// ???
+					case Direction.Left:
+						if(tank.Position.X>0)
+						{
+							var pos = new Point(tank.Position.X - 1,tank.Position.Y);
+							tank.Position = pos;
+						}
+						break;
+					case Direction.Right:
+						if(tank.Position.X<width)
+						{
+							var pos = new Point(tank.Position.X + 1, tank.Position.Y);
+							tank.Position = pos;
+						}
+						break;
+					case Direction.Up:
+						if(tank.Position.Y>0)
+						{
+							var pos = new Point(tank.Position.X, tank.Position.Y-1);
+							tank.Position = pos;
+						}
+						break;
+					case Direction.Down:
+						if (tank.Position.Y < height)
+						{
+							var pos = new Point(tank.Position.X, tank.Position.Y + 1);
+							tank.Position = pos;
+						}
+						break;
 				}
 			}
-
-			var x = objects as IProtocol;
-			return x;
+			else if(tmp is IBullet)
+			{
+				var bullet = tmp as IBullet;
+			}
 		}
 
-		public IProtocol Move(int id)
+		private void Reload(string id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IProtocol Reload(int id)
+		public IMap Send()
 		{
-			throw new NotImplementedException();
+			var t = new object() as IMap;
+			t.Blocks = blocks;
+			t.Bullets = bullets;
+			t.Tanks = tanks;
+			return t;
 		}
-
-		public IEnumerable<IProtocol> Send()
-		{
-			throw new NotImplementedException();
-		}
+		
 	}
 }
