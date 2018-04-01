@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +17,11 @@ namespace Tanki
 
     public interface IGamer
     {
-        String id { get; set; }
-        Socket Socket { get; set; }
+        String id { get;}
+        Guid Passport { get; }
+        IPEndPoint RemoteEndPoint { get; }
+        //Socket Socket { get; set; }
+        void SetId(String newID, Guid confirmpassport);
     }
 
 
