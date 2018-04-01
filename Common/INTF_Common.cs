@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Tanki
 {
@@ -91,28 +94,64 @@ namespace Tanki
     }
 
 
+    public interface IAddresssee
+    {
+        IPEndPoint RemoteEndPoint { get; }
+    }
 
     /// <summary>
     /// Cущность отправляющая информацию от клиента хосту
     /// </summary>
     public interface ISender
     {
-        string RemoteAdress { get; set; }   // ip хоста
-        int RemotePort { get; set; }        // порт хоста
-        IPackage Pack { get; set; }         // пакет на отправку
-        void SendMessage();
+        //string RemoteAdress { get; set; }   // ip хоста
+        //int RemotePort { get; set; }        // порт хоста
+        //IPackage Pack { get; set; }         // пакет на отправку
+        void SendMessage(IPackage msg, IPEndPoint Target);
+        void SendMessage(IPackage msg, IEnumerable<IPEndPoint> Targets);
+        void SendMessage(IPackage msg, IAddresssee Target);
+        void SendMessage(IPackage msg, IEnumerable<IAddresssee> Targets);
+
     }
+
+
 
 
     /// <summary>
     /// Cущность принимающая информацию клиентом от хоста
     /// </summary>
-    public interface IReceiver
+    public interface IReciever: INetCommunicationObj
     {
-        bool Alive { get; set; }   // работает ли поток на прием
-        int LocalPort { get; set; }        // прослушивающий порт
-        IPackage Run();
+        IRecieverClient Owner { get; }
+        bool Alive { get; set; }                            // работает ли поток на прием
+        //int LocalPort { get; set; }                       // прослушивающий порт
+        IPEndPoint LockalEndPoint { get; }
+        INetCommunicationObj GetNetCommunicationObject();
+        void Run();                                         //must running in separate thread
+        void OnRegistered_EventHandler(Object Sender, RegRecieverData evntData);
+
     }
+
+    public interface IRecieverClient
+    {
+        IMessageQueue MessageQueue { get; }
+        void RegisterDependcy(IReciever regReciever);
+        event EventHandler<RegRecieverData> OnRegisterReciever;
+    }
+
+
+
+
+    public interface INetCommunicationObj { }
+    public interface ISocket: INetCommunicationObj
+    {
+        Socket Socket { get; }
+    }
+    public interface IUdpClient : INetCommunicationObj
+    {
+        UdpClient NetClient { get; }
+    }
+
 
     #region MessageQueue Interfaces
     /// <summary> Интерфейс описывает очередь сообщений клиента/сервера </summary>
@@ -138,7 +177,7 @@ namespace Tanki
 
     public interface IMessageQueueClient
     {
-        IReceiver Reciever { get; }
+        IReciever Reciever { get; }
         IEngine Engine { get; }
         void RegisterDependcy(IMessageQueue regMsqQueue);
         event EventHandler<RegMsgQueueData> OnRegisterMessageQueue;
@@ -181,7 +220,7 @@ namespace Tanki
     /// может использоваться для GameServer и GameClient
     /// </summary>
     #region INetProcessor
-    public interface INetProcessor:IMessageQueueClient, IEngineClient
+    public interface INetProcessor:IMessageQueueClient, IEngineClient,IRecieverClient
     {
         //IMessageQueueClient - предоставляет IEnumerable of IReciever (использующие IMessageQueue), IEngine (нужный для IMessageQueue), 
         //                      а также механизм регистрации dependency IMessageQueue

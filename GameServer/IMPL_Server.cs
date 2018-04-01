@@ -31,7 +31,13 @@ namespace Tanki
 
         public void RUN()
         {
-            IRoom managerRoom = (new RoomFabric()).CreateRoom("", RoomType.rtMngRoom);
+            //
+
+            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
+            Int32 roomPort = 10001;
+            IPEndPoint roomEP = new IPEndPoint(roomAddr, roomPort);
+
+            IRoom managerRoom = (new RoomFabric()).CreateRoom("", roomEP, RoomType.rtMngRoom);
             _rooms.Add(managerRoom);
             managerRoom.RUN();
 

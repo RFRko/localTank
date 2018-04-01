@@ -15,7 +15,7 @@ namespace Tanki
     /// </summary>
     /// 
 
-    public interface IGamer
+    public interface IGamer: IAddresssee
     {
         String id { get;}
         Guid Passport { get; }
@@ -49,7 +49,7 @@ namespace Tanki
 
     public interface IRoomFabric
     {
-        IRoom CreateRoom(String roomId, RoomType roomType);
+        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType);
     }
 
 
