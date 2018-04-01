@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,11 @@ namespace Tanki
     public abstract class RoomAbs : NetProcessorAbs, IRoom
     {
         private RoomAbs() { }
-        public RoomAbs(String id)
+        public RoomAbs(String id, IPEndPoint localEP)
         {
             RoomId = id;
-            Reciever = new Receiver();
-            Sender = new Sender();
+            Reciever = new ReceiverUdpClientBased(localEP);
+            Sender = new SenderUdpClientBased(Reciever);
         }
 
         private List<IGamer> _gamers = new List<IGamer>();
@@ -43,36 +44,50 @@ namespace Tanki
 
     public class ManagingRoom : RoomAbs
     {
-        public ManagingRoom(string id) : base(id)
+        public ManagingRoom(string id, IPEndPoint localEP) : base(id, localEP)
         {
-            Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine, this);
-            MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqOneByOneProcc, Engine);
+            Reciever = new ReceiverUdpClientBased(localEP);
+            base.RegisterDependcy(Reciever);
+
+            Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
+            base.RegisterDependcy(Engine);
+
+            MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqOneByOneProcc);
+            base.RegisterDependcy(MessageQueue);
+
         }
     }
 
     public class GameRoom : RoomAbs
     {
-        public GameRoom(string id) : base(id)
+        public GameRoom(string id, IPEndPoint localEP) : base(id, localEP)
         {
-            Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvGameEngine, this);
-            MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqByTimerProcc, Engine);
+            Reciever = new ReceiverUdpClientBased(localEP);
+            base.RegisterDependcy(Reciever);
+
+            Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvGameEngine);
+            base.RegisterDependcy(Engine);
+
+            MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqByTimerProcc);
+            base.RegisterDependcy(MessageQueue);
+
         }
     }
 
 
     public class RoomFabric : IRoomFabric
     {
-        public IRoom CreateRoom(String roomId, RoomType roomType)
+        public IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType)
         {
             IRoom res = null;
 
             switch (roomType)
             {
                 case RoomType.rtMngRoom:
-                    res = new ManagingRoom(roomId);
+                    res = new ManagingRoom(roomId, localEP);
                     break;
                 case RoomType.rtGameRoom:
-                    res = new GameRoom(roomId);
+                    res = new GameRoom(roomId, localEP);
                     break;
             }
             return res;

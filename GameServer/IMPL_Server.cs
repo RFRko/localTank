@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,12 +24,23 @@ namespace Tanki
 
         public override void OnNewConnectionHandler(object Sender, NewConnectionData evntData)
         {
-            throw new NotImplementedException();
+            var remoteEP = (IPEndPoint)evntData.RemoteClientSocket.RemoteEndPoint;
+            Gamer newGamer = new Gamer(remoteEP);           
+            _rooms[0].AddGamer(newGamer);
+
+            // у Room будет событие OnNewGamer
+            // для Управляющей комнаты по этому событию будет отправка клиенту IPackage.Data = Gamer.GUID
         }
 
         public void RUN()
         {
-            IRoom managerRoom = (new RoomFabric()).CreateRoom("", RoomType.rtMngRoom);
+            //
+
+            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
+            Int32 roomPort = 10001;
+            IPEndPoint roomEP = new IPEndPoint(roomAddr, roomPort);
+
+            IRoom managerRoom = (new RoomFabric()).CreateRoom("", roomEP, RoomType.rtMngRoom);
             _rooms.Add(managerRoom);
             managerRoom.RUN();
 

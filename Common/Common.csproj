@@ -47,6 +47,7 @@
     <Compile Include="IMPL_Common.cs" />
     <Compile Include="IMPL_EngineAbs.cs" />
     <Compile Include="IMPL_EventsData.cs" />
+    <Compile Include="IMPL_GuidGen.cs" />
     <Compile Include="IMPL_NetProcessorAbs.cs" />
     <Compile Include="IMPL_Package.cs" />
     <Compile Include="IMPL_Receiver.cs" />

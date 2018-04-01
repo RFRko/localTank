@@ -10,21 +10,21 @@ namespace Tanki
     public abstract class NetProcessorAbs : INetProcessor
     {
         public NetProcessorAbs() { }
-        public NetProcessorAbs(IMessageQueue msgQueue, IEngine engine)
+        public NetProcessorAbs(IMessageQueue msgQueue, IEngine engine, IReciever reciever)
         {
             RegisterDependcy(msgQueue);
             RegisterDependcy(engine);
+            RegisterDependcy(reciever);
         }
-        public IReceiver Reciever { get; protected set; }
 
+        public IReciever Reciever { get; protected set; }
         public IEngine Engine { get; protected set; }
-
         public IMessageQueue MessageQueue { get; protected set; }
-
         public ISender Sender { get; protected set; }
 
         public event EventHandler<RegMsgQueueData> OnRegisterMessageQueue;
         public event EventHandler<RegEngineData> OnRegisterEngine;
+        public event EventHandler<RegRecieverData> OnRegisterReciever;
 
         public void RegisterDependcy(IMessageQueue regMsqQueue)
         {
@@ -42,6 +42,15 @@ namespace Tanki
             OnRegisterEngine -= regEngine.OnRegistered_EventHandler;
             if (regEngine.Owner == this)
                 Engine = regEngine;
+        }
+
+        public void RegisterDependcy(IReciever regReciever)
+        {
+            OnRegisterReciever += regReciever.OnRegistered_EventHandler;
+            OnRegisterReciever?.Invoke(this, new RegRecieverData() { owner = this });
+            OnRegisterReciever -= regReciever.OnRegistered_EventHandler;
+            if (regReciever.Owner == this)
+                Reciever = regReciever;
         }
 
         public void RUN()

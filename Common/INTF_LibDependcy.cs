@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,13 @@ namespace Tanki
     /// </summary>
     /// 
 
-    public interface IGamer
+    public interface IGamer: IAddresssee
     {
-        String id { get; set; }
-        Socket Socket { get; set; }
+        String id { get;}
+        Guid Passport { get; }
+        IPEndPoint RemoteEndPoint { get; }
+        //Socket Socket { get; set; }
+        void SetId(String newID, Guid confirmpassport);
     }
 
 
@@ -45,7 +49,7 @@ namespace Tanki
 
     public interface IRoomFabric
     {
-        IRoom CreateRoom(String roomId, RoomType roomType);
+        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType);
     }
 
 

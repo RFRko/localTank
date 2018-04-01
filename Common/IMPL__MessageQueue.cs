@@ -10,7 +10,7 @@ namespace Tanki
     public abstract class MessageQueueAbs : IMessageQueue
     {
         private MessageQueueAbs() { }
-        public MessageQueueAbs(IEngine withEngine) { _serverEngine = withEngine; }
+        public MessageQueueAbs(IEngine withEngine = null) { if (withEngine != null) _serverEngine = withEngine; }
 
         public IMessageQueueClient Owner { get; protected set; }
         protected IEngine _serverEngine;
@@ -222,7 +222,7 @@ namespace Tanki
 
     public class MessageQueueFabric : IMessageQueueFabric
     {
-        public IMessageQueue CreateMessageQueue(MsgQueueType queueType, IEngine withEngine)
+        public IMessageQueue CreateMessageQueue(MsgQueueType queueType, IEngine withEngine = null)
         {
             IMessageQueue instance = null;
 
