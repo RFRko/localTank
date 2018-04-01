@@ -18,14 +18,12 @@ namespace Tanki
         public string id { get; set; }
 
         public Guid Passport { get; private set; }
-
         public IPEndPoint RemoteEndPoint { get; private set; }
 
         public void SetId(string newID, Guid confirmpassport)
         {
             if (Passport != confirmpassport)
                 Dispose();
-
             id = newID;
         }
 

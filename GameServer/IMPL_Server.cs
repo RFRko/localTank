@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,9 @@ namespace Tanki
 
         public override void OnNewConnectionHandler(object Sender, NewConnectionData evntData)
         {
-            throw new NotImplementedException();
+            var remoteEP = (IPEndPoint)evntData.RemoteClientSocket.RemoteEndPoint;
+            Gamer newGamer = new Gamer(remoteEP);
+            _rooms[0].AddGamer(newGamer);
         }
 
         public void RUN()
