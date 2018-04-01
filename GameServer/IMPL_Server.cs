@@ -25,8 +25,11 @@ namespace Tanki
         public override void OnNewConnectionHandler(object Sender, NewConnectionData evntData)
         {
             var remoteEP = (IPEndPoint)evntData.RemoteClientSocket.RemoteEndPoint;
-            Gamer newGamer = new Gamer(remoteEP);
+            Gamer newGamer = new Gamer(remoteEP);           
             _rooms[0].AddGamer(newGamer);
+
+            // у Room будет событие OnNewGamer
+            // для Управляющей комнаты по этому событию будет отправка клиенту IPackage.Data = Gamer.GUID
         }
 
         public void RUN()
