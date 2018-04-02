@@ -29,4 +29,9 @@ namespace Tanki
     //    IPackage Run();
     //}
 
+    public interface IGameClient
+    {
+
+    }
+
 }

@@ -20,11 +20,16 @@ namespace Tanki
 
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {
+            var v = evntData.newAddresssee;
+
+
             //
         }
 
         private void ProcessMessageHandler(IPackage msg)
         {
+            
+
             // нужно реализовать обработку управляющих  сообщений клиет-сервер
         }
     }
