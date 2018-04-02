@@ -216,5 +216,10 @@ namespace Tanki
             return t;
 
         }
+
+        public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

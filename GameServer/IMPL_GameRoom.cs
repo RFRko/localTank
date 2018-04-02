@@ -20,6 +20,7 @@ namespace Tanki
 
         private List<IGamer> _gamers = new List<IGamer>();
 
+
         public string RoomId { get; set; }        
 
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
@@ -38,6 +39,14 @@ namespace Tanki
             //MessageQueue.RUN();
             //Reciever.Run();
         }
+
+        public IEnumerable<IGamer> GetAddresssees() {return _gamers;}
+        public IAddresssee this[string id] {
+            get { var v = from g in _gamers where g.id == id select g;
+                if (v.Count() > 1) throw new Exception("not unique") ;
+                return v.First();
+            } }
+        public event EventHandler<NewAddressseeData> OnNewAddresssee;
     }
 
 

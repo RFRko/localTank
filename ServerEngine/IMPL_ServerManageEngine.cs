@@ -18,6 +18,11 @@ namespace Tanki
         public override ProcessMessageHandler ProcessMessage { get; protected set; }
         public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 
+        public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
+        {
+            //
+        }
+
         private void ProcessMessageHandler(IPackage msg)
         {
             // нужно реализовать обработку управляющих  сообщений клиет-сервер
