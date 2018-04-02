@@ -63,6 +63,7 @@ namespace Tanki
 	/// </summary>
 	public interface ITank : IEntity
 	{
+		string Tank_ID { get; set; }
 		int Lives { get; set; }
 		Team Team { get; set; }
 	}

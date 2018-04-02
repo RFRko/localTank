@@ -87,7 +87,7 @@ namespace Common
             set { this._speed = value; }
         }
 
-        public EntityAction Command { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public EntityAction Command { get; set; }
     }
 
     /// <summary>
@@ -101,6 +101,7 @@ namespace Common
     {
         private int _lives;
         private Team _team;
+		private string _tank_ID;
 
         public Tank()
         {
@@ -118,7 +119,21 @@ namespace Common
             get { return this._lives; }
             set { this._lives = value; }
         }
-        public Team Team
+
+		public string Tank_ID
+		{
+			get
+			{
+				return this._tank_ID;
+			}
+
+			set
+			{
+				this._tank_ID = value;
+			}
+		}
+
+		public Team Team
         {
             get { return this._team; }
             set { this._team = value; }
