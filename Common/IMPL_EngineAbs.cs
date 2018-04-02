@@ -15,9 +15,17 @@ namespace Tanki
         public abstract ProcessMessagesHandler ProcessMessages { get; protected set; }
         public IEngineClient Owner { get; protected set; }
 
+        public abstract void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData);
+
         public void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
         {
             Owner = evntData.EngineOwner;
+
+            var addrHolder = Owner as IAddressseeHolderBase;
+
+            if (addrHolder != null)
+                addrHolder.OnNewAddresssee += OnNewAddresssee_Handler;
+
         }
     }
 

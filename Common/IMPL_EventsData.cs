@@ -17,4 +17,12 @@ namespace Tanki
         public IEngineClient EngineOwner { get; set; }
     }
 
+    public class NewAddressseeData : EventArgs
+    {
+        public IAddresssee newAddresssee { get; set; }
+    }
+
+
+    
+
 }
