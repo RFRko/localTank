@@ -36,10 +36,10 @@ namespace Tanki
             IPEndPoint ipv4EP = new IPEndPoint(ipv4Addr, Port);
             IPEndPoint ipv6EP = new IPEndPoint(ipv6Addr, Port);
 
-            ipv4_listener = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            ipv4_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             ipv4_listener.Bind(ipv4EP);
 
-            ipv6_listener = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
+            ipv6_listener = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
             ipv6_listener.Bind(ipv6EP);
 
 
