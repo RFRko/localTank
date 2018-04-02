@@ -17,11 +17,8 @@ namespace Tanki
 		{
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
-			//this._room = room;
 		}
 
-        // ИЗ ТВОЕЙ ИСХОДНОЙ РЕАЛИЗАЦИИ
-        //private IRoom _room; - теперь не ненужен, room будет значение Owner базового абстрактного класса
         private IList<IPackage> processList = new List<IPackage>();
         private List<IEntity> objects;
         private int width = 20;
@@ -68,34 +65,44 @@ namespace Tanki
 		public void Death(string id) 
         {
             var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+			if (tmp is ITank)
+			{
+				var tank = tmp as ITank;
+				if (tank.Lives > 0)
+				{
+					tank.Lives--;
+					this.Reload(id);
+				}	
+			}
             tmp.Is_Alive = false;
         }
 
-		public void Fire(string id) //было IPackage Fire(int id)
-		{
-            //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
+		public void Fire(string id)
+		{ 
+			var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+			if (tmp.Can_Shoot)
+			{
+				var bullet = new object() as IBullet;
 
-            var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+				bullet.Direction = tmp.Direction;
 
-            var bullet = new object() as IBullet;
+				bullet.Parent_Id = id;
 
-            bullet.Direction = tmp.Direction;
+				tanks.FirstOrDefault(t => t.Tank_ID == id).Can_Shoot = false;
 
-            bullet.Parent_Id = id;
+				bullet.Is_Alive = true;
 
-			tanks.FirstOrDefault(t => t.Tank_ID == id).Can_Shoot = false;
+				bullet.Can_Be_Destroyed = false;
 
-            bullet.Is_Alive = true;
+				bullet.Can_Shoot = false;
 
-            bullet.Can_Be_Destroyed = false;
+				bullet.Position = tmp.Position;
 
-            bullet.Can_Shoot = false;
+				bullet.Command = EntityAction.Move;
 
-            bullet.Position = tmp.Position;
+				bullets.Add(bullet);
+			}
 
-            bullet.Command = EntityAction.Move;
-
-            bullets.Add(bullet);
         }
 
         public void GenerateMap()
@@ -103,16 +110,53 @@ namespace Tanki
             //ПОКА ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
 
             var room = Owner as IRoom; // используй так
-
+			int tankCount = room.Gamers.Count();
             foreach (var t in room.Gamers)
             {
+				var obj = new object() as ITank;
+				obj.Tank_ID = t.id;
+				obj.Lives = 5;
+				obj.Is_Alive = true;
+				obj.Can_Shoot = true;
+				obj.Direction = Direction.Up;
+				tanks.Add(obj);
+				while(obj.Position!=null)
+				{
+					Random colInd = new Random(DateTime.Now.Millisecond - 15);
+					Random rowInd = new Random(DateTime.Now.Millisecond + 20);
+					int columnIndex = colInd.Next(0, width);
+					int rowIndex = rowInd.Next(0, height);
+					Point p = new Point(rowIndex, columnIndex);
+					if(tanks.FirstOrDefault(tank=>tank.Position==p)==null)
+					{
+						obj.Position = p;
+					}	
+				}
+				objects.Add(obj);
+			}
+			while(objectCount>0)
+			{
+				Random colInd = new Random(DateTime.Now.Millisecond - 15);
+				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
+				int columnIndex = colInd.Next(0, width);
+				int rowIndex = rowInd.Next(0, height);
+				Point p = new Point(rowIndex, columnIndex);
+				if(objects.FirstOrDefault(block=>block.Position==p)==null)
+				{
+					var obj = new object() as IBlock;
+					obj.Position = p;
+					obj.Can_Be_Destroyed = true;
+					obj.Can_Shoot = false;
+					obj.Is_Alive = true;
+					blocks.Add(obj);
+					objects.Add(obj);
+				}
+			}
 
-            }
-        }
+		}
 
-		public void Move(string id) // было IPackage Move(int id), ПОСТАВИЛ КАК У ТЕБЯ
-		{
-            //ПОКА ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
+		public void Move(string id)
+		{ 
             var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
             if (tmp is ITank)
             {
@@ -152,23 +196,56 @@ namespace Tanki
                         }
                         break;
                 }
+				tank.Command = EntityAction.None;
             }
             else if (tmp is IBullet)
             {
                 var bullet = tmp as IBullet;
+				switch (bullet.Direction)
+				{
+					case Direction.Left:
+						if (bullet.Position.X > 0)
+						{
+							var pos = new Point(bullet.Position.X - 1, bullet.Position.Y);
+							bullet.Position = pos;
+						}
+						break;
+
+					case Direction.Right:
+						if (bullet.Position.X < width)
+						{
+							var pos = new Point(bullet.Position.X + 1, bullet.Position.Y);
+							bullet.Position = pos;
+						}
+						break;
+
+					case Direction.Up:
+						if (bullet.Position.Y > 0)
+						{
+							var pos = new Point(bullet.Position.X, bullet.Position.Y - 1);
+							bullet.Position = pos;
+						}
+						break;
+
+					case Direction.Down:
+
+						if (bullet.Position.Y < height)
+						{
+							var pos = new Point(bullet.Position.X, bullet.Position.Y + 1);
+							bullet.Position = pos;
+						}
+						break;
+				}
             }
         }
 
 		public void Reload(String id) //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
         {
-			throw new NotImplementedException();
+			
 		}
 
-		public void Send()          //было IEnumerable<IPackage> Send()  ПОСТАВИЛ КАК У ТЕБЯ
-		{
-            // Миха, если это Send .. то он должен делать Owner.Sender.SendMessage()
-
-            //ПОКА ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
+		public void Send()
+		{       
             var t = new object() as IMap;
 
             t.Blocks = blocks;
@@ -176,9 +253,11 @@ namespace Tanki
             t.Bullets = bullets;
 
             t.Tanks = tanks;
+			var pack =new object() as IPackage;
+			pack.Data = t;
+			var adress = Owner as IRoom;
+			Owner.Sender.SendMessage(pack, adress.Gamers);
 
-            return t;
-
-        }
+		}
     }
 }

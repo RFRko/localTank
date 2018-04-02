@@ -10,6 +10,7 @@
 
     public enum EntityAction
     {
+		None,
         Move,
         Fire
     }
