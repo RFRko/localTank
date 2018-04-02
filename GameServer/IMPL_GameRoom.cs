@@ -11,11 +11,11 @@ namespace Tanki
     public abstract class RoomAbs : NetProcessorAbs, IRoom
     {
         private RoomAbs() { }
-        public RoomAbs(String id, IPEndPoint localEP)
+        public RoomAbs(String id, IPEndPoint localEP):base()
         {
             RoomId = id;
-            Reciever = new ReceiverUdpClientBased(localEP);
-            Sender = new SenderUdpClientBased(Reciever);
+            //Reciever = new ReceiverUdpClientBased(localEP);
+            //Sender = new SenderUdpClientBased(Reciever);
         }
 
         private List<IGamer> _gamers = new List<IGamer>();
@@ -46,14 +46,16 @@ namespace Tanki
     {
         public ManagingRoom(string id, IPEndPoint localEP) : base(id, localEP)
         {
-            Reciever = new ReceiverUdpClientBased(localEP);
-            base.RegisterDependcy(Reciever);
+            IReciever _Reciever = new ReceiverUdpClientBased(localEP);
+            base.RegisterDependcy(_Reciever);
 
-            Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
-            base.RegisterDependcy(Engine);
+            Sender = new SenderUdpClientBased(Reciever);
 
-            MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqOneByOneProcc);
-            base.RegisterDependcy(MessageQueue);
+            IEngine _Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
+            base.RegisterDependcy(_Engine);
+
+            IMessageQueue _MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqOneByOneProcc);
+            base.RegisterDependcy(_MessageQueue);
 
         }
     }
@@ -64,6 +66,8 @@ namespace Tanki
         {
             Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(Reciever);
+
+            Sender = new SenderUdpClientBased(Reciever);
 
             Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvGameEngine);
             base.RegisterDependcy(Engine);

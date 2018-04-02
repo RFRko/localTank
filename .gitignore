@@ -11,3 +11,6 @@ ClientEngine/obj/
 ClientEngine/bin/
 TankiViewOpenPage/obj/
 TankiViewOpenPage/bin/
+packages
+Test*
+test*

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    class ServerManageEngine:EngineAbs
+    public class ServerManageEngine:EngineAbs
     {
         public ServerManageEngine():base() { }
         public ServerManageEngine(IRoom inRoom) : base(inRoom)
@@ -20,7 +20,7 @@ namespace Tanki
 
         private void ProcessMessageHandler(IPackage msg)
         {
-            // нужно реализовать обработку управляющих сообщений клиет-сервер
+            // нужно реализовать обработку управляющих  сообщений клиет-сервер
         }
     }
 }
