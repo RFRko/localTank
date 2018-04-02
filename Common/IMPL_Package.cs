@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Tanki
 {
 	[Serializable]
-	class Package : IPackage
+	public class Package : IPackage
 	{
 		public string Sender_id { get; set; }
 		public object Data { get; set; }

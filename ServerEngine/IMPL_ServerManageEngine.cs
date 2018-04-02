@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    class ServerManageEngine:EngineAbs
+    public class ServerManageEngine:EngineAbs
     {
         public ServerManageEngine():base() { }
         public ServerManageEngine(IRoom inRoom) : base(inRoom)
@@ -18,9 +18,19 @@ namespace Tanki
         public override ProcessMessageHandler ProcessMessage { get; protected set; }
         public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 
+        public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
+        {
+            var v = evntData.newAddresssee;
+
+
+            //
+        }
+
         private void ProcessMessageHandler(IPackage msg)
         {
-            // нужно реализовать обработку управляющих сообщений клиет-сервер
+            
+
+            // нужно реализовать обработку управляющих  сообщений клиет-сервер
         }
     }
 }

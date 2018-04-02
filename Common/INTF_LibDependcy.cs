@@ -25,12 +25,31 @@ namespace Tanki
     }
 
 
+    public interface IAddressseeHolderBase
+    {
+        event EventHandler<NewAddressseeData> OnNewAddresssee;
+    }
+
+    public interface IAddressseeHolder<T, Tid>: IAddressseeHolderBase where T:IAddresssee
+    {
+        IEnumerable<T> GetAddresssees();
+        IAddresssee this[Tid id] { get; }
+    }
+
+
+    public interface IAddressseeHolderClient
+    {
+
+        void OnNewAddresssee_Handler(Object Sender, NewAddressseeData evntData);
+    }
+
+
     /// <summary>
     /// Нужна для:
     /// -IServer (библиотека GameServer)
     /// -ServerGameEngine (библиотека ServerEngine)
     /// </summary>
-    public interface IRoom: INetProcessor
+    public interface IRoom: INetProcessor, IAddressseeHolder<IGamer,String>
     {
         String RoomId { get; set; }
         IEnumerable<IGamer> Gamers { get; }
