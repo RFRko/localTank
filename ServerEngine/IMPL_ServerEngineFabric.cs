@@ -17,33 +17,33 @@ namespace Tanki
 
     public class ServerEngineFabric : IServerEngineFabric
     {
-        public IServerEngine CreateEngine(SrvEngineType engineType)
+        public IEngine CreateEngine(SrvEngineType engineType)
         {
-            IServerEngine res = null;
+            IEngine res = null;
 
             switch (engineType)
             {
                 case SrvEngineType.srvGameEngine:
-                    res = (new ServerGameEngine()) as IServerEngine;
+                    res = new ServerGameEngine();
                     break;
                 case SrvEngineType.srvManageEngine:
-                    res = (new ServerManageEngine()) as IServerEngine;
+                    res = new ServerManageEngine();
                     break;
             }
             return res;
         }
 
-        public IServerEngine CreateEngine(SrvEngineType engineType, IRoom inRoom)
+        public IEngine CreateEngine(SrvEngineType engineType, IRoom inRoom)
         {
-            IServerEngine res = null;
+            IEngine res = null;
 
             switch (engineType)
             {
                 case SrvEngineType.srvGameEngine:
-                    res = (new ServerGameEngine(inRoom)) as IServerEngine;
+                    res = new ServerGameEngine(inRoom);
                     break;
                 case SrvEngineType.srvManageEngine:
-                    res = (new ServerManageEngine(inRoom)) as IServerEngine;
+                    res = new ServerManageEngine(inRoom);
                     break;
             }
             return res;

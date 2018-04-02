@@ -50,8 +50,8 @@ namespace Tanki
 
     public interface IServerEngineFabric
     {
-        IServerEngine CreateEngine(SrvEngineType engineType);
-        IServerEngine CreateEngine(SrvEngineType engineType, IRoom inRoom);
+        IEngine CreateEngine(SrvEngineType engineType);
+        IEngine CreateEngine(SrvEngineType engineType, IRoom inRoom);
 
     }
 

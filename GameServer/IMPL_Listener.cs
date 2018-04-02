@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -26,7 +27,23 @@ namespace Tanki
 
     public class Listener : IListener
     {
-        public Listener() { }
+        public Listener(Int32 Port)
+        {
+            IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipv4Addr = HostEntry.AddressList[2];
+            IPAddress ipv6Addr = HostEntry.AddressList[0];
+
+            IPEndPoint ipv4EP = new IPEndPoint(ipv4Addr, Port);
+            IPEndPoint ipv6EP = new IPEndPoint(ipv6Addr, Port);
+
+            ipv4_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            ipv4_listener.Bind(ipv4EP);
+
+            ipv6_listener = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+            ipv6_listener.Bind(ipv6EP);
+
+
+        }
         public Socket ipv4_listener { get; protected set; }
         public Socket ipv6_listener { get; protected set; }
 

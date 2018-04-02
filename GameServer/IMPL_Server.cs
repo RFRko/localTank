@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    class GameServer: ListeningClientAbs,  IServer
+    public class GameServer: ListeningClientAbs,  IServer
     {
         private GameServer() { }
 
-        private GameServer(IListener listener)
+        public GameServer(IListener listener)
         {
             ServerListner = listener;
             RegisterListener(ServerListner);
@@ -37,7 +37,7 @@ namespace Tanki
             //
 
             IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
-            Int32 roomPort = 10001;
+            Int32 roomPort = 50001;
             IPEndPoint roomEP = new IPEndPoint(roomAddr, roomPort);
 
             IRoom managerRoom = (new RoomFabric()).CreateRoom("", roomEP, RoomType.rtMngRoom);
