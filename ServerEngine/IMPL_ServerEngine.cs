@@ -112,7 +112,6 @@ namespace Tanki
 				obj.Is_Alive = true;
 				obj.Can_Shoot = true;
 				obj.Direction = Direction.Up;
-				tanks.Add(obj);
 				while(obj.Position!=null)
 				{
 					Random colInd = new Random(DateTime.Now.Millisecond - 15);
@@ -125,6 +124,7 @@ namespace Tanki
 						obj.Position = p;
 					}	
 				}
+				tanks.Add(obj);
 				objects.Add(obj);
 			}
 			while(objectCount>0)
