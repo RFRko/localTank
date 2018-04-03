@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace Tanki
 {
 	[Serializable]
-	public class Package : IPackage
+	public class RoomStat : IRoomStat
 	{
-		public Guid Passport { get; set; }
-		public object Data { get; set; }
-		public MesseggeType MesseggeType { get; set; }
+		public Guid Pasport { get; set; }
+		public int Players_count { get; set; }
+		public Guid Creator_Pasport { get; set; }
 	}
 }

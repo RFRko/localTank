@@ -15,9 +15,9 @@ namespace Tanki
 	/// </summary>
 	public interface IRoomStat
 	{
-		string Id { get; set; }
+		Guid Pasport { get; set; }
 		int Players_count { get; set; }
-		string Creator_Id { get; set; }
+		Guid Creator_Pasport { get; set; }
 	}
 
 
@@ -229,17 +229,18 @@ namespace Tanki
         //                      а также механизм регистрации dependency IEngine
         void RUN();
     }
-    #endregion INetProcessor
+	#endregion INetProcessor
 
 
 
-    /// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
-    /// Используется в IMesegeQueue, ISender, IReceiver</summary>
-    /// Реализующий клас обязан иметь атрибут [Serializable]
-    public interface IPackage
+	/// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
+	/// Используется в IMesegeQueue, ISender, IReceiver</summary>
+	/// Реализующий клас обязан иметь атрибут [Serializable]
+	public interface IPackage
 	{
-		string Sender_id { get; set; }
+		Guid Passport { get; set; }
 		object Data { get; set; }
+		MesseggeType MesseggeType { get; set; }
 	}
 
 
@@ -248,5 +249,20 @@ namespace Tanki
 	{
 		byte[] Serialize(object obj);
 		IPackage Deserialize(byte[] bytes);
+	}
+
+	public interface IGameSetings
+	{
+		int GameSpeed { get; set; }
+		int ObjectsSize { get; set; }
+		int MapSize { get; set; }
+		int MaxPlayersCount { get; set; }
+		GameType GameType { get; set; }
+	}
+
+	public interface IConectionData
+	{
+		string PlayerName { get; set; }
+		Guid Pasport { get; set; }
 	}
 }

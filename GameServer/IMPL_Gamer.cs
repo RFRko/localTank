@@ -15,7 +15,7 @@ namespace Tanki
             RemoteEndPoint = ep;
             Passport = GuidGenTimeBased.GenGuid(ep.Address.ToString().GetHashCode(), ep.Port);
         }
-        public string id { get; set; }
+        public string Name { get; set; }
 
         public Guid Passport { get; private set; }
         public IPEndPoint RemoteEndPoint { get; private set; }
@@ -24,7 +24,7 @@ namespace Tanki
         {
             if (Passport != confirmpassport)
                 Dispose();
-            id = newID;
+            Name = newID;
         }
 
         public void Dispose()
