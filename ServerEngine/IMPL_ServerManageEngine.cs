@@ -13,13 +13,12 @@ namespace Tanki
 	{
 		public override ProcessMessageHandler ProcessMessage { get; protected set; }
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
-		private ISender Sender { get; set; }
-		private IServer Server { get; set; }
+
 		private List<IRoom> ListRooms;
 		private List<IGamer> WatingGamers;
 		
 		public ServerManageEngine() : base() { }
-		public ServerManageEngine(IServer server, ISender sender, IRoom inRoom) : base(inRoom)
+		public ServerManageEngine(IRoom inRoom) : base(inRoom)
 			{
 				ProcessMessage += ProcessMessageHandler;
 				ProcessMessages = null;
