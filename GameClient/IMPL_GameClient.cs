@@ -26,7 +26,7 @@ namespace Tanki
             base.RegisterDependcy(_MessageQueue);
 
         }
-
+        // gonevo
 
         // должен быть приватный TCPClien  для коннекта к хосту
 
