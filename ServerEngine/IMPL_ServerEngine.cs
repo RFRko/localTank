@@ -18,11 +18,12 @@ namespace Tanki
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
 		}
-
+		public int Width { get { return this.width;	} set {	this.width = value;	}}
+		public int Height { get { return this.height; } set { this.height = value; } }
         private IList<IPackage> processList = new List<IPackage>();
         private List<IEntity> objects;
-        private int width = 20;
-        private int height = 20;
+        private int width;
+        private int height;
         private List<ITank> tanks = new List<ITank>();
         private List<IBlock> blocks = new List<IBlock>();
         private List<IBullet> bullets = new List<IBullet>();
@@ -31,7 +32,7 @@ namespace Tanki
 
 
 
-        public void CheckWin()  //поменял IPackage на void
+        private void CheckWin()  //поменял IPackage на void
 		{
 			throw new NotImplementedException();
 		}
@@ -42,53 +43,45 @@ namespace Tanki
 			{
                 //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
                 var tmp = t.Data as IEntity;
-
                 if (tmp.Command == EntityAction.Move)
-
                 {
-
-                    this.Move(t.Sender_id);
-
+                    this.Move(tmp);
                 }
-
                 if (tmp.Command == EntityAction.Fire)
-
-                {
-
-                    this.Fire(t.Sender_id);
-
+				{ 
+                    this.Fire(tmp);
                 }
-
             }
         }
-
-		public void Death(string id) 
+		private void Death(IEntity entity) 
         {
-            var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data==entity) as IEntity;
+			//var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
 			if (tmp is ITank)
 			{
 				var tank = tmp as ITank;
 				if (tank.Lives > 0)
 				{
 					tank.Lives--;
-					this.Reload(id);
+					this.Reload(entity);
 				}	
 			}
             tmp.Is_Alive = false;
         }
 
-		public void Fire(string id)
-		{ 
-			var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+		private void Fire(IEntity entity)
+		{
+			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data == entity) as ITank;
+			//var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
 			if (tmp.Can_Shoot)
 			{
 				var bullet = new object() as IBullet;
 
 				bullet.Direction = tmp.Direction;
+				
+				bullet.Parent_Id = tmp.Tank_ID;
 
-				bullet.Parent_Id = id;
-
-				tanks.FirstOrDefault(t => t.Tank_ID == id).Can_Shoot = false;
+				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
 
 				bullet.Is_Alive = true;
 
@@ -105,7 +98,7 @@ namespace Tanki
 
         }
 
-        public void GenerateMap()
+        private void GenerateMap()
 		{
             //ПОКА ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
 
@@ -155,9 +148,10 @@ namespace Tanki
 
 		}
 
-		public void Move(string id)
-		{ 
-            var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+		private void Move(IEntity entity)
+		{
+			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data == entity) as ITank;
+			//var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
             if (tmp is ITank)
             {
                 var tank = tmp as ITank;
@@ -239,7 +233,7 @@ namespace Tanki
             }
         }
 
-		public void Reload(String id) //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
+		private void Reload(IEntity entity) //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
         {
 			
 		}
