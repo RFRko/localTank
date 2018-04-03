@@ -26,6 +26,47 @@ namespace Tanki
             base.RegisterDependcy(_MessageQueue);
 
         }
+
+        public IAddresssee this[string id]
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IClientGameState ClientGameState
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void AddAddressee(string Id, IAddresssee addresssee)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnClientGameStateChangedHandler(object Sender, GameStateChangeData evntData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RUN(IPEndPoint ServerEndPoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RUN_GAME()
+        {
+            throw new NotImplementedException();
+        }
         // gonevo
 
         // должен быть приватный TCPClien  для коннекта к хосту
@@ -35,6 +76,6 @@ namespace Tanki
         //должен быть приватный Timer - на callBack которого будет вызываться метод переодической отправки клинтского состояния игры на сервер.
 
         //должен будет быть приватный метод  'void ProceedQueue(Object state)' который будет передаваться time-ру как callback 
-                                                // этот метод должен с периодиностью таймера отправлять клиентское состояние игры на сервер
+        // этот метод должен с периодиностью таймера отправлять клиентское состояние игры на сервер
     }
 }
