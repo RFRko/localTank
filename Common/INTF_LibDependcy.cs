@@ -62,7 +62,7 @@ namespace Tanki
     }
 
 
-    public interface IManagerRoom: IRoom
+    public interface IManagerRoom
     {
         IRoomStat getRoomStat(String forRoomID);
         IEnumerable<IRoomStat> getRoomsStat();
