@@ -7,85 +7,8 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-	#region ЗАГЛУШКИ
-	//заглушка
-	public interface IServer
-	{
-		IListener ServerListner { get; }
-		IEnumerable<IRoom> Rooms { get; } //список игровых комнат
-		IEnumerable<IRoom> _rooms { get; set; } //список начальных комнат
-		void RUN();
-	}
-	//заглушка
-	public interface IListener { }
-	//заглушка
-	public class Gamer : IGamer, IDisposable
-	{
-		public Gamer(IPEndPoint ep)
-		{
-			RemoteEndPoint = ep;
-			Passport = GuidGenTimeBased.GenGuid(ep.Address.ToString().GetHashCode(), ep.Port);
-		}
-		public string Name { get; set; }
-
-		public Guid Passport { get; private set; }
-		public IPEndPoint RemoteEndPoint { get; private set; }
-
-		public void SetId(string newID, Guid confirmpassport)
-		{
-			if (Passport != confirmpassport)
-				Dispose();
-			Name = newID;
-		}
-
-		public void Dispose()
-		{
-			RemoteEndPoint = null;
-		}
-
-	}
-	//заглушка
-	public  class RoomAbs : NetProcessorAbs
-	{
-		public RoomAbs() { }
-		public RoomAbs(String id, IPEndPoint localEP) : base()
-		{
-			RoomId = id;
-			//Reciever = new ReceiverUdpClientBased(localEP);
-			//Sender = new SenderUdpClientBased(Reciever);
-		}
-
-		private List<IGamer> _gamers = new List<IGamer>();
-
-		public string RoomId { get; set; }
-
-		public IRoomStat RoomStat { get; set; }
-
-		public IEnumerable<IGamer> Gamers { get { return _gamers; } }
-
-		public IGameSetings GameSetings { get; set; }
-
-		public virtual void AddGamer(IGamer newGamer)
-		{
-			_gamers.Add(newGamer);
-		}
-
-		public virtual new void RUN()
-		{
-			base.RUN();
-			//if (MessageQueue == null) throw new Exception("MessageQueue object not valid");
-			//if (Engine == null) throw new Exception("Engine object not valid");
-
-			//MessageQueue.RUN();
-			//Reciever.Run();
-		}
-		//------------------------------------------------------------
-	}
-	#endregion
-	//===================================================================================
-	//Нужно подключить ссылки на файлы а после все исправить, тут одни костыли
-
 	
+  
 	public class ServerManageEngine : EngineAbs
 	{
 		public override ProcessMessageHandler ProcessMessage { get; protected set; }

@@ -44,23 +44,45 @@ namespace Tanki
     }
 
 
-	/// <summary>
-	/// Нужна для:
-	/// -IServer (библиотека GameServer)
-	/// -ServerGameEngine (библиотека ServerEngine)
-	/// </summary>
-	public interface IRoom : INetProcessor, IAddressseeHolder<IGamer, String>
-	{
-		IRoomStat RoomStat { get; }
-		IGameSetings GameSetings { get; set; }
-		IEnumerable<IGamer> Gamers { get; }
-		void AddGamer(IGamer newGamer);
+
+    /// <summary>
+    /// Нужна для:
+    /// -IServer (библиотека GameServer)
+    /// -ServerGameEngine (библиотека ServerEngine)
+    /// </summary>
+    public interface IRoom: INetProcessor, IAddressseeHolder<IGamer,String>
+    {
+        IRoomOwner Owner { get; }
+        String RoomId { get; set; }
+        IGameSetings GameSetings { get; set; }
+        IEnumerable<IGamer> Gamers { get; }
+        void AddGamer(IGamer newGamer);
+        IRoomStat getRoomStat();
 
 		void RUN();
 	}
 
+    public interface IManagerRoom
+    {
+        IRoomStat getRoomStat(String forRoomID);
+        IEnumerable<IRoomStat> getRoomsStat();
+        void MooveGamerToRoom(IGamer gamer, String TargetRoomId);
+    }
 
-	public enum RoomType
+
+    public interface IRoomOwner
+    {
+        IRoomStat getRoomStat(String RoomID);
+    }
+
+    public interface IManagerRoomOwner: IRoomOwner
+    {
+        IEnumerable<IRoomStat> getRoomsStat();
+        void MooveGamerToRoom(IGamer gamer, String TargetRoomId);
+    }
+
+
+    public enum RoomType
     {
         rtMngRoom,
         rtGameRoom
@@ -68,7 +90,7 @@ namespace Tanki
 
     public interface IRoomFabric
     {
-        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType);
+        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner);
     }
 
 
