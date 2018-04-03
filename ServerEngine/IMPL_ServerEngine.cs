@@ -112,6 +112,13 @@ namespace Tanki
 			int tankCount = room.Gamers.Count();
             foreach (var t in room.Gamers)
             {
+<<<<<<< HEAD
+
+            }
+
+
+        }
+=======
 				var obj = new object() as ITank;
 				obj.Tank_ID = t.id;
 				obj.Lives = 5;
@@ -142,6 +149,7 @@ namespace Tanki
 			}
 
 		}
+>>>>>>> master
 
 		private void Move(IEntity entity)
 		{
@@ -245,15 +253,27 @@ namespace Tanki
 			}
 		}
 
+<<<<<<< HEAD
+		public void Send()          //было IEnumerable<IPackage> Send()  ПОСТАВИЛ КАК У ТЕБЯ
+		{
+            // Миха, если это Send .. то он должен делать Owner.Sender.SendMessage()
+
+            //ПОКА ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
+=======
 		public void Send()
 		{       
+>>>>>>> master
             var t = new object() as IMap;
-
             t.Blocks = blocks;
-
             t.Bullets = bullets;
-
             t.Tanks = tanks;
+<<<<<<< HEAD
+			var pack = new object() as IPackage;
+			pack.Data = t;
+			var adress = Owner as IRoom;
+			Owner.Sender.SendMessage(pack, adress.Gamers);
+
+=======
 			var pack =new object() as IPackage;
 			pack.Data = t;
 			var adress = Owner as IRoom;
@@ -263,6 +283,7 @@ namespace Tanki
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {
             throw new NotImplementedException();
+>>>>>>> master
         }
     }
 }
