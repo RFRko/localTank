@@ -17,78 +17,76 @@ namespace Tanki
 		{
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
+			objectCount = (width * height) / (width + height);
 		}
-
+		public int Width { get { return this.width;	} set {	this.width = value;	}}
+		public int Height { get { return this.height; } set { this.height = value; } }
         private IList<IPackage> processList = new List<IPackage>();
         private List<IEntity> objects;
-        private int width = 20;
-        private int height = 20;
+        private int width;
+        private int height;
         private List<ITank> tanks = new List<ITank>();
         private List<IBlock> blocks = new List<IBlock>();
         private List<IBullet> bullets = new List<IBullet>();
-        private int objectCount = 10;
+		private int objectCount;
         private ISender sender;
 
 
 
-        public void CheckWin()  //поменял IPackage на void
+        private void CheckWin()  //поменял IPackage на void
 		{
 			throw new NotImplementedException();
 		}
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
 			processList = new List<IPackage>();
+			foreach(var x in bullets)
+			{
+				this.Move(x);
+			}
 			foreach(var t in list)
 			{
                 //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
                 var tmp = t.Data as IEntity;
-
                 if (tmp.Command == EntityAction.Move)
-
                 {
-
-                    this.Move(t.Sender_id);
-
+                    this.Move(tmp);
                 }
-
                 if (tmp.Command == EntityAction.Fire)
-
-                {
-
-                    this.Fire(t.Sender_id);
-
+				{ 
+                    this.Fire(tmp);
                 }
-
             }
         }
-
-		public void Death(string id) 
+		private void Death(IEntity entity) 
         {
-            var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data==entity) as IEntity;
+			//var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
 			if (tmp is ITank)
 			{
 				var tank = tmp as ITank;
 				if (tank.Lives > 0)
 				{
 					tank.Lives--;
-					this.Reload(id);
+					this.Reload(entity);
 				}	
 			}
             tmp.Is_Alive = false;
         }
 
-		public void Fire(string id)
-		{ 
-			var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+		private void Fire(IEntity entity)
+		{
+			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data == entity) as ITank;
+			//var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
 			if (tmp.Can_Shoot)
 			{
 				var bullet = new object() as IBullet;
 
 				bullet.Direction = tmp.Direction;
+				
+				bullet.Parent_Id = tmp.Tank_ID;
 
-				bullet.Parent_Id = id;
-
-				tanks.FirstOrDefault(t => t.Tank_ID == id).Can_Shoot = false;
+				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
 
 				bullet.Is_Alive = true;
 
@@ -102,10 +100,11 @@ namespace Tanki
 
 				bullets.Add(bullet);
 			}
+			entity.Command = EntityAction.None;
 
-        }
+		}
 
-        public void GenerateMap()
+        private void GenerateMap()
 		{
             //ПОКА ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
 
@@ -119,19 +118,8 @@ namespace Tanki
 				obj.Is_Alive = true;
 				obj.Can_Shoot = true;
 				obj.Direction = Direction.Up;
+				this.Reload(obj);
 				tanks.Add(obj);
-				while(obj.Position!=null)
-				{
-					Random colInd = new Random(DateTime.Now.Millisecond - 15);
-					Random rowInd = new Random(DateTime.Now.Millisecond + 20);
-					int columnIndex = colInd.Next(0, width);
-					int rowIndex = rowInd.Next(0, height);
-					Point p = new Point(rowIndex, columnIndex);
-					if(tanks.FirstOrDefault(tank=>tank.Position==p)==null)
-					{
-						obj.Position = p;
-					}	
-				}
 				objects.Add(obj);
 			}
 			while(objectCount>0)
@@ -155,9 +143,10 @@ namespace Tanki
 
 		}
 
-		public void Move(string id)
-		{ 
-            var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
+		private void Move(IEntity entity)
+		{
+			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data == entity) as ITank;
+			//var tmp = processList.FirstOrDefault(t => t.Sender_id == id).Data as IEntity;
             if (tmp is ITank)
             {
                 var tank = tmp as ITank;
@@ -239,21 +228,29 @@ namespace Tanki
             }
         }
 
-		public void Reload(String id) //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
+		private void Reload(IEntity entity) //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
         {
-			
+			entity.Position = Point.Empty;
+			while (entity.Position != Point.Empty)
+			{
+				Random colInd = new Random(DateTime.Now.Millisecond - 15);
+				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
+				int columnIndex = colInd.Next(0, width);
+				int rowIndex = rowInd.Next(0, height);
+				Point p = new Point(rowIndex, columnIndex);
+				if (tanks.FirstOrDefault(tank => tank.Position == p) == null)
+				{
+					entity.Position = p;
+				}
+			}
 		}
-
 		public void Send()
 		{       
             var t = new object() as IMap;
-
             t.Blocks = blocks;
-
             t.Bullets = bullets;
-
             t.Tanks = tanks;
-			var pack =new object() as IPackage;
+			var pack = new object() as IPackage;
 			pack.Data = t;
 			var adress = Owner as IRoom;
 			Owner.Sender.SendMessage(pack, adress.Gamers);
