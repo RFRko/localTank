@@ -98,7 +98,7 @@ namespace Tanki
 		public ServerManageEngine() : base() { }
 		public ServerManageEngine(IServer server, ISender sender, IRoom inRoom) : base(inRoom)
 			{
-				ProcessMessage = ProcessMessage;
+				ProcessMessage += ProcessMessageHandler;
 				ProcessMessages = null;
 
 				Server = server;
@@ -108,7 +108,7 @@ namespace Tanki
 				WatingGamers = ListRooms[0].Gamers as List<IGamer>;
 			}
 
-		private void ProcessMessageHandler(Package msg)
+		private void ProcessMessageHandler(IPackage msg)
 			{
 				switch (msg.MesseggeType)
 				{
@@ -145,7 +145,7 @@ namespace Tanki
 					SendRoomList(gamer.RemoteEndPoint);
 				}
 			}
-		private void SendRoomList(IPEndPoint addresssee)
+		private void SendRoomList(IAddresssee addresssee)
 			{
 				var roomlist = new List<IRoomStat>();
 
@@ -162,7 +162,7 @@ namespace Tanki
 			{
 				var client_id = package.Passport;
 				var ipendpoint =  WatingGamers.Find((s) => s.Passport == client_id).RemoteEndPoint;
-				SendRoomList(ipendpoint);
+				SendRoomList((IAddresssee)ipendpoint);
 			}
 		private void RoomConnect(IPackage package)
 			{
@@ -200,7 +200,7 @@ namespace Tanki
 					}, gamer.RemoteEndPoint);
 				}
 			}
-		private void CreatRoom(Package package)
+		private void CreatRoom(IPackage package)
 			{
 				var newGame = (IGameSetings)package.Data;
 
