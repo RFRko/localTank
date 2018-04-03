@@ -11,26 +11,17 @@ namespace Tanki
   
 	public class ServerManageEngine : EngineAbs
 	{
-		public override ProcessMessageHandler ProcessMessage { get; protected set; }
-		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
+        public ServerManageEngine() : base() { }
+        public ServerManageEngine(IRoom inRoom) : base(inRoom)
+        {
+            this.ProcessMessage = ProcessMessage;
+            this.ProcessMessages = null;
+        }
 
-		private List<IRoom> ListRooms;
-		private List<IGamer> WatingGamers;
-		
-		public ServerManageEngine() : base() { }
-		public ServerManageEngine(IRoom inRoom) : base(inRoom)
-			{
-				ProcessMessage += ProcessMessageHandler;
-				ProcessMessages = null;
+        public override ProcessMessageHandler ProcessMessage { get; protected set; }
+        public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 
-				Server = server;
-				Sender = sender;
-
-				ListRooms = Server._rooms as List<IRoom>;
-				WatingGamers = ListRooms[0].Gamers as List<IGamer>;
-			}
-
-		private void ProcessMessageHandler(IPackage msg)
+        private void ProcessMessageHandler(IPackage msg)
 			{
 				switch (msg.MesseggeType)
 				{
@@ -55,7 +46,7 @@ namespace Tanki
 
 		public override void OnNewAddresssee_Handler(object sender, NewAddressseeData evntData)
 			{
-				var gamer = WatingGamers.Find((s) => s.RemoteEndPoint == evntData.newAddresssee);
+				var gamer =  WatingGamers.Find((s) => s.RemoteEndPoint == evntData.newAddresssee);
 				if (gamer != null)
 				{
 					Sender.SendMessage(new Package()
