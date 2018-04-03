@@ -17,6 +17,7 @@ namespace Tanki
 		{
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
+			objectCount = (width * height) / (width + height);
 		}
 		public int Width { get { return this.width;	} set {	this.width = value;	}}
 		public int Height { get { return this.height; } set { this.height = value; } }
@@ -27,7 +28,7 @@ namespace Tanki
         private List<ITank> tanks = new List<ITank>();
         private List<IBlock> blocks = new List<IBlock>();
         private List<IBullet> bullets = new List<IBullet>();
-        private int objectCount = 10;
+		private int objectCount;
         private ISender sender;
 
 
@@ -39,6 +40,10 @@ namespace Tanki
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
 			processList = new List<IPackage>();
+			foreach(var x in bullets)
+			{
+				this.Move(x);
+			}
 			foreach(var t in list)
 			{
                 //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
@@ -95,8 +100,9 @@ namespace Tanki
 
 				bullets.Add(bullet);
 			}
+			entity.Command = EntityAction.None;
 
-        }
+		}
 
         private void GenerateMap()
 		{
@@ -112,18 +118,7 @@ namespace Tanki
 				obj.Is_Alive = true;
 				obj.Can_Shoot = true;
 				obj.Direction = Direction.Up;
-				while(obj.Position!=Point.Empty)
-				{
-					Random colInd = new Random(DateTime.Now.Millisecond - 15);
-					Random rowInd = new Random(DateTime.Now.Millisecond + 20);
-					int columnIndex = colInd.Next(0, width);
-					int rowIndex = rowInd.Next(0, height);
-					Point p = new Point(rowIndex, columnIndex);
-					if(tanks.FirstOrDefault(tank=>tank.Position==p)==null)
-					{
-						obj.Position = p;
-					}	
-				}
+				this.Reload(obj);
 				tanks.Add(obj);
 				objects.Add(obj);
 			}
