@@ -187,4 +187,16 @@ namespace Common
                 
         }
     }
+
+
+    [Serializable]
+    public class RoomStat : IRoomStat
+    {
+        public RoomStat() { }
+        public string Id { get; set ; }
+        public int Players_count { get; set; }
+        public string Creator_Id { get; set; }
+    }
+
+
 }

@@ -28,7 +28,7 @@ namespace Tanki
         void OnNewConnectionHandler(Object Sender, NewConnectionData evntData);
     }
 
-    public interface IServer:IListeningClient
+    public interface IServer:IListeningClient, IRoomOwner, IManagerRoomOwner
     {
         IListener ServerListner { get; }
         IEnumerable<IRoom> Rooms { get; }

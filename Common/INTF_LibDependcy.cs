@@ -51,12 +51,34 @@ namespace Tanki
     /// </summary>
     public interface IRoom: INetProcessor, IAddressseeHolder<IGamer,String>
     {
+        IRoomOwner Owner { get; }
         String RoomId { get; set; }
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
+        IRoomStat getRoomStat();
 
         void RUN();
 
+    }
+
+
+    public interface IManagerRoom: IRoom
+    {
+        IRoomStat getRoomStat(String forRoomID);
+        IEnumerable<IRoomStat> getRoomsStat();
+        void MooveGamerToRoom(IGamer gamer, String TargetRoomId);
+    }
+
+
+    public interface IRoomOwner
+    {
+        IRoomStat getRoomStat(String RoomID);
+    }
+
+    public interface IManagerRoomOwner: IRoomOwner
+    {
+        IEnumerable<IRoomStat> getRoomsStat();
+        void MooveGamerToRoom(IGamer gamer, String TargetRoomId);
     }
 
 
@@ -68,7 +90,7 @@ namespace Tanki
 
     public interface IRoomFabric
     {
-        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType);
+        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner);
     }
 
 

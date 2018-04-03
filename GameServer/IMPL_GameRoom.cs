@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,16 +12,17 @@ namespace Tanki
     public abstract class RoomAbs : NetProcessorAbs, IRoom
     {
         private RoomAbs() { }
-        public RoomAbs(String id, IPEndPoint localEP):base()
+        public RoomAbs(String id, IPEndPoint localEP, IRoomOwner owner) :base()
         {
             RoomId = id;
+            Owner = owner;
             //Reciever = new ReceiverUdpClientBased(localEP);
             //Sender = new SenderUdpClientBased(Reciever);
         }
 
         private List<IGamer> _gamers = new List<IGamer>();
 
-
+        public IRoomOwner Owner { get; protected set; }
         public string RoomId { get; set; }        
 
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
@@ -41,6 +43,12 @@ namespace Tanki
         }
 
         public IEnumerable<IGamer> GetAddresssees() {return _gamers;}
+
+        public IRoomStat getRoomStat()
+        {
+            return new RoomStat() { Id = this.RoomId, Players_count = Gamers.Count(), Creator_Id = "will be later" };
+        }
+
         public IAddresssee this[string id] {
             get { var v = from g in _gamers where g.id == id select g;
                 if (v.Count() > 1) throw new Exception("not unique") ;
@@ -51,9 +59,9 @@ namespace Tanki
 
 
 
-    public class ManagingRoom : RoomAbs
+    public class ManagingRoom : RoomAbs, IManagerRoom
     {
-        public ManagingRoom(string id, IPEndPoint localEP) : base(id, localEP)
+        public ManagingRoom(string id, IPEndPoint localEP, IRoomOwner owner) : base(id, localEP, owner)
         {
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
@@ -67,11 +75,29 @@ namespace Tanki
             base.RegisterDependcy(_MessageQueue);
 
         }
+
+        public IEnumerable<IRoomStat> getRoomsStat()
+        {
+            IManagerRoomOwner mO = Owner as IManagerRoomOwner;
+            return mO.getRoomsStat();
+        }
+
+        public IRoomStat getRoomStat(String forRoomID)
+        {
+            IManagerRoomOwner mO = Owner as IManagerRoomOwner;
+            return mO.getRoomStat(forRoomID);
+        }
+
+        public void MooveGamerToRoom(IGamer gamer, string TargetRoomId)
+        {
+            IManagerRoomOwner mO = Owner as IManagerRoomOwner;
+            mO.MooveGamerToRoom(gamer,TargetRoomId);
+        }
     }
 
     public class GameRoom : RoomAbs
     {
-        public GameRoom(string id, IPEndPoint localEP) : base(id, localEP)
+        public GameRoom(string id, IPEndPoint localEP, IRoomOwner owner) : base(id, localEP, owner)
         {
             Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(Reciever);
@@ -90,17 +116,17 @@ namespace Tanki
 
     public class RoomFabric : IRoomFabric
     {
-        public IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType)
+        public IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner)
         {
             IRoom res = null;
 
             switch (roomType)
             {
                 case RoomType.rtMngRoom:
-                    res = new ManagingRoom(roomId, localEP);
+                    res = new ManagingRoom(roomId, localEP, owner);
                     break;
                 case RoomType.rtGameRoom:
-                    res = new GameRoom(roomId, localEP);
+                    res = new GameRoom(roomId, localEP, owner);
                     break;
             }
             return res;
