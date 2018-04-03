@@ -17,11 +17,11 @@ namespace Tanki
 
     public interface IGamer: IAddresssee
     {
-        String id { get;}
+        String Name { get;}
         Guid Passport { get; }
         IPEndPoint RemoteEndPoint { get; }
         //Socket Socket { get; set; }
-        void SetId(String newID, Guid confirmpassport);
+        void SetId(String Name, Guid confirmpassport);
     }
 
 
@@ -44,6 +44,7 @@ namespace Tanki
     }
 
 
+
     /// <summary>
     /// Нужна для:
     /// -IServer (библиотека GameServer)
@@ -53,14 +54,13 @@ namespace Tanki
     {
         IRoomOwner Owner { get; }
         String RoomId { get; set; }
+        IGameSetings GameSetings { get; set; }
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
         IRoomStat getRoomStat();
 
-        void RUN();
-
-    }
-
+		void RUN();
+	}
 
     public interface IManagerRoom
     {

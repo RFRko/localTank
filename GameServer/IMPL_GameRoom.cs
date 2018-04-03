@@ -24,10 +24,11 @@ namespace Tanki
 
         public IRoomOwner Owner { get; protected set; }
         public string RoomId { get; set; }        
-
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
 
-        public virtual void AddGamer(IGamer newGamer)
+		public IGameSetings GameSetings { get; set; }
+
+		public virtual void AddGamer(IGamer newGamer)
         {
             _gamers.Add(newGamer);
         }
@@ -50,7 +51,7 @@ namespace Tanki
         }
 
         public IAddresssee this[string id] {
-            get { var v = from g in _gamers where g.id == id select g;
+            get { var v = from g in _gamers where g.Name == id select g;
                 if (v.Count() > 1) throw new Exception("not unique") ;
                 return v.First();
             } }

@@ -44,13 +44,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adds_Common.cs" />
+    <Compile Include="IMPL_ConectionData.cs" />
     <Compile Include="IMPL_Common.cs" />
     <Compile Include="IMPL_EngineAbs.cs" />
     <Compile Include="IMPL_EventsData.cs" />
+    <Compile Include="IMPL_GameSetings.cs" />
     <Compile Include="IMPL_GuidGen.cs" />
     <Compile Include="IMPL_NetProcessorAbs.cs" />
     <Compile Include="IMPL_Package.cs" />
     <Compile Include="IMPL_Receiver.cs" />
+    <Compile Include="IMPL_RoomStat.cs" />
     <Compile Include="IMPL_Sender.cs" />
     <Compile Include="IMPL_Serializator.cs" />
     <Compile Include="IMPL__MessageQueue.cs" />
