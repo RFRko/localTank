@@ -112,7 +112,7 @@ namespace Tanki
 				obj.Is_Alive = true;
 				obj.Can_Shoot = true;
 				obj.Direction = Direction.Up;
-				while(obj.Position!=null)
+				while(obj.Position!=Point.Empty)
 				{
 					Random colInd = new Random(DateTime.Now.Millisecond - 15);
 					Random rowInd = new Random(DateTime.Now.Millisecond + 20);
@@ -235,7 +235,19 @@ namespace Tanki
 
 		private void Reload(IEntity entity) //ВЕРНУЛ ТВОЮ РЕАЛИЗАЦИЮ ПОСЛЕ РЕШЕНИЯ КОНФЛИКТОВ
         {
-			
+			entity.Position = Point.Empty;
+			while (entity.Position != Point.Empty)
+			{
+				Random colInd = new Random(DateTime.Now.Millisecond - 15);
+				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
+				int columnIndex = colInd.Next(0, width);
+				int rowIndex = rowInd.Next(0, height);
+				Point p = new Point(rowIndex, columnIndex);
+				if (tanks.FirstOrDefault(tank => tank.Position == p) == null)
+				{
+					entity.Position = p;
+				}
+			}
 		}
 
 		public void Send()
