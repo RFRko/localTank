@@ -7,36 +7,71 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
+	/// <summary>
+	/// Реализация игрового движка
+	/// </summary>
     public class ServerGameEngine : EngineAbs
     {
+		/// <summary>
+		/// Делегат принимающий сообщение от MessageQueue
+		/// </summary>
         public override ProcessMessageHandler ProcessMessage { get; protected set; }
-        public override ProcessMessagesHandler ProcessMessages { get; protected set; }
-
+		/// <summary>
+		/// Делегат принимающий сообщения от MessageQueue
+		/// </summary>
+		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
+		/// <summary>
+		/// Конструктор игрового движка
+		/// </summary>
         public ServerGameEngine() : base() { }
-        public ServerGameEngine(IRoom room):base(room)  //room будет значение Owner базового абстрактного класса
+		/// <summary>
+		/// Конструктор игрового движка
+		/// </summary>
+		/// <param name="room">Значение Owner базового абстрактного класса</param>
+		public ServerGameEngine(IRoom room):base(room) 
 		{
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
-			objectCount = (width * height) / (width + height);
 		}
+		/// <summary>
+		/// Ширина игрового поля
+		/// </summary>
 		public int Width { get { return this.width;	} set {	this.width = value;	}}
+		/// <summary>
+		/// Высота игрового поля
+		/// </summary>
 		public int Height { get { return this.height; } set { this.height = value; } }
-        private IList<IPackage> processList = new List<IPackage>();
+		/// <summary>
+		/// Список всех сущностей на игровом поле
+		/// </summary>
         private List<IEntity> objects;
         private int width;
         private int height;
+		/// <summary>
+		/// Список всех танков на игровом поле
+		/// </summary>
         private List<ITank> tanks = new List<ITank>();
+		/// <summary>
+		/// Список всех блоков на игровом поле
+		/// </summary>
         private List<IBlock> blocks = new List<IBlock>();
+		/// <summary>
+		/// Список всех пуль на игровом поле
+		/// </summary>
         private List<IBullet> bullets = new List<IBullet>();
-		private int objectCount;
-        private ISender sender;
 
-
-
-        private bool CheckWin()  //поменял IPackage на void
+		/// <summary>
+		/// Метод реализирующий проверку, выполнено ли условие победы в игре
+		/// </summary>
+		/// <returns>Возвращает закончена ли игра</returns>
+        private bool CheckWin()
 		{
 			return true;
 		}
+		/// <summary>
+		/// Метод реализирующий проверку списка сущностей на наличие убитых
+		/// </summary>
+		/// <param name="package"> Список сущностей, который подлежит проверке на "мертвых"</param>
 		private void CheckAlive(IEnumerable<IPackage> package)
 		{
 			Parallel.ForEach(package, item => {
@@ -101,9 +136,12 @@ namespace Tanki
 			//	}
 			//}
 		}
+		/// <summary>
+		/// Реализация делегата ProcessMessagesHandler
+		/// </summary>
+		/// <param name="list">Список пакетов переданый движку на обработку</param>
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
-			processList = new List<IPackage>();
 			this.CheckAlive(list);
 			foreach(var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
 			{
@@ -122,24 +160,35 @@ namespace Tanki
                 }
             }
         }
+		/// <summary>
+		/// Метод реализирующий обработку "убитой" сущности
+		/// </summary>
+		/// <param name="entity">"Убитая" сущность</param>
 		private void Death(IEntity entity) 
         {
-			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data==entity) as IEntity;
+			var tmp = objects.FirstOrDefault(t => t==entity);
 			if (tmp is ITank)
 			{
 				var tank = tmp as ITank;
 				if (tank.Lives > 0)
 				{
 					tank.Lives--;
-					tank.Is_Alive = false;
-				}	
+				}
 			}
-            tmp.Is_Alive = false;
+			else if(tmp is IBullet)
+			{
+				var bullet = tmp as IBullet;
+				tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
+			}
+			tmp.Is_Alive = false;
         }
-
+		/// <summary>
+		/// Метод реализирующий выстрел
+		/// </summary>
+		/// <param name="entity">Сущность осуществившая выстрел</param>
 		private void Fire(IEntity entity)
 		{
-			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data == entity) as ITank;
+			var tmp = objects.FirstOrDefault(t => t == entity) as ITank;
 			if (tmp.Can_Shoot)
 			{
 				var bullet = new object() as IBullet;
@@ -155,11 +204,14 @@ namespace Tanki
 			}
 			entity.Command = EntityAction.None;
 		}
-
+		/// <summary>
+		/// Генерация сущностей на игровом поле
+		/// </summary>
         private void GenerateMap()
 		{
             var room = Owner as IRoom;
 			int tankCount = room.Gamers.Count();
+			int objectCount = (this.height * this.width) / (this.height + this.width);
             foreach (var t in room.Gamers)
             {
 				var obj = new object() as ITank;
@@ -174,28 +226,23 @@ namespace Tanki
 			}
 			while(objectCount>0)
 			{
-				Random colInd = new Random(DateTime.Now.Millisecond - 15);
-				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
-				int columnIndex = colInd.Next(0, width);
-				int rowIndex = rowInd.Next(0, height);
-				Point p = new Point(rowIndex, columnIndex);
 				var obj = new object() as IBlock;
-				if (objects.FirstOrDefault(tmp=>tmp.Position.IntersectsWith(new Rectangle(p,new Size(obj.Size,obj.Size)))==true)==null)
-				{
-					obj.Position = new Rectangle(p,new Size(obj.Size,obj.Size));
-					obj.Can_Be_Destroyed = true;
-					obj.Can_Shoot = false;
-					obj.Is_Alive = true;
-					blocks.Add(obj);
-					objects.Add(obj);
-				}
+				this.Reload(obj);
+				obj.Can_Be_Destroyed = true;
+				obj.Can_Shoot = false;
+				obj.Is_Alive = true;
+				blocks.Add(obj);
+				objects.Add(obj);
+				objectCount--;
 			}
-
 		}
-
+		/// <summary>
+		/// Метод реализирующий движение сущности
+		/// </summary>
+		/// <param name="entity">Сущность осуществляющая движение</param>
 		private void Move(IEntity entity)
 		{
-			var tmp = processList.FirstOrDefault(t => (IEntity)t.Data == entity) as IEntity;
+			var tmp = objects.FirstOrDefault(t => t == entity);
 			if (tmp.Is_Alive)
 			{
 				if (tmp is ITank)
@@ -280,16 +327,23 @@ namespace Tanki
 				}
 			}
         }
+		/// <summary>
+		/// Реализация попадания пули в другую сущность
+		/// </summary>
+		/// <param name="bullet">Пуля попавшая в "цель"</param>
 		private void HitTarget(IBullet bullet)
 		{
 			var tmp = objects.FirstOrDefault(tank => tank.Position.IntersectsWith(bullet.Position));
 			if(tmp!=null)
 			{
-				tmp.Is_Alive = false;
-				bullet.Is_Alive = false;
-				tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
+				this.Death(tmp);
+				this.Death(bullet);
 			}
 		}
+		/// <summary>
+		/// Гененация расположения для сущности
+		/// </summary>
+		/// <param name="entity">Сущность требующая разположения на игровом поле</param>
 		private void Reload(IEntity entity)
         {
 			entity.Position = Rectangle.Empty;
@@ -306,6 +360,9 @@ namespace Tanki
 				}
 			}
 		}
+		/// <summary>
+		/// Метод реализирующий передачу данных на сендер
+		/// </summary>
 		public void Send()
 		{       
             var t = new object() as IMap;

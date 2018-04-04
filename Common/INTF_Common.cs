@@ -192,7 +192,7 @@ namespace Tanki
     /// <summary> Общий Интерфейс для движков (серверного и клиентского
     /// должен передаватся как dependency MessageQueue (поэтому определяется сдесь для исключения циклических ссылок библиотек)
     /// реализации будут в разных библиотеках, т.к. это разные реализации для разных приложений
-
+	///</summary>
     public delegate void ProcessMessageHandler(IPackage message);
     public delegate void ProcessMessagesHandler(IEnumerable<IPackage> messages);
 
