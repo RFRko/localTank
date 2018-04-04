@@ -43,13 +43,14 @@ namespace Tanki
 	/// </summary>
 	public interface IEntity
 	{
-		Point Position { get; set; }
+		Rectangle Position { get; set; }
 		Direction Direction { get; set; }
         EntityAction Command { get; set; }
         bool Can_Shoot { get; set; }
 		bool Is_Alive { get; set; }
 		bool Can_Be_Destroyed { get; set; }
         int Speed { get; set; }
+		int Size { get; set; }
 	}
 
 
@@ -63,7 +64,7 @@ namespace Tanki
 	/// </summary>
 	public interface ITank : IEntity
 	{
-		string Tank_ID { get; set; }
+		Guid Tank_ID { get; set; }
 		int Lives { get; set; }
 		Team Team { get; set; }
 	}
@@ -78,7 +79,7 @@ namespace Tanki
 	/// </summary>
 	public interface IBullet : IEntity
 	{
-		string Parent_Id { get; set; }
+		Guid Parent_Id { get; set; }
 	}
 
 
