@@ -27,6 +27,7 @@ namespace Tanki
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
 
 		public IGameSetings GameSetings { get; set; }
+		public GameStatus Status { get; set; }
 
 		public virtual void AddGamer(IGamer newGamer)
         {
@@ -56,7 +57,7 @@ namespace Tanki
                 return v.First();
             } }
         public event EventHandler<NewAddressseeData> OnNewAddresssee;
-    }
+	}
 
 
 

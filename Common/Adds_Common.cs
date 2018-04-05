@@ -65,14 +65,28 @@
 		/// <summary> Отправка серверу сообщения о создании новой комнаты </summary>
 		CreateRoom,
 		/// <summary> Отправка клиентам сообщения о начале игры </summary>
-		StatGame,
+		StartGame,
 		/// <summary> Отправка клиентам сообщения о конце игры </summary>
 		EndGame,
 		/// <summary> Отправка серерверу сообщения об убийстве</summary>
 		Kill,
 		/// <summary> Настройки </summary>
 		Settings,
-		RoomEndpoint, // Ipendpoint созданной/подключенной комнаты
-		Entity //объект отправляемый клиентом на сервер
+		/// <summary> IPEndPoint созданной/подключенной комнаты</summary>
+		RoomEndpoint,
+		/// <summary> Oбъект отправляемый клиентом на сервер</summary>
+		Entity
+	}
+	/// <summary>
+	/// Состояние игры
+	/// </summary>
+	public enum GameStatus
+	{
+		/// <summary> Ожидание начала игры</summary>
+		WaitForStart,
+		/// <summary> Игра запущена</summary>
+		Start,
+		/// <summary> Игра завершена</summary>
+		EndGame
 	}
 }
