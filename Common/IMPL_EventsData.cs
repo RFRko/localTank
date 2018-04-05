@@ -23,6 +23,14 @@ namespace Tanki
     }
 
 
-    
+    public class GameStateChangeData : EventArgs
+    {
+        public IEntity newGameState { get; set; }
+    }
 
+    public class EnforceDrawingData : EventArgs
+    {
+        public IEntity mustDrawTheEntity { get; set; }
+    }
+    
 }

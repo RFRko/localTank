@@ -37,9 +37,9 @@ namespace Tanki
                                              //Адресат это объект с IPEndPoint комнаты (может быть как минимум два аддерсата - управляющая комната, текущая игровая комната
         void RUN(IPEndPoint ServerEndPoint); // запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
         void RUN_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
-        IClientGameState ClientGameState { get;set }
+        IEntity ClientGameState { get; set; }
         void OnClientGameStateChangedHandler(Object Sender, GameStateChangeData evntData);
-
+        event EventHandler<EnforceDrawingData> EnforceDrawing;
     }
 
 }

@@ -51,6 +51,7 @@ namespace Tanki
 			if (gamer != null)
 			{
 				Owner.Sender.SendMessage(new Package()
+
 				{
 					Data = gamer.Passport,
 					MesseggeType = MesseggeType.Passport
