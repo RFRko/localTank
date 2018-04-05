@@ -34,6 +34,7 @@ namespace Tanki
             this.ProcessMessage = null;
 			this.Width = room.GameSetings.MapSize;
 			this.Height= room.GameSetings.MapSize;
+			room.OnNewGameStatus += OnNewGameStatus_Handler;
 			this.status = GameStatus.WaitForStart;
 			room.OnNewAddresssee += OnNewAddresssee_Handler;
 			this.GenerateMap();
