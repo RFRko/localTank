@@ -1,41 +1,77 @@
 ﻿namespace Tanki
 {
-	/// <summary> Варианты направления движения (Left/Right/Up/Down)</summary>
-	public enum Direction { Left, Right, Up, Down }
-
-
-
-	/// <summary> Названия команд (Red/Green)</summary>
-	public enum Team { Red, Green }
-
-    public enum EntityAction
-    {
-		None,
-        Move,
-        Fire
-    }
-
-	public enum GameType
-	{
-		LastAlive,
-		Time,
-		FlagDefence
+	/// <summary> Варианты направления движения</summary>
+	public enum Direction {
+		/// <summary> Направление движения влево</summary>
+		Left,
+		/// <summary> Направление движения вправо</summary>
+		Right,
+		/// <summary> Направление движения вверх </summary>
+		Up,
+		/// <summary> Направление движения вниз </summary>
+		Down
 	}
 
+
+
+	/// <summary> Названия команд </summary>
+	public enum Team {
+		/// <summary> Красная команда </summary>
+		Red,
+		/// <summary> Зеленая команда </summary>
+		Green
+	}
+	/// <summary>
+	/// Тип действия, выполняемое сущностью
+	/// </summary>
+    public enum EntityAction
+    {
+		/// <summary>Действие отсутствует </summary>
+		None,
+		/// <summary>Сущность передвигается </summary>
+		Move,
+		/// <summary>Сущность стреляет </summary>
+		Fire
+	}
+	/// <summary> Тип игры </summary>
+	public enum GameType
+	{
+		/// <summary> Игра до последнего оставшегося в живых игрока </summary>
+		LastAlive,
+		/// <summary> Игра на время </summary>
+		Time,
+		/// <summary> Защита флага </summary>
+		FlagDefence,
+		/// <summary>Игра до определенного количества убийств </summary>
+		FragCount
+	}
+	/// <summary> Тип системного сообщения для отправки </summary>
 	public enum MesseggeType
 	{
-		Map, //обмен обЪектами
-		GetRoomList, //запрос списка комнат
-		RoomList, //отправка клиенту списка комнат
-		Passport, //отправка клиенту сгенерированый id
-		RoomID, //отравка серверу id выбранной комнаты
-		Connect, //подключение к серверу
-		RoomError, //отправка клиенту сообщение об ошибке
-		CreateRoom, //отправка сервереру сообщение о создании новой комнаты
-		StatGame, //оправка клиентам сообщения о начале игры
-		EndGame, //оправка клиентам сообщения о конце игры
-		Kill, //отправка серерверу сообщения об убействе
-		Setings, //настройки
+		/// <summary> Обмен обЪектами</summary>
+		Map,
+		/// <summary> Запрос списка комнат </summary>
+		GetRoomList,
+		/// <summary> Отправка клиенту списка комнат </summary>
+		RoomList,
+		/// <summary> Отправка клиенту сгенерированого id </summary>
+		Passport,
+		/// <summary> Отравка серверу id выбранной комнаты </summary>
+		RoomID,
+		/// <summary> Подключение к серверу </summary>
+		Connect,
+		/// <summary> Отправка клиенту сообщения об ошибке </summary>
+		RoomError,
+		/// <summary> Отправка серверу сообщения о создании новой комнаты </summary>
+		CreateRoom,
+		/// <summary> Отправка клиентам сообщения о начале игры </summary>
+		StatGame,
+		/// <summary> Отправка клиентам сообщения о конце игры </summary>
+		EndGame,
+		/// <summary> Отправка серерверу сообщения об убийстве</summary>
+		Kill,
+		/// <summary> Настройки </summary>
+		Settings,
 		RoomEndpoint, // Ipendpoint созданной/подключенной комнаты
 		Entity //объект отправляемый клиентом на сервер
 	}
