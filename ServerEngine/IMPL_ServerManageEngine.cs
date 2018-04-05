@@ -83,7 +83,6 @@ namespace Tanki
 			gamer.SetId(name, client_passport);
 			var room_passport = cd.Pasport;
 			var room = Owner as IRoom; // нужен метод:  IRoom Room_by_Guid(Guid pasport); поиск комнаты по guid
-
 			if (room != null)
 			{
 				if (room.Gamers.Count() < room.GameSetings.MaxPlayersCount)
