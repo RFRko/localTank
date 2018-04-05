@@ -447,13 +447,23 @@ namespace Tanki
 			tanks.Add(obj);
 			objects.Add(obj);
 		}
-
-		//или сендер здесь и есть IGamer?
+		//Андрей, если я правильно понял - то ожидалась такая реализация?
+		/// <summary>
+		/// Обработка события добавления нового игрока
+		/// </summary>
+		/// <param name="Sender">Объект вызвавший добавление нового игрока</param>
+		/// <param name="evntData">Данные о подключении</param>
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {
-			var tmp = Sender as IGamer;
-			this.NewGamer(tmp);
+			var room = Owner as IRoom;
+			var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
+			this.NewGamer(gamer);
         }
+		/// <summary>
+		/// Обработка события изменения игрового статуса
+		/// </summary>
+		/// <param name="Sender">Объект изменивший игровой статус</param>
+		/// <param name="statusData"> Данные о новом игровом статуса</param>
 		public void OnNewGameStatus_Handler(object Sender, GameStatusChangedData statusData)
 		{
 			this.status = statusData.newStatus;
