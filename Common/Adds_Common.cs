@@ -71,6 +71,8 @@
 		/// <summary> Отправка серерверу сообщения об убийстве</summary>
 		Kill,
 		/// <summary> Настройки </summary>
-		Settings
+		Settings,
+		RoomEndpoint, // Ipendpoint созданной/подключенной комнаты
+		Entity //объект отправляемый клиентом на сервер
 	}
 }
