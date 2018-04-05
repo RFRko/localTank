@@ -20,8 +20,8 @@ namespace Tanki
         String Name { get;}
         Guid Passport { get; }
         IPEndPoint RemoteEndPoint { get; }
-        //Socket Socket { get; set; }
-        void SetId(String Name, Guid confirmpassport);
+		//Socket Socket { get; set; }
+		void SetId(String Name, Guid confirmpassport);
     }
 
 
