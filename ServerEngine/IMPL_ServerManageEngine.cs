@@ -7,135 +7,121 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-	
-  
 	public class ServerManageEngine : EngineAbs
 	{
 		public override ProcessMessageHandler ProcessMessage { get; protected set; }
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
-		private ISender Sender { get; set; }
-		private IServer Server { get; set; }
-		private List<IRoom> ListRooms;
-		private List<IGamer> WatingGamers;
-		
+		private IManagerRoomOwner ManagerRoom;
+
 		public ServerManageEngine() : base() { }
-		public ServerManageEngine(IServer server, ISender sender, IRoom inRoom) : base(inRoom)
-			{
-				ProcessMessage += ProcessMessageHandler;
-				ProcessMessages = null;
+		public ServerManageEngine(IRoom inRoom) : base(inRoom)
+		{
+			ProcessMessage += ProcessMessageHandler;
+			ProcessMessages = null;
 
-				Server = server;
-				Sender = sender;
-
-				ListRooms = Server._rooms as List<IRoom>;
-				WatingGamers = ListRooms[0].Gamers as List<IGamer>;
-			}
+			ManagerRoom = Owner as IManagerRoomOwner;
+		}
 
 		private void ProcessMessageHandler(IPackage msg)
+		{
+			switch (msg.MesseggeType)
 			{
-				switch (msg.MesseggeType)
-				{
-					case MesseggeType.GetRoomList:
-						{
-							RoomList(msg);
-							break;
-						}
-					case MesseggeType.RoomID:
-						{
-							RoomConnect(msg);
-							break;
-						}
-					case MesseggeType.CreateRoom:
-						{
-							CreatRoom(msg);
-							break;
-						}
-					default: return;
-				}
+				case MesseggeType.GetRoomList:
+					{
+						RoomList(msg);
+						break;
+					}
+				case MesseggeType.RoomID:
+					{
+						RoomConnect(msg);
+						break;
+					}
+				case MesseggeType.CreateRoom:
+					{
+						CreatRoom(msg);
+						break;
+					}
+				default: return;
 			}
+		}
 
 		public override void OnNewAddresssee_Handler(object sender, NewAddressseeData evntData)
+		{
+			var gamer = evntData as IGamer;
+			if (gamer != null)
 			{
-				var gamer = WatingGamers.Find((s) => s.RemoteEndPoint == evntData.newAddresssee);
-				if (gamer != null)
+				Owner.Sender.SendMessage(new Package()
 				{
-					Sender.SendMessage(new Package()
-					{
-						Data = gamer.Passport,
-						MesseggeType = MesseggeType.Passport
-					}, gamer.RemoteEndPoint);
+					Data = gamer.Passport,
+					MesseggeType = MesseggeType.Passport
+				}, gamer.RemoteEndPoint);
 
-					SendRoomList(gamer.RemoteEndPoint);
-				}
+				SendRoomList(gamer.RemoteEndPoint);
 			}
-		private void SendRoomList(IAddresssee addresssee)
+			else throw new Exception("Empty new gamer");
+		}
+		private void SendRoomList(IPEndPoint addresssee)
+		{
+			Owner.Sender.SendMessage(new Package()
 			{
-				var roomlist = new List<IRoomStat>();
-
-				foreach (var i in Server.Rooms)
-					roomlist.Add(i.RoomStat);
-
-				Sender.SendMessage(new Package()
-				{
-					Data = roomlist,
-					MesseggeType = MesseggeType.RoomList
-				}, addresssee);
-			}
+				Data = ManagerRoom.getRoomsStat(),
+				MesseggeType = MesseggeType.RoomList
+			}, addresssee);
+		}
 		private void RoomList(IPackage package)
-			{
-				var client_id = package.Passport;
-				var ipendpoint =  WatingGamers.Find((s) => s.Passport == client_id).RemoteEndPoint;
-				SendRoomList((IAddresssee)ipendpoint);
-			}
+		{
+			var client_id = package.Passport;
+			IGamer gamer = null; // нужен метод -  IGamer Gamer_by_Guid(Guid pasport) поиск игрока по guid в списке ожидающих
+			SendRoomList(gamer.RemoteEndPoint);
+		}
 		private void RoomConnect(IPackage package)
-			{
-				var cd = (IConectionData)package.Data;
-				var name = cd.PlayerName;
-				var client_passport = package.Passport;
-				var gamer = WatingGamers.Find((s) => s.Passport == client_passport);
-				var room = ListRooms.Find((s) => s.RoomStat.Pasport == cd.Pasport);
+		{
+			var cd = (IConectionData)package.Data;
+			var name = cd.PlayerName;
+			var client_passport = package.Passport;
+			IGamer gamer = null; // нужен метод:  IGamer Gamer_by_Guid(Guid pasport); поиск игрока по guid в списке ожидающих
+			gamer.SetId(name, client_passport);
+			var room_passport = cd.Pasport;
+			var room = Owner as IRoom; // нужен метод:  IRoom Room_by_Guid(Guid pasport); поиск комнаты по guid
 
-				if (room != null)
+			if (room != null)
+			{
+				if (room.Gamers.Count() < room.GameSetings.MaxPlayersCount)
 				{
-					if (room.RoomStat.Players_count < room.GameSetings.MaxPlayersCount)
+					IPEndPoint room_ipendpoint = ManagerRoom.MooveGamerToRoom(gamer, cd.Pasport);
+
+					Owner.Sender.SendMessage(new Package()
 					{
-						room.AddGamer(new Gamer(gamer.RemoteEndPoint)
-						{
-							Name = name
-						});
-						WatingGamers.Remove(gamer);
-					}
-					else
-					{
-						Sender.SendMessage(new Package()
-						{
-							Data = "Room is full",
-							MesseggeType = MesseggeType.RoomError
-						}, gamer.RemoteEndPoint);
-					}
+						Data = room_ipendpoint,
+						MesseggeType = MesseggeType.RoomEndpoint
+					}, gamer.RemoteEndPoint);
 				}
 				else
 				{
-					Sender.SendMessage(new Package()
+					Owner.Sender.SendMessage(new Package()
 					{
-						Data = "Room is not exist",
+						Data = "Room is full",
 						MesseggeType = MesseggeType.RoomError
 					}, gamer.RemoteEndPoint);
 				}
 			}
-		private void CreatRoom(IPackage package)
+			else
 			{
-				var newGame = (IGameSetings)package.Data;
-
-				var client_passport = package.Passport;
-
-				var gamer = WatingGamers.Find((s) => s.Passport == client_passport);
-
-				var new_room = new RoomAbs();
-
-				new_room.AddGamer(gamer);
-
-				WatingGamers.Remove(gamer);
+				Owner.Sender.SendMessage(new Package()
+				{
+					Data = "Room is not exist",
+					MesseggeType = MesseggeType.RoomError
+				}, gamer.RemoteEndPoint);
 			}
+		}
+		private void CreatRoom(IPackage package)
+		{
+			var newGame = (IGameSetings)package.Data;
+			var client_passport = package.Passport;
+			// получить Gamer по id из списка ожидающих
+			// создать комнату
+			// добавить в нее игрока
+			// отправить ipendpoint комнаты игроку
+		}
 	}
 }
