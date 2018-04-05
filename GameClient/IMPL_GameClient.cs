@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,12 +12,18 @@ namespace Tanki
     public class GameClient:NetProcessorAbs, IGameClient
     {
         private Dictionary<string, IAddresssee> adresee_list;       // приватный Dictionary<String, IAddresssee>  для хранения перечня адрессатов
-        private 
+        private TcpClient tcp;
+        private IEntity entity;
+        private Guid passport;
+
+
 
         //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
         public GameClient(IPEndPoint localEP, IRoomOwner owner) : base(null, localEP, owner)
         {
             this.adresee_list = new Dictionary<string, IAddresssee>();
+            tcp = new TcpClient();
+
 
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
@@ -81,7 +88,9 @@ namespace Tanki
 
         public void RUN(IPEndPoint ServerEndPoint)
         {
+            tcp = new TcpClient(ServerEndPoint);
             base.RUN();
+            tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
         }
 
         public void RUN_GAME()
@@ -89,7 +98,17 @@ namespace Tanki
             throw new NotImplementedException();
         }
 
-
+        public Guid Passport
+        {
+            get
+            {
+                return this.passport;
+            }
+            set
+            {
+                this.passport = value;
+            }
+        }
 
 
 

@@ -45,6 +45,7 @@ namespace Tanki
         IEntity ClientGameState { get; set; }   // польностью вернуть объект
         void OnClientGameStateChangedHandler(Object Sender, GameStateChangeData evntData); // просто реализовать метод на котрый что-то подпишеи
         event EventHandler<EnforceDrawingData> EnforceDrawing;  // дернет движок, просто делегат
+        Guid Passport { get; set; }
     }
 
 }
