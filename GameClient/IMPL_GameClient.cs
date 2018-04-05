@@ -11,15 +11,16 @@ namespace Tanki
     public class GameClient:NetProcessorAbs, IGameClient
     {
         private Dictionary<string, IAddresssee> adresee_list;       // приватный Dictionary<String, IAddresssee>  для хранения перечня адрессатов
+        private 
 
-
-        //взять этот за основу
-        public GameClient(IPEndPoint localEP, IRoomOwner owner) : base("", localEP, owner)
+        //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
+        public GameClient(IPEndPoint localEP, IRoomOwner owner) : base(null, localEP, owner)
         {
             this.adresee_list = new Dictionary<string, IAddresssee>();
 
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
+            
 
             Sender = new SenderUdpClientBased(Reciever);
             
@@ -52,6 +53,10 @@ namespace Tanki
             }
         }
 
+
+
+
+
         public IEntity ClientGameState
         {
             get
@@ -76,7 +81,7 @@ namespace Tanki
 
         public void RUN(IPEndPoint ServerEndPoint)
         {
-            throw new NotImplementedException();
+            base.RUN();
         }
 
         public void RUN_GAME()
@@ -88,14 +93,7 @@ namespace Tanki
 
 
 
-
-
-
-
-
-        // gonevo
-
-        // должен быть приватный TCPClien  для коннекта к хосту
+        // должен быть приватный TCPClient  для коннекта к хосту
 
 
         //должен быть приватный Timer - на callBack которого будет вызываться метод переодической отправки клинтского состояния игры на сервер.
