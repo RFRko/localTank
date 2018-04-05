@@ -41,7 +41,9 @@
 		/// <summary> Игра на время </summary>
 		Time,
 		/// <summary> Защита флага </summary>
-		FlagDefence
+		FlagDefence,
+		/// <summary>Игра до определенного количества убийств </summary>
+		FragCount
 	}
 	/// <summary> Тип системного сообщения для отправки </summary>
 	public enum MesseggeType

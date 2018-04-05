@@ -32,6 +32,9 @@ namespace Tanki
 		{
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
+			this.Width = room.GameSetings.MapSize;
+			this.Height= room.GameSetings.MapSize;
+			this.GenerateMap();
 		}
 		/// <summary>
 		/// Ширина игрового поля
@@ -66,7 +69,24 @@ namespace Tanki
 		/// <returns>Возвращает закончена ли игра</returns>
         private bool CheckWin()
 		{
-			return true;
+			var t = Owner as IRoom;
+			switch (t.GameSetings.GameType)
+			{
+				case GameType.LastAlive:
+					int cnt = 0;
+					foreach(var tank in tanks)
+					{
+						if (tank.Lives>0)
+							cnt++;
+					}
+					if (cnt == 1) return true;
+					break;
+				case GameType.Time:
+					break;
+				case GameType.FlagDefence:
+					break;
+			}
+			return false;
 		}
 		/// <summary>
 		/// Метод реализирующий проверку списка сущностей на наличие убитых
@@ -159,6 +179,10 @@ namespace Tanki
                     this.Fire(tmp);
                 }
             }
+			if(this.CheckWin())
+			{
+				this.SendEndGame();
+			}
         }
 		/// <summary>
 		/// Метод реализирующий обработку "убитой" сущности
@@ -214,15 +238,16 @@ namespace Tanki
 			int objectCount = (this.height * this.width) / (this.height + this.width);
             foreach (var t in room.Gamers)
             {
-				var obj = new object() as ITank;
-				obj.Tank_ID = t.Passport;
-				obj.Lives = 5;
-				obj.Is_Alive = true;
-				obj.Can_Shoot = true;
-				obj.Direction = Direction.Up;
-				this.Reload(obj);
-				tanks.Add(obj);
-				objects.Add(obj);
+				this.NewGamer(t);
+				//var obj = new object() as ITank;
+				//obj.Tank_ID = t.Passport;
+				//obj.Lives = 5;
+				//obj.Is_Alive = true;
+				//obj.Can_Shoot = true;
+				//obj.Direction = Direction.Up;
+				//this.Reload(obj);
+				//tanks.Add(obj);
+				//objects.Add(obj);
 			}
 			while(objectCount>0)
 			{
@@ -371,13 +396,27 @@ namespace Tanki
             t.Tanks = tanks;
 			var pack = new object() as IPackage;
 			pack.Data = t;
+			pack.MesseggeType = MesseggeType.Map;
 			var adress = Owner as IRoom;
 			Owner.Sender.SendMessage(pack, adress.Gamers);
         }
-
+		/// <summary>
+		/// Метод реализирующий уведомление игроков о конце игры
+		/// </summary>
+		public void SendEndGame()
+		{
+			var pack = new object() as IPackage;
+			pack.MesseggeType = MesseggeType.EndGame;
+			var adress = Owner as IRoom;
+			Owner.Sender.SendMessage(pack, adress.Gamers);
+		}
 
 
 		// Нужно вызывать эту чепуху при новом игроке в комнате, метод ниже мне не подходит, по причине - мне не нужен ендпоинт, мне нужен гуид
+		/// <summary>
+		/// Метод интегрирующий нового игрока на игровое поле
+		/// </summary>
+		/// <param name="gamer"> Новый игрок</param>
 		public void NewGamer(IGamer gamer)
 		{
 			var obj = new object() as ITank;
