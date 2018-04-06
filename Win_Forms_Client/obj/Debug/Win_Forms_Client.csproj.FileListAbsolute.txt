@@ -1,0 +1,15 @@
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Win_Forms_Client.csprojResolveAssemblyReference.cache
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Tanki.ConnectionForm.resources
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Tanki.Lobby.resources
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Win_Forms_Client.Properties.Resources.resources
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Win_Forms_Client.csproj.GenerateResource.Cache
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Win_Forms_Client.csproj.CoreCompileInputs.cache
+D:\Git_06\BattleCityRemix\Win_Forms_Client\bin\Debug\Win_Forms_Client.exe.config
+D:\Git_06\BattleCityRemix\Win_Forms_Client\bin\Debug\Win_Forms_Client.exe
+D:\Git_06\BattleCityRemix\Win_Forms_Client\bin\Debug\Win_Forms_Client.pdb
+D:\Git_06\BattleCityRemix\Win_Forms_Client\bin\Debug\Common.dll
+D:\Git_06\BattleCityRemix\Win_Forms_Client\bin\Debug\Common.pdb
+D:\Git_06\BattleCityRemix\Win_Forms_Client\bin\Debug\Common.xml
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Win_Forms_Client.exe
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Win_Forms_Client.pdb
+D:\Git_06\BattleCityRemix\Win_Forms_Client\obj\Debug\Tanki.GameOptionsForm.resources
