@@ -16,6 +16,7 @@ namespace Tanki
         {
             RoomId = id;
             Owner = owner;
+            Passport = Guid.NewGuid();
             //Reciever = new ReceiverUdpClientBased(localEP);
             //Sender = new SenderUdpClientBased(Reciever);
         }
@@ -29,7 +30,10 @@ namespace Tanki
 		public IGameSetings GameSetings { get; set; }
 		public GameStatus Status { get; set; }
 
-		public virtual void AddGamer(IGamer newGamer)
+        public Guid Passport { get; protected set; }
+        public Guid CreatorPassport { get; set ; }
+
+        public virtual void AddGamer(IGamer newGamer)
         {
             _gamers.Add(newGamer);
         }
@@ -48,12 +52,14 @@ namespace Tanki
 
         public IRoomStat getRoomStat()
         {
-            return new RoomStat() { Id = this.RoomId, Players_count = Gamers.Count(), Creator_Id = "will be later" };
+            return new RoomStat() { Pasport = this.Passport, Players_count = Gamers.Count(), Creator_Pasport = this.CreatorPassport };
         }
 
         public IAddresssee this[string id] {
-            get { var v = from g in _gamers where g.Name == id select g;
-                if (v.Count() > 1) throw new Exception("not unique") ;
+            get
+            {
+                var v = from g in _gamers where g.Name == id select g;
+                if (v.Count() > 1) throw new Exception(" addresssee not unique") ;
                 return v.First();
             } }
         public event EventHandler<NewAddressseeData> OnNewAddresssee;
@@ -76,6 +82,18 @@ namespace Tanki
             IMessageQueue _MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqOneByOneProcc);
             base.RegisterDependcy(_MessageQueue);
 
+        }
+
+        public IGamer GetGamerByGuid(Guid gamerGuid)
+        {
+            IGamer foundGamer = null;
+
+            var g = (from G in Gamers where G.Passport == gamerGuid select G);
+            if (g.Count() > 1) throw new Exception("Rooms ID not unique");
+
+            foundGamer = g.FirstOrDefault();
+
+            return foundGamer;
         }
 
         public IEnumerable<IRoomStat> getRoomsStat()

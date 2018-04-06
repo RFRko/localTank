@@ -20,8 +20,8 @@ namespace Tanki
         private IPackage package;
         private IPEndPoint endpoint;
 
-
-        public GameClient(IPEndPoint localEP, IRoomOwner owner) : base()
+        //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
+        public GameClient(IPEndPoint localEP, IRoomOwner owner) 
         {
             this.adresee_list = new Dictionary<string, IAddresssee>();
             this.tcp = new TcpClient();
@@ -140,5 +140,6 @@ namespace Tanki
         {
             tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
         }
+
     }
 }
