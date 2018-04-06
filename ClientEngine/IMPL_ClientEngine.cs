@@ -7,21 +7,46 @@ using System.Threading.Tasks;
 
 namespace Tanki 
 {
-	public class ClientEngine : EngineAbs
-	{
+	public class ClientEngine : EngineAbs,IClientEngine
+    {
 		public override ProcessMessageHandler ProcessMessage { get; protected set; }
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 
+        public IEnumerable<IRoomStat> RoomsStat { get { return _RoomsStat; } protected set { SetRoomsStat(_RoomsStat); } }
+        public IMap Map { get; protected set; }
+        public IEntity Entity { get; protected set; }
 
-		public ClientEngine()
+        private IGameEngineOwner Owner;
+        private List<IRoomStat> _RoomsStat = new List<IRoomStat>();
+
+
+        public event EventHandler<RoomStatChangeData> OnRoomsStatChanged;
+        public event EventHandler<IMap> OnMapChanged;
+
+        public ClientEngine()
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
 		}
 
-		private void ProcessMessageHandler(IPackage msg)
+        public ClientEngine(IGameEngineOwner owner)
+        {
+            ProcessMessage += ProcessMessageHandler;
+            ProcessMessages = null;
+            Owner = owner;
+        }
+
+
+        private void SetRoomsStat(List<IRoomStat> newVal)
+        {
+            _RoomsStat = newVal;
+            OnRoomsStatChanged?.Invoke(this, new RoomStatChangeData() { RoomsStat = _RoomsStat });
+        }
+
+
+        private void ProcessMessageHandler(IPackage msg)
 		{
-			switch (msg.MesseggeType)
+            switch (msg.MesseggeType)
 			{
 				case MesseggeType.Map:
 					{
@@ -106,10 +131,26 @@ namespace Tanki
 			//отправить id комнаты и имя игрока на сервер
 		}
 
-		//событие о рум эндпоинт
-		//событие о мап
-		//событие о энтити
-		//событие о старте игры
-		//событие о конце игры
-	}
+        public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void OnViewCommandHandler(object Sender, object evntData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnEntityHandler(object Sender, IEntity evntData)
+        {
+            throw new NotImplementedException();
+        }
+
+        //событие о рум эндпоинт
+        //событие о мап
+        //событие о энтити
+        //событие о старте игры
+        //событие о конце игры
+    }
 }

@@ -98,6 +98,12 @@ namespace Tanki
             throw new NotImplementedException();
         }
 
+        public void END_GAME()
+        {
+            throw new NotImplementedException();
+        }
+
+
         public Guid Passport
         {
             get
@@ -119,5 +125,11 @@ namespace Tanki
 
         //должен будет быть приватный метод  'void ProceedQueue(Object state)' который будет передаваться time-ру как callback 
         // этот метод должен с периодиностью таймера отправлять клиентское состояние игры на сервер
+
+        public void Connect(IPEndPoint ServerEndPoint)
+        {
+            //throw new NotImplementedException();
+        }
+
     }
 }

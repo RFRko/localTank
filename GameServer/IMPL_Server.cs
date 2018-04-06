@@ -67,5 +67,17 @@ namespace Tanki
 
             return new RoomStat() { Id = selRoom.RoomId, Players_count = selRoom.Gamers.Count() };
         }
+
+        public IRoom GetRoomByGuid(Guid roomGuid)
+        {
+            IRoom foundRoom = null;
+
+            var r = (from R in Rooms where R.Passport == roomGuid select  R);            
+            if (r.Count() > 1) throw new Exception("Rooms ID not unique");
+
+            foundRoom = r.FirstOrDefault();
+
+            return foundRoom;
+        }
     }
 }

@@ -32,5 +32,13 @@ namespace Tanki
     {
         public IEntity mustDrawTheEntity { get; set; }
     }
+
+
+    public class RoomStatChangeData : EventArgs
+    {
+        public IEnumerable<IRoomStat> RoomsStat { get; set; }
+    }
+
     
+
 }
