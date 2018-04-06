@@ -37,15 +37,17 @@ namespace Tanki
         IAddresssee this[String id] { get; } //свойство идексатор для возврата Адресата по текстовому имени\ид.  
                                              //Адресат это объект с IPEndPoint комнаты (может быть как минимум два аддерсата - управляющая комната, текущая игровая комната
 
+        IEntity ClientGameState { get; set; }   // польностью вернуть объект
 
-
+        Guid Passport { get; set; }
 
         void RUN(IPEndPoint ServerEndPoint); // создаем тспклиент с serverendpoint, через него запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
         void RUN_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
-        IEntity ClientGameState { get; set; }   // польностью вернуть объект
+
+
         void OnClientGameStateChangedHandler(Object Sender, GameStateChangeData evntData); // просто реализовать метод на котрый что-то подпишеи
         event EventHandler<EnforceDrawingData> EnforceDrawing;  // дернет движок, просто делегат
-        Guid Passport { get; set; }
+        
     }
 
 }

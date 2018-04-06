@@ -12,9 +12,12 @@ namespace Tanki
     public class GameClient:NetProcessorAbs, IGameClient
     {
         private Dictionary<string, IAddresssee> adresee_list;       // приватный Dictionary<String, IAddresssee>  для хранения перечня адрессатов
-        private TcpClient tcp;
-        private IEntity entity;
+        private TcpClient tcp;                                      // должен быть приватный TCPClient  для коннекта к хосту
+        private IEntity clientGameState;
+        
         private Guid passport;
+        private TimerCallback tm;                                   //должен быть приватный Timer - на callBack которого будет вызываться метод переодической отправки клинтского состояния игры на сервер.
+        public event EventHandler<EnforceDrawingData> EnforceDrawing;
 
 
 
@@ -22,8 +25,8 @@ namespace Tanki
         public GameClient(IPEndPoint localEP, IRoomOwner owner) : base(null, localEP, owner)
         {
             this.adresee_list = new Dictionary<string, IAddresssee>();
-            tcp = new TcpClient();
-
+            this.tcp = new TcpClient();
+            
 
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
@@ -61,41 +64,17 @@ namespace Tanki
         }
 
 
-
-
-
         public IEntity ClientGameState
         {
             get
             {
-                throw new NotImplementedException();
+                return this.clientGameState;
             }
 
             set
             {
-                throw new NotImplementedException();
+                this.clientGameState = value;
             }
-        }
-
-        public event EventHandler<EnforceDrawingData> EnforceDrawing;
-
-
-
-        public void OnClientGameStateChangedHandler(object Sender, GameStateChangeData evntData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RUN(IPEndPoint ServerEndPoint)
-        {
-            tcp = new TcpClient(ServerEndPoint);
-            base.RUN();
-            tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
-        }
-
-        public void RUN_GAME()
-        {
-            throw new NotImplementedException();
         }
 
         public Guid Passport
@@ -111,13 +90,28 @@ namespace Tanki
         }
 
 
+        public void RUN(IPEndPoint ServerEndPoint)                  // запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
+        {
+            tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
+            base.RUN();
+        }
 
-        // должен быть приватный TCPClient  для коннекта к хосту
+        public void RUN_GAME()                                     // запускает таймер переодической отправки клиентского состоянения игры на сервер
+        {
+            int num = 0;
+            this.tm = new TimerCallback(ProceedQueue);
+            Timer timer = new Timer(tm, num, 0, 2000);
+        }
 
+        private void ProceedQueue(object state)                     //должен будет быть приватный метод  'void ProceedQueue(Object state)' который будет передаваться time-ру как callback 
+        {                                                           // этот метод должен с периодиностью таймера отправлять клиентское состояние игры на сервер    
+            this.clientGameState = (IEntity)state;
+            // отправка данных
+        }
 
-        //должен быть приватный Timer - на callBack которого будет вызываться метод переодической отправки клинтского состояния игры на сервер.
-
-        //должен будет быть приватный метод  'void ProceedQueue(Object state)' который будет передаваться time-ру как callback 
-        // этот метод должен с периодиностью таймера отправлять клиентское состояние игры на сервер
+        public void OnClientGameStateChangedHandler(object Sender, GameStateChangeData evntData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
