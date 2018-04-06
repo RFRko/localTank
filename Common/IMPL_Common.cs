@@ -38,18 +38,16 @@ namespace Common
             this._position = Position;
             this._direction = Direction;
         }
-        /// <summary>
-        /// Текущая позиция X Y.
-        /// </summary>
-        public Point Position
-        {
-            get { return this._position; }
-            set { this._position = value; }
-        }
-        /// <summary>
-        /// Направление движения.
-        /// </summary>
-        public Direction Direction
+		public int Size { get; set; }
+
+		/// <summary>
+		/// Текущая позиция X Y.
+		/// </summary>
+		public Rectangle Position { get; set; }
+		/// <summary>
+		/// Направление движения.
+		/// </summary>
+		public Direction Direction
         {
             get { return this._direction; }
             set { this._direction = value; }
@@ -101,7 +99,6 @@ namespace Common
     {
         private int _lives;
         private Team _team;
-		private string _tank_ID;
 
         public Tank()
         {
@@ -120,18 +117,7 @@ namespace Common
             set { this._lives = value; }
         }
 
-		public string Tank_ID
-		{
-			get
-			{
-				return this._tank_ID;
-			}
-
-			set
-			{
-				this._tank_ID = value;
-			}
-		}
+		public Guid Tank_ID { get; set; }
 
 		public Team Team
         {
@@ -161,10 +147,10 @@ namespace Common
             this._parent_id = Parent_Id;
         }
 
-        public string Parent_Id
+        public Guid Parent_Id
         {
-            get { return this._parent_id; }
-            set { this._parent_id = value; }
+			get;
+			set;
         }
     }
 
@@ -193,10 +179,10 @@ namespace Common
     public class RoomStat : IRoomStat
     {
         public RoomStat() { }
-        public string Id { get; set ; }
         public int Players_count { get; set; }
-        public string Creator_Id { get; set; }
-    }
+		public Guid Pasport { get; set; }
+		public Guid Creator_Pasport { get; set; }
+	}
 
 
 }
