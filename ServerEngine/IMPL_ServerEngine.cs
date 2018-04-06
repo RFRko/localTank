@@ -34,6 +34,9 @@ namespace Tanki
             this.ProcessMessage = null;
 			this.Width = room.GameSetings.MapSize;
 			this.Height= room.GameSetings.MapSize;
+			room.OnNewGameStatus += OnNewGameStatus_Handler;
+			this.status = GameStatus.WaitForStart;
+			room.OnNewAddresssee += OnNewAddresssee_Handler;
 			this.GenerateMap();
 		}
 		/// <summary>
@@ -54,6 +57,10 @@ namespace Tanki
 		/// Список всех танков на игровом поле
 		/// </summary>
         private List<ITank> tanks = new List<ITank>();
+		/// <summary>
+		/// Статус игры
+		/// </summary>
+		private GameStatus status;
 		/// <summary>
 		/// Список всех блоков на игровом поле
 		/// </summary>
@@ -162,26 +169,31 @@ namespace Tanki
 		/// <param name="list">Список пакетов переданый движку на обработку</param>
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
-			this.CheckAlive(list);
-			foreach(var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
+			if (this.status == GameStatus.Start)
 			{
-				this.Move(x);
-			}
-			foreach(var t in list)
-			{
-                var tmp = t.Data as IEntity;
-                if (tmp.Command == EntityAction.Move)
-                {
-                    this.Move(tmp);
-                }
-                if (tmp.Command == EntityAction.Fire)
-				{ 
-                    this.Fire(tmp);
-                }
-            }
-			if(this.CheckWin())
-			{
-				this.SendEndGame();
+				this.CheckAlive(list);
+				foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
+				{
+					this.Move(x);
+				}
+				foreach (var t in list)
+				{
+					var tmp = t.Data as IEntity;
+					if (tmp.Command == EntityAction.Move)
+					{
+						this.Move(tmp);
+					}
+					if (tmp.Command == EntityAction.Fire)
+					{
+						this.Fire(tmp);
+					}
+				}
+				if (this.CheckWin())
+				{
+					var room = Owner as IRoom;
+					room.Status = GameStatus.EndGame;
+					this.SendEndGame();
+				}
 			}
         }
 		/// <summary>
@@ -403,14 +415,20 @@ namespace Tanki
 		/// <summary>
 		/// Метод реализирующий уведомление игроков о конце игры
 		/// </summary>
-		public void SendEndGame()
+		private void SendEndGame()
 		{
 			var pack = new object() as IPackage;
 			pack.MesseggeType = MesseggeType.EndGame;
 			var adress = Owner as IRoom;
 			Owner.Sender.SendMessage(pack, adress.Gamers);
 		}
-
+		private void SendStartGame()
+		{
+			var pack = new object() as IPackage;
+			pack.MesseggeType = MesseggeType.StartGame;
+			var adress = Owner as IRoom;
+			Owner.Sender.SendMessage(pack, adress.Gamers);
+		}
 
 		// Нужно вызывать эту чепуху при новом игроке в комнате, метод ниже мне не подходит, по причине - мне не нужен ендпоинт, мне нужен гуид
 		/// <summary>
@@ -429,11 +447,29 @@ namespace Tanki
 			tanks.Add(obj);
 			objects.Add(obj);
 		}
-
-		//или сендер здесь и есть IGamer?
+		//Андрей, если я правильно понял - то ожидалась такая реализация?
+		/// <summary>
+		/// Обработка события добавления нового игрока
+		/// </summary>
+		/// <param name="Sender">Объект вызвавший добавление нового игрока</param>
+		/// <param name="evntData">Данные о подключении</param>
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {
-            throw new NotImplementedException();
+			var room = Owner as IRoom;
+			var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
+			this.NewGamer(gamer);
         }
-    }
+		/// <summary>
+		/// Обработка события изменения игрового статуса
+		/// </summary>
+		/// <param name="Sender">Объект изменивший игровой статус</param>
+		/// <param name="statusData"> Данные о новом игровом статуса</param>
+		public void OnNewGameStatus_Handler(object Sender, GameStatusChangedData statusData)
+		{
+			this.status = statusData.newStatus;
+			if (statusData.newStatus == GameStatus.Start)
+				this.SendStartGame();
+		}
+		//public event EventHandler<GameStatusChangedData> OnNewGameStatus; - вот это нужно
+	}
 }

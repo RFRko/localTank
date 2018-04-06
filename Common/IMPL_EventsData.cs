@@ -32,5 +32,8 @@ namespace Tanki
     {
         public IEntity mustDrawTheEntity { get; set; }
     }
-    
+    public class GameStatusChangedData : EventArgs
+	{
+		public GameStatus newStatus { get; set; }
+	}
 }
