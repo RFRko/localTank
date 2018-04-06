@@ -239,7 +239,7 @@ namespace Tanki
 	/// Реализующий клас обязан иметь атрибут [Serializable]
 	public interface IPackage
 	{
-		Guid Passport { get; set; }
+		Guid Sender_Passport { get; set; }
 		object Data { get; set; }
 		MesseggeType MesseggeType { get; set; }
 	}

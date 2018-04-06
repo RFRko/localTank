@@ -43,7 +43,7 @@ namespace Tanki
 
         void RUN(IPEndPoint ServerEndPoint); // создаем тспклиент с serverendpoint, через него запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
         void RUN_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
-        
+        void Connect(IPEndPoint ServerEndPoint);
     }
 
 }
