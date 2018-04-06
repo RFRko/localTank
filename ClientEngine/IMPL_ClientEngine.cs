@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tanki
+namespace Tanki 
 {
 	public class ClientEngine : EngineAbs
 	{
@@ -13,7 +13,7 @@ namespace Tanki
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 
 
-		public ClientEngine(IRoom inRoom)
+		public ClientEngine()
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
@@ -57,19 +57,6 @@ namespace Tanki
 			}
 		}
 
-		//ловит уведомления от отрисовщика об изменнении Entity и отправляет его на сервер
-		public override void On_Entity_Update_Handler(IEntity entity)
-		{
-			IPEndPoint room_IpEndpoint = null; //заменить, получить ipendpoint текущего room
-			Guid my_passport = new Guid(); //заменить, получить passport клиента
-			Owner.Sender.SendMessage(new Package()
-			{
-				Passport = my_passport,
-				Data = entity,
-				MesseggeType = MesseggeType.Entity
-			},room_IpEndpoint);
-		}
-
 		private void Map(IPackage package)
 		{
 			var map = package.Data;
@@ -97,5 +84,32 @@ namespace Tanki
 			//остановить отрисовку
 			//перейти в окно со списком комнат
 		}
+
+		public void On_Entity_Update_Handler(IEntity entity)
+		{
+			//ловит уведомления от отрисовщика об изменнении Entity и отправляет его на сервер
+			IPEndPoint room_IpEndpoint = null; //заменить, получить ipendpoint текущего room
+			Guid my_passport = new Guid(); //заменить, получить passport клиента
+			Owner.Sender.SendMessage(new Package()
+			{
+				Passport = my_passport,
+				Data = entity,
+				MesseggeType = MesseggeType.Entity
+			}, room_IpEndpoint);
+		}
+		public void CreateGame(GameSetings gameSetings)
+		{
+			//отправить настройки и имя игрока серверу
+		}
+		public void ConnectGame(Guid room_guid)
+		{
+			//отправить id комнаты и имя игрока на сервер
+		}
+
+		//событие о рум эндпоинт
+		//событие о мап
+		//событие о энтити
+		//событие о старте игры
+		//событие о конце игры
 	}
 }

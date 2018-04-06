@@ -40,18 +40,18 @@ namespace Common
             this._direction = Direction;
 			this._size = size;
         }
-        /// <summary>
-        /// Текущая позиция X Y.
-        /// </summary>
-        public Rectangle Position
-        {
-            get { return this._position; }
-            set { this._position = value; }
-        }
-        /// <summary>
-        /// Направление движения.
-        /// </summary>
-        public Direction Direction
+
+		public int Size { get; set; }
+
+		/// <summary>
+		/// Текущая позиция X Y.
+		/// </summary>
+		public Rectangle Position { get; set; }
+		/// <summary>
+		/// Направление движения.
+		/// </summary>
+		public Direction Direction
+
         {
             get { return this._direction; }
             set { this._direction = value; }
@@ -109,8 +109,7 @@ namespace Common
     {
         private int _lives;
         private Team _team;
-		private Guid _tank_ID;
-
+		    private Guid _tank_ID;
         public Tank()
         {
 
@@ -128,20 +127,9 @@ namespace Common
             set { this._lives = value; }
         }
 
-		public Guid Tank_ID
-		{
-			get
-			{
-				return this._tank_ID;
-			}
 
-			set
-			{
-				this._tank_ID = value;
-			}
-		}
-
-		public Team Team
+		    public Guid Tank_ID { get; set; }
+		    public Team Team
         {
             get { return this._team; }
             set { this._team = value; }
@@ -171,8 +159,8 @@ namespace Common
 
         public Guid Parent_Id
         {
-            get { return this._parent_id; }
-            set { this._parent_id = value; }
+			get;
+			set;
         }
     }
 
@@ -201,10 +189,11 @@ namespace Common
     public class RoomStat : IRoomStat
     {
         public RoomStat() { }
-        public Guid Pasport { get; set ; }
         public int Players_count { get; set; }
-        public Guid Creator_Pasport { get; set; }
-    }
+		    public Guid Pasport { get; set; }
+		    public Guid Creator_Pasport { get; set; }
+	  }
+
 
 
 }

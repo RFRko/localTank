@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Common</name>
+    </assembly>
+    <members>
+        <member name="T:Tanki.Direction">
+            <summary> Варианты направления движения</summary>
+        </member>
+        <member name="F:Tanki.Direction.Left">
+            <summary> Направление движения влево</summary>
+        </member>
+        <member name="F:Tanki.Direction.Right">
+            <summary> Направление движения вправо</summary>
+        </member>
+        <member name="F:Tanki.Direction.Up">
+            <summary> Направление движения вверх </summary>
+        </member>
+        <member name="F:Tanki.Direction.Down">
+            <summary> Направление движения вниз </summary>
+        </member>
+        <member name="T:Tanki.Team">
+            <summary> Названия команд </summary>
+        </member>
+        <member name="F:Tanki.Team.Red">
+            <summary> Красная команда </summary>
+        </member>
+        <member name="F:Tanki.Team.Green">
+            <summary> Зеленая команда </summary>
+        </member>
+        <member name="T:Tanki.EntityAction">
+            <summary>
+            Тип действия, выполняемое сущностью
+            </summary>
+        </member>
+        <member name="F:Tanki.EntityAction.None">
+            <summary>Действие отсутствует </summary>
+        </member>
+        <member name="F:Tanki.EntityAction.Move">
+            <summary>Сущность передвигается </summary>
+        </member>
+        <member name="F:Tanki.EntityAction.Fire">
+            <summary>Сущность стреляет </summary>
+        </member>
+        <member name="T:Tanki.GameType">
+            <summary> Тип игры </summary>
+        </member>
+        <member name="F:Tanki.GameType.LastAlive">
+            <summary> Игра до последнего оставшегося в живых игрока </summary>
+        </member>
+        <member name="F:Tanki.GameType.Time">
+            <summary> Игра на время </summary>
+        </member>
+        <member name="F:Tanki.GameType.FlagDefence">
+            <summary> Защита флага </summary>
+        </member>
+        <member name="F:Tanki.GameType.FragCount">
+            <summary>Игра до определенного количества убийств </summary>
+        </member>
+        <member name="T:Tanki.MesseggeType">
+            <summary> Тип системного сообщения для отправки </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.Map">
+            <summary> Обмен обЪектами</summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.GetRoomList">
+            <summary> Запрос списка комнат </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.RoomList">
+            <summary> Отправка клиенту списка комнат </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.Passport">
+            <summary> Отправка клиенту сгенерированого id </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.RoomID">
+            <summary> Отравка серверу id выбранной комнаты </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.Connect">
+            <summary> Подключение к серверу </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.RoomError">
+            <summary> Отправка клиенту сообщения об ошибке </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.CreateRoom">
+            <summary> Отправка серверу сообщения о создании новой комнаты </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.StatGame">
+            <summary> Отправка клиентам сообщения о начале игры </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.EndGame">
+            <summary> Отправка клиентам сообщения о конце игры </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.Kill">
+            <summary> Отправка серерверу сообщения об убийстве</summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.Settings">
+            <summary> Настройки </summary>
+        </member>
+        <member name="T:Tanki.BinSerializator">
+            <summary> Бинарный сериализатор. Используется в ISender, IReceiver. </summary>
+        </member>
+        <member name="M:Tanki.BinSerializator.Deserialize(System.Byte[])">
+            <summary> Де-Сериализатор </summary>
+            <param name="bytes"> Масив байт требующий Де-Сериализации</param>
+            <returns> IPackage </returns>
+        </member>
+        <member name="M:Tanki.BinSerializator.Serialize(System.Object)">
+            <summary> Сериализатор </summary>
+            <param name="obj"> Объект требующий Сериализации</param>
+            <returns> Возвращает массив байт </returns>
+        </member>
+        <member name="T:Tanki.IRoomStat">
+            <summary>
+            Интерфейс описующий информацию об игре (IGameRoom).
+            Является частью интерфейса IGameRoom.
+            Предназначен для обмена между клиентом/серверером
+            Реализующий клас обязан иметь атрибут [Serializable]
+            </summary>
+        </member>
+        <member name="T:Tanki.IMap">
+            <summary>
+            Интерфейс описующий информацию об игровом поле.
+            Предназначен для обмена между клиентом/серверером
+            Реализующий клас обязан иметь атрибут [Serializable]
+            </summary>
+        </member>
+        <member name="T:Tanki.IEntity">
+            <summary>
+            Интерфейс описующий информацию об объекте.
+            Является родителем для ITank, IBullet, IBlock.
+            Предназначен для обмена между клиентом/серверером
+            Реализующий клас обязан иметь атрибут [Serializable]
+            </summary>
+        </member>
+        <member name="T:Tanki.ITank">
+            <summary>
+            Интерфейс описующий информацию о Танке(Игроке).
+            Является наследником IEntity.
+            Является частью IPlayer(подругому IGamer).
+            Используется в интерфейсах IServerEngine и IClientEngine.
+            Реализующий клас обязан иметь атрибут [Serializable]
+            </summary>
+        </member>
+        <member name="T:Tanki.IBullet">
+            <summary>
+            Интерфейс описующий информацию о Пуле.
+            Является наследником IEntity.
+            Используется в интерфейсах IServerEngine и IClientEngine.
+            Реализующий клас обязан иметь атрибут [Serializable]
+            </summary>
+        </member>
+        <member name="T:Tanki.IBlock">
+            <summary>
+            Интерфейс описующий информацию о Преградах (Пеньках).
+            Является наследником IEntity.
+            Используется в интерфейсах IServerEngine и IClientEngine.
+            Реализующий клас обязан иметь атрибут [Serializable]
+            </summary>
+        </member>
+        <member name="T:Tanki.ISender">
+            <summary>
+            Cущность отправляющая информацию от клиента хосту
+            </summary>
+        </member>
+        <member name="T:Tanki.IReciever">
+            <summary>
+            Cущность принимающая информацию клиентом от хоста
+            </summary>
+        </member>
+        <member name="T:Tanki.IMessageQueue">
+            <summary> Интерфейс описывает очередь сообщений клиента/сервера </summary>
+        </member>
+        <member name="T:Tanki.ProcessMessageHandler">
+             <summary> Общий Интерфейс для движков (серверного и клиентского
+             должен передаватся как dependency MessageQueue (поэтому определяется сдесь для исключения циклических ссылок библиотек)
+             реализации будут в разных библиотеках, т.к. это разные реализации для разных приложений
+            </summary>
+        </member>
+        <member name="T:Tanki.INetProcessor">
+            <summary> Реализует общую абстракцию сетевой обработки - 
+             Итнерфейс, имеющий Enumerable of IReciver, IMessageQueue, IEngine, ISender
+             может использоваться для GameServer и GameClient
+             </summary>
+        </member>
+        <member name="T:Tanki.IPackage">
+            <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
+            Используется в IMesegeQueue, ISender, IReceiver</summary>
+            Реализующий клас обязан иметь атрибут [Serializable]
+        </member>
+        <member name="T:Tanki.ISerializator">
+            <summary> Сереализатор. Используется в ISender, IReceiver. </summary>
+        </member>
+        <member name="T:Tanki.IGamer">
+            <summary>
+            Добавлен для включения интерфейсов, которые не являются общими (характерны для конкретных библиотек),
+            Но не могут быть в них объявлены из-за возникновения циклических ссылок при dependecy injection
+            например ServerEngine должен иметь dependency Room, но Room в библиотеке Server, которой нужна dependency ServerEngine
+            </summary>
+            
+        </member>
+        <member name="T:Tanki.IRoom">
+            <summary>
+            Нужна для:
+            -IServer (библиотека GameServer)
+            -ServerGameEngine (библиотека ServerEngine)
+            </summary>
+        </member>
+        <member name="T:Common.GameEntity">
+            <summary>
+            Абстрактный класс описующий информацию об объектах рендеринга.
+            Является наследником IEntity.
+            Используется в классах Tank, Bullet, Block.
+            Наследующий класс обязан иметь атрибут [Serializable]
+            </summary>
+        </member>
+        <member name="P:Common.GameEntity.Position">
+            <summary>
+            Текущая позиция X Y.
+            </summary>
+        </member>
+        <member name="P:Common.GameEntity.Direction">
+            <summary>
+            Направление движения.
+            </summary>
+        </member>
+        <member name="P:Common.GameEntity.Can_Shoot">
+            <summary>
+            Возможно ли произвести выстрел в данный момент.
+            </summary>
+        </member>
+        <member name="P:Common.GameEntity.Is_Alive">
+            <summary>
+            Состояние объект. 
+            </summary>
+        </member>
+        <member name="P:Common.GameEntity.Can_Be_Destroyed">
+            <summary>
+            Может объект быть уничтожен.
+            </summary>
+        </member>
+        <member name="P:Common.GameEntity.Speed">
+            <summary>
+            Скорость движения объекта.
+            </summary>
+        </member>
+        <member name="T:Common.Tank">
+            <summary>
+            Класс описующий объект "Танк".
+            Является наследником GameEntity.
+            Создан для коммуникации между клиентом и сервером.
+            </summary>
+            
+        </member>
+        <member name="T:Common.Bullet">
+            <summary>
+            Класс описующий объект "Пуля".
+            Является наследником GameEntity.
+            Создан для коммуникации между клиентом и сервером.
+            </summary>
+            
+        </member>
+        <member name="T:Common.Block">
+            <summary>
+            Класс описующий объект "Блок"(пенек).
+            Является наследником GameEntity.
+            Создан для коммуникации между клиентом и сервером.
+            </summary>
+            
+        </member>
+    </members>
+</doc>

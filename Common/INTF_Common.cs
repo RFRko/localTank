@@ -256,7 +256,7 @@ namespace Tanki
 	{
 		int GameSpeed { get; set; }
 		int ObjectsSize { get; set; }
-		int MapSize { get; set; }
+		Size MapSize { get; set; }
 		int MaxPlayersCount { get; set; }
 		GameType GameType { get; set; }
 	}
