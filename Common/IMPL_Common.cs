@@ -21,15 +21,16 @@ namespace Common
         private bool _can_destroy;
         private bool _is_alive;
         private int _speed;
+		private int _size;
         private Direction _direction;
-        private Point _position;
+        private Rectangle _position;
 
         public GameEntity()
         {
 
         }
 
-        public GameEntity(bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Point Position,Direction Direction)
+        public GameEntity(bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position,Direction Direction,int size)
         {
             this._can_destroy = CanDestroy;
             this._can_shoot = CanShoot;
@@ -37,7 +38,9 @@ namespace Common
             this._speed = Speed;
             this._position = Position;
             this._direction = Direction;
+			this._size = size;
         }
+
 		public int Size { get; set; }
 
 		/// <summary>
@@ -48,6 +51,7 @@ namespace Common
 		/// Направление движения.
 		/// </summary>
 		public Direction Direction
+
         {
             get { return this._direction; }
             set { this._direction = value; }
@@ -86,7 +90,13 @@ namespace Common
         }
 
         public EntityAction Command { get; set; }
-    }
+
+		public int Size
+		{
+			get { return this._size; }
+			set { this._size = value; }
+		}
+	}
 
     /// <summary>
 	/// Класс описующий объект "Танк".
@@ -99,13 +109,13 @@ namespace Common
     {
         private int _lives;
         private Team _team;
-
+		    private Guid _tank_ID;
         public Tank()
         {
 
         }
 
-        public Tank(int Lives,Team Team,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Point Position, Direction Direction) : base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction)
+        public Tank(int Lives,Team Team,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size) : base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction,Size)
         {
             this._lives = Lives;
             this._team = Team;
@@ -117,9 +127,9 @@ namespace Common
             set { this._lives = value; }
         }
 
-		public Guid Tank_ID { get; set; }
 
-		public Team Team
+		    public Guid Tank_ID { get; set; }
+		    public Team Team
         {
             get { return this._team; }
             set { this._team = value; }
@@ -135,14 +145,14 @@ namespace Common
     [Serializable]
     public class Bullet : GameEntity, IBullet
     {
-        private string _parent_id;
+        private Guid _parent_id;
 
         public Bullet()
         {
             
         }
 
-        public Bullet(string Parent_Id,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Point Position, Direction Direction) : base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction)
+        public Bullet(Guid Parent_Id,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size) : base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction,Size)
         {
             this._parent_id = Parent_Id;
         }
@@ -168,7 +178,7 @@ namespace Common
 
         }
 
-        public Block(bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Point Position, Direction Direction) :base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction)
+        public Block(bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size) :base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction,Size)
         {
                 
         }
@@ -180,9 +190,10 @@ namespace Common
     {
         public RoomStat() { }
         public int Players_count { get; set; }
-		public Guid Pasport { get; set; }
-		public Guid Creator_Pasport { get; set; }
-	}
+		    public Guid Pasport { get; set; }
+		    public Guid Creator_Pasport { get; set; }
+	  }
+
 
 
 }

@@ -28,6 +28,7 @@ namespace Tanki
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
 
 		public IGameSetings GameSetings { get; set; }
+		public GameStatus Status { get; set; }
 
         public Guid Passport { get; protected set; }
         public Guid CreatorPassport { get; set ; }
@@ -62,7 +63,7 @@ namespace Tanki
                 return v.First();
             } }
         public event EventHandler<NewAddressseeData> OnNewAddresssee;
-    }
+	}
 
 
 

@@ -61,6 +61,7 @@ namespace Tanki
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
         IRoomStat getRoomStat();
+		GameStatus Status { get; set; }
 
 		void RUN();
 	}
