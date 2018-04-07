@@ -84,7 +84,7 @@
         <member name="F:Tanki.MesseggeType.CreateRoom">
             <summary> Отправка серверу сообщения о создании новой комнаты </summary>
         </member>
-        <member name="F:Tanki.MesseggeType.StatGame">
+        <member name="F:Tanki.MesseggeType.StartGame">
             <summary> Отправка клиентам сообщения о начале игры </summary>
         </member>
         <member name="F:Tanki.MesseggeType.EndGame">
@@ -95,6 +95,26 @@
         </member>
         <member name="F:Tanki.MesseggeType.Settings">
             <summary> Настройки </summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.RoomEndpoint">
+            <summary> IPEndPoint созданной/подключенной комнаты</summary>
+        </member>
+        <member name="F:Tanki.MesseggeType.Entity">
+            <summary> Oбъект отправляемый клиентом на сервер</summary>
+        </member>
+        <member name="T:Tanki.GameStatus">
+            <summary>
+            Состояние игры
+            </summary>
+        </member>
+        <member name="F:Tanki.GameStatus.WaitForStart">
+            <summary> Ожидание начала игры</summary>
+        </member>
+        <member name="F:Tanki.GameStatus.Start">
+            <summary> Игра запущена</summary>
+        </member>
+        <member name="F:Tanki.GameStatus.EndGame">
+            <summary> Игра завершена</summary>
         </member>
         <member name="T:Tanki.BinSerializator">
             <summary> Бинарный сериализатор. Используется в ISender, IReceiver. </summary>

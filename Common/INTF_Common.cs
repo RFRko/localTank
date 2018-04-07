@@ -217,11 +217,13 @@ namespace Tanki
     #endregion
 
 
+    #region INetProcessor
+
     ///<summary> Реализует общую абстракцию сетевой обработки - 
     /// Итнерфейс, имеющий Enumerable of IReciver, IMessageQueue, IEngine, ISender
     /// может использоваться для GameServer и GameClient
     /// </summary>
-    #region INetProcessor
+
     public interface INetProcessor:IMessageQueueClient, IEngineClient,IRecieverClient
     {
         //IMessageQueueClient - предоставляет IEnumerable of IReciever (использующие IMessageQueue), IEngine (нужный для IMessageQueue), 

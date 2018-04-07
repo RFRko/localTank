@@ -14,7 +14,7 @@ namespace Tanki
     /// например ServerEngine должен иметь dependency Room, но Room в библиотеке Server, которой нужна dependency ServerEngine
     /// </summary>
     /// 
-#region GamerInterfaces
+    #region GamerInterfaces
     public interface IGamer: IAddresssee
     {
         String Name { get;}
@@ -46,6 +46,13 @@ namespace Tanki
     #endregion GamerInterfaces
 
     #region RoomInterfaces
+
+    public enum RoomType
+    {
+        rtMngRoom,
+        rtGameRoom
+    }
+
     /// <summary>
     /// Нужна для:
     /// -IServer (библиотека GameServer)
@@ -57,7 +64,7 @@ namespace Tanki
         String RoomId { get; set; }
         Guid Passport { get; }
         Guid CreatorPassport { get; set; }
-        IGameSetings GameSetings { get; set; }
+        IGameSetings GameSetings { get; }
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
         IRoomStat getRoomStat();
@@ -70,7 +77,7 @@ namespace Tanki
     {
         IRoomStat getRoomStat(String forRoomID);
         IEnumerable<IRoomStat> getRoomsStat();
-        void MooveGamerToRoom(IGamer gamer, String TargetRoomId);
+        void MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
         IGamer GetGamerByGuid(Guid gamerGuid);
     }
 
@@ -83,16 +90,16 @@ namespace Tanki
     public interface IManagerRoomOwner: IRoomOwner
     {
         IEnumerable<IRoomStat> getRoomsStat();
-        void MooveGamerToRoom(IGamer gamer, String TargetRoomId);
+        IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
         IRoom GetRoomByGuid(Guid roomGuid);
     }
 
 
-    public enum RoomType
+    public interface IGameRoom
     {
-        rtMngRoom,
-        rtGameRoom
+        event EventHandler<GameStatusChangedData> OnNewGameStatus;
     }
+
 
     public interface IRoomFabric
     {
@@ -104,17 +111,17 @@ namespace Tanki
     #region GameClientInterfaces
 
 
-    public interface IGameClientClient
+    public interface IGameClient
     {
         IEntity ClientGameState { get; set; }
-        void RUN_GAME();
+        void RUN_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
         void END_GAME();
         Guid Passport { get; set; }
         void Connect(IPEndPoint ServerEndPoint);
 
     }
 
-    public interface IGameClient: IGameClientClient
+    public interface IClient: IGameClient
     {
         void AddAddressee(String Id, IAddresssee addresssee);   // добавляем нового адресата 
 
@@ -123,13 +130,10 @@ namespace Tanki
 
 
         void RUN(IPEndPoint ServerEndPoint); // создаем тспклиент с serverendpoint, через него запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
-        void RUN_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
-        void END_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
-
         IEntity ClientGameState { get; set; }   // польностью вернуть объект
         void OnClientGameStateChangedHandler(Object Sender, GameStateChangeData evntData); // просто реализовать метод на котрый что-то подпишеи
         event EventHandler<EnforceDrawingData> EnforceDrawing;  // дернет движок, просто делегат
-        Guid Passport { get; set; }
+
     }
 
     

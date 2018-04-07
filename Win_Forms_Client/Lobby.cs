@@ -136,7 +136,7 @@ namespace Tanki
 						SetRoomIpEndpoint(msg);
 						break;
 					}
-				case MesseggeType.StatGame:
+				case MesseggeType.StartGame:
 					{
 						GameStart(msg);
 						break;
@@ -157,7 +157,7 @@ namespace Tanki
 			Guid my_passport = new Guid(); //заменить, получить passport клиента
 			parent.Sender.SendMessage(new Package()
 			{
-				Passport = my_passport,
+				Sender_Passport = my_passport,
 				Data = entity,
 				MesseggeType = MesseggeType.Entity
 			}, room_IpEndpoint);

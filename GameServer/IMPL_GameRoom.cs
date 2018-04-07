@@ -108,14 +108,14 @@ namespace Tanki
             return mO.getRoomStat(forRoomID);
         }
 
-        public void MooveGamerToRoom(IGamer gamer, string TargetRoomId)
+        public void MooveGamerToRoom(IGamer gamer, Guid TargetRoomId)
         {
             IManagerRoomOwner mO = Owner as IManagerRoomOwner;
             mO.MooveGamerToRoom(gamer,TargetRoomId);
         }
     }
 
-    public class GameRoom : RoomAbs
+    public class GameRoom : RoomAbs, IGameRoom
     {
         public GameRoom(string id, IPEndPoint localEP, IRoomOwner owner) : base(id, localEP, owner)
         {
@@ -131,6 +131,8 @@ namespace Tanki
             base.RegisterDependcy(MessageQueue);
 
         }
+
+        public event EventHandler<GameStatusChangedData> OnNewGameStatus;
     }
 
 

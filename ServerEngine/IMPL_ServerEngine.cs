@@ -32,11 +32,18 @@ namespace Tanki
 		{
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
-			this.Width = room.GameSetings.MapSize;
-			this.Height= room.GameSetings.MapSize;
-			room.OnNewGameStatus += OnNewGameStatus_Handler;
+
+            var gameRoom = room as IGameRoom;
+            if (gameRoom == null) throw new Exception("Wrong room type");
+
+            gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
 			this.status = GameStatus.WaitForStart;
-			room.OnNewAddresssee += OnNewAddresssee_Handler;
+
+            this.Width = room.GameSetings.MapSize.Width;
+            this.Height = room.GameSetings.MapSize.Height;
+
+
+            room.OnNewAddresssee += OnNewAddresssee_Handler;
 			this.GenerateMap();
 		}
 		/// <summary>
