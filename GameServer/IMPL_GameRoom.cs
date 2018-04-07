@@ -69,14 +69,18 @@ namespace Tanki
 
     public class ManagingRoom : RoomAbs, IManagerRoom
     {
-        public ManagingRoom(string id, IPEndPoint localEP, IRoomOwner owner) : base(id, localEP, owner)
+        public ManagingRoom(string id, IPEndPoint localEP, IRoomOwner owner, IEngine engine = null) : base(id, localEP, owner)
         {
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
 
             Sender = new SenderUdpClientBased(Reciever);
 
-            IEngine _Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
+            IEngine _Engine;
+            if (engine != null)
+                _Engine = engine;
+            else
+                _Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
             base.RegisterDependcy(_Engine);
 
             IMessageQueue _MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqOneByOneProcc);
@@ -108,24 +112,35 @@ namespace Tanki
             return mO.getRoomStat(forRoomID);
         }
 
-        public void MooveGamerToRoom(IGamer gamer, Guid TargetRoomId)
+        public IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId)
         {
             IManagerRoomOwner mO = Owner as IManagerRoomOwner;
-            mO.MooveGamerToRoom(gamer,TargetRoomId);
+            return mO.MooveGamerToRoom(gamer,TargetRoomId);
         }
+
+        public IRoom AddRoom()
+        {
+            IManagerRoomOwner mO = Owner as IManagerRoomOwner;
+            return mO.AddRoom();
+        }
+
     }
 
     public class GameRoom : RoomAbs, IGameRoom
     {
-        public GameRoom(string id, IPEndPoint localEP, IRoomOwner owner) : base(id, localEP, owner)
+        public GameRoom(string id, IPEndPoint localEP, IRoomOwner owner, IEngine engine = null) : base(id, localEP, owner)
         {
             Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(Reciever);
 
             Sender = new SenderUdpClientBased(Reciever);
 
-            Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvGameEngine);
-            base.RegisterDependcy(Engine);
+            IEngine _Engine;
+            if (engine != null)
+                _Engine = engine;
+            else
+                _Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvGameEngine);
+            base.RegisterDependcy(_Engine);
 
             MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqByTimerProcc);
             base.RegisterDependcy(MessageQueue);
@@ -138,17 +153,17 @@ namespace Tanki
 
     public class RoomFabric : IRoomFabric
     {
-        public IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner)
+        public IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner, IEngine engine = null)
         {
             IRoom res = null;
 
             switch (roomType)
             {
                 case RoomType.rtMngRoom:
-                    res = new ManagingRoom(roomId, localEP, owner);
+                    res = new ManagingRoom(roomId, localEP, owner, engine);
                     break;
                 case RoomType.rtGameRoom:
-                    res = new GameRoom(roomId, localEP, owner);
+                    res = new GameRoom(roomId, localEP, owner, engine);
                     break;
             }
             return res;

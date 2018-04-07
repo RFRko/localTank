@@ -12,13 +12,22 @@ namespace Tanki
     {
         private GameServer() { }
 
-        public GameServer(IListener listener)
+        public GameServer(IListener listener, ISystemSettings sysSettings, IEngine mngEngine = null, IEngine gameEngine = null)
         {
+            _sys_settings = sysSettings;
+            _next_room_port = sysSettings.RoomPortMin;
+
             ServerListner = listener;
             RegisterListener(ServerListner);
+            _mngEngine = mngEngine;
+            _gameEngine = gameEngine;
         }
 
         private List<IRoom> _rooms = new List<IRoom>();
+        private ISystemSettings _sys_settings;
+        private IEngine _mngEngine;
+        private IEngine _gameEngine;
+        private Int32 _next_room_port;
 
         public IListener ServerListner { get; private set; }
         public IEnumerable<IRoom> Rooms { get { return _rooms; } }
@@ -36,11 +45,12 @@ namespace Tanki
         public void RUN()
         {
             IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
-            Int32 roomPort = 50001;
+            Int32 roomPort = GetNextRoomPort();
             IPEndPoint roomEP = new IPEndPoint(roomAddr, roomPort);
 
-            IRoom managerRoom = (new RoomFabric()).CreateRoom("", roomEP, RoomType.rtMngRoom,this);
-            _rooms.Add(managerRoom);
+            IRoom managerRoom = (new RoomFabric()).CreateRoom("", roomEP, RoomType.rtMngRoom, this, _mngEngine);
+                _rooms.Add(managerRoom);
+
             managerRoom.RUN();
 
             ServerListner.RUN();
@@ -77,6 +87,21 @@ namespace Tanki
             foundRoom = r.FirstOrDefault();
 
             return foundRoom;
+        }
+
+        Int32 GetNextRoomPort()
+        {
+            if (_next_room_port > _sys_settings.RoomPortMax) throw new Exception("RoomPortMax is exceeded");
+            return _next_room_port++;
+        }
+
+        public IRoom AddRoom()
+        {
+            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
+            Int32 roomPort = GetNextRoomPort();
+
+            IRoom newGameRoom = (new RoomFabric()).CreateRoom("",new IPEndPoint(roomAddr,roomPort), RoomType.rtGameRoom, this ,_gameEngine);
+            return newGameRoom;
         }
     }
 }

@@ -7,90 +7,90 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-	/// <summary>
-	/// Интерфейс описующий информацию об игре (IGameRoom).
-	/// Является частью интерфейса IGameRoom.
-	/// Предназначен для обмена между клиентом/серверером
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	/// </summary>
-	public interface IRoomStat
-	{
-		Guid Pasport { get; set; }
-		int Players_count { get; set; }
-		Guid Creator_Pasport { get; set; }
-	}
+    /// <summary>
+    /// Интерфейс описующий информацию об игре (IGameRoom).
+    /// Является частью интерфейса IGameRoom.
+    /// Предназначен для обмена между клиентом/серверером
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    /// </summary>
+    public interface IRoomStat
+    {
+        Guid Pasport { get; set; }
+        int Players_count { get; set; }
+        Guid Creator_Pasport { get; set; }
+    }
 
 
-	/// <summary>
-	/// Интерфейс описующий информацию об игровом поле.
-	/// Предназначен для обмена между клиентом/серверером
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	/// </summary>
-	public interface IMap
-	{
-		IEnumerable<ITank> Tanks { get; set; }
-		IEnumerable<IBullet> Bullets { get; set; }
-		IEnumerable<IBlock> Blocks { get; set; }
-	}
+    /// <summary>
+    /// Интерфейс описующий информацию об игровом поле.
+    /// Предназначен для обмена между клиентом/серверером
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    /// </summary>
+    public interface IMap
+    {
+        IEnumerable<ITank> Tanks { get; set; }
+        IEnumerable<IBullet> Bullets { get; set; }
+        IEnumerable<IBlock> Blocks { get; set; }
+    }
 
 
 
-	/// <summary>
-	/// Интерфейс описующий информацию об объекте.
-	/// Является родителем для ITank, IBullet, IBlock.
-	/// Предназначен для обмена между клиентом/серверером
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	/// </summary>
-	public interface IEntity
-	{
-		Rectangle Position { get; set; }
-		Direction Direction { get; set; }
+    /// <summary>
+    /// Интерфейс описующий информацию об объекте.
+    /// Является родителем для ITank, IBullet, IBlock.
+    /// Предназначен для обмена между клиентом/серверером
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    /// </summary>
+    public interface IEntity
+    {
+        Rectangle Position { get; set; }
+        Direction Direction { get; set; }
         EntityAction Command { get; set; }
         bool Can_Shoot { get; set; }
-		bool Is_Alive { get; set; }
-		bool Can_Be_Destroyed { get; set; }
+        bool Is_Alive { get; set; }
+        bool Can_Be_Destroyed { get; set; }
         int Speed { get; set; }
-		int Size { get; set; }
-	}
+        int Size { get; set; }
+    }
 
 
 
-	/// <summary>
-	/// Интерфейс описующий информацию о Танке(Игроке).
-	/// Является наследником IEntity.
-	/// Является частью IPlayer(подругому IGamer).
-	/// Используется в интерфейсах IServerEngine и IClientEngine.
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	/// </summary>
-	public interface ITank : IEntity
-	{
-		Guid Tank_ID { get; set; }
-		int Lives { get; set; }
-		Team Team { get; set; }
-	}
+    /// <summary>
+    /// Интерфейс описующий информацию о Танке(Игроке).
+    /// Является наследником IEntity.
+    /// Является частью IPlayer(подругому IGamer).
+    /// Используется в интерфейсах IServerEngine и IClientEngine.
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    /// </summary>
+    public interface ITank : IEntity
+    {
+        Guid Tank_ID { get; set; }
+        int Lives { get; set; }
+        Team Team { get; set; }
+    }
 
 
 
-	/// <summary>
-	/// Интерфейс описующий информацию о Пуле.
-	/// Является наследником IEntity.
-	/// Используется в интерфейсах IServerEngine и IClientEngine.
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	/// </summary>
-	public interface IBullet : IEntity
-	{
-		Guid Parent_Id { get; set; }
-	}
+    /// <summary>
+    /// Интерфейс описующий информацию о Пуле.
+    /// Является наследником IEntity.
+    /// Используется в интерфейсах IServerEngine и IClientEngine.
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    /// </summary>
+    public interface IBullet : IEntity
+    {
+        Guid Parent_Id { get; set; }
+    }
 
 
 
-	/// <summary>
-	/// Интерфейс описующий информацию о Преградах (Пеньках).
-	/// Является наследником IEntity.
-	/// Используется в интерфейсах IServerEngine и IClientEngine.
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	/// </summary>
-	public interface IBlock : IEntity
+    /// <summary>
+    /// Интерфейс описующий информацию о Преградах (Пеньках).
+    /// Является наследником IEntity.
+    /// Используется в интерфейсах IServerEngine и IClientEngine.
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    /// </summary>
+    public interface IBlock : IEntity
     {
 
     }
@@ -122,7 +122,7 @@ namespace Tanki
     /// <summary>
     /// Cущность принимающая информацию клиентом от хоста
     /// </summary>
-    public interface IReciever: INetCommunicationObj
+    public interface IReciever : INetCommunicationObj
     {
         IRecieverClient Owner { get; }
         bool Alive { get; set; }                            // работает ли поток на прием
@@ -145,7 +145,7 @@ namespace Tanki
 
 
     public interface INetCommunicationObj { }
-    public interface ISocket: INetCommunicationObj
+    public interface ISocket : INetCommunicationObj
     {
         Socket Socket { get; }
     }
@@ -196,7 +196,7 @@ namespace Tanki
     public delegate void ProcessMessageHandler(IPackage message);
     public delegate void ProcessMessagesHandler(IEnumerable<IPackage> messages);
 
-    public interface IEngine:IAddressseeHolderClient
+    public interface IEngine : IAddressseeHolderClient
     {
         IEngineClient Owner { get; }
         ProcessMessageHandler ProcessMessage { get; }
@@ -224,7 +224,7 @@ namespace Tanki
     /// может использоваться для GameServer и GameClient
     /// </summary>
 
-    public interface INetProcessor:IMessageQueueClient, IEngineClient,IRecieverClient
+    public interface INetProcessor : IMessageQueueClient, IEngineClient, IRecieverClient
     {
         //IMessageQueueClient - предоставляет IEnumerable of IReciever (использующие IMessageQueue), IEngine (нужный для IMessageQueue), 
         //                      а также механизм регистрации dependency IMessageQueue
@@ -232,14 +232,23 @@ namespace Tanki
         //                      а также механизм регистрации dependency IEngine
         void RUN();
     }
-	#endregion INetProcessor
+    #endregion INetProcessor
 
+    #region SystemSettings
+    public interface ISystemSettings
+    {
+        Int32 RoomPortMin {get;set;}
+        Int32 RoomPortMax { get; set; }
+        Int32 ClientPortMin { get; set; }
+        Int32 ClientPortMax { get; set; }
+        Int32 MaxRoomNumber { get; set; }
+    }
+    #endregion SystemSettings
 
-
-	/// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
-	/// Используется в IMesegeQueue, ISender, IReceiver</summary>
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	public interface IPackage
+    /// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
+    /// Используется в IMesegeQueue, ISender, IReceiver</summary>
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    public interface IPackage
 	{
 		Guid Sender_Passport { get; set; }
 		object Data { get; set; }

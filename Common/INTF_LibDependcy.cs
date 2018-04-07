@@ -77,7 +77,8 @@ namespace Tanki
     {
         IRoomStat getRoomStat(String forRoomID);
         IEnumerable<IRoomStat> getRoomsStat();
-        void MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IRoom AddRoom();
         IGamer GetGamerByGuid(Guid gamerGuid);
     }
 
@@ -91,6 +92,7 @@ namespace Tanki
     {
         IEnumerable<IRoomStat> getRoomsStat();
         IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IRoom AddRoom();
         IRoom GetRoomByGuid(Guid roomGuid);
     }
 
@@ -103,7 +105,7 @@ namespace Tanki
 
     public interface IRoomFabric
     {
-        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner);
+        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner, IEngine engine = null);
     }
 
     #endregion RoomInterfaces

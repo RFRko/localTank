@@ -118,10 +118,23 @@ namespace Tanki
 		{
 			var newGame = (IGameSetings)package.Data;
 			var client_passport = package.Sender_Passport;
-			// получить Gamer по id из списка ожидающих
-			// создать комнату
-			// добавить в нее игрока
-			// отправить ipendpoint комнаты игроку
-		}
+
+            IManagerRoom manageRoom = Owner as IManagerRoom;
+
+            // получить Gamer по id из списка ожидающих
+            IGamer gamer = manageRoom.GetGamerByGuid(client_passport);
+
+            // создать комнату
+            IRoom newGameRoom = manageRoom.AddRoom();
+            newGameRoom.CreatorPassport = gamer.Passport;
+
+            // добавить в нее игрока
+            manageRoom.MooveGamerToRoom(gamer, newGameRoom.Passport);
+
+            // отправить ipendpoint комнаты игроку
+            IPEndPoint newRoomEP = newGameRoom.Reciever.LockalEndPoint;
+
+
+        }
 	}
 }
