@@ -41,7 +41,6 @@ namespace Common
 			this._size = size;
         }
 
-		public int Size { get; set; }
 
 		/// <summary>
 		/// Текущая позиция X Y.
