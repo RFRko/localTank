@@ -67,9 +67,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BaseViewModel.cs" />
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainPageViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -108,9 +111,9 @@
     <Resource Include="begin1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{b8a2415b-ad82-4c99-ae00-f9c1fd5abdd3}</Project>
-      <Name>Common</Name>
+    <ProjectReference Include="..\GameServer\GameServer.csproj">
+      <Project>{fd87445b-5f4d-40c1-be21-44008685853c}</Project>
+      <Name>GameServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
