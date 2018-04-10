@@ -39,7 +39,7 @@ namespace Tanki
     }
 
     public class GameStatusChangedData : EventArgs
-	  {
+	{
 		  public GameStatus newStatus { get; set; }
-	  }
+	}
 }

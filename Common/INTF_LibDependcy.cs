@@ -73,6 +73,8 @@ namespace Tanki
 		void RUN();
 	}
 
+
+	//все что нужно для Server Manage Engine 
     public interface IManagerRoom
     {
         IRoomStat getRoomStat(String forRoomID);
@@ -81,7 +83,6 @@ namespace Tanki
         IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport);
         IGamer GetGamerByGuid(Guid gamerGuid);
     }
-
 
     public interface IRoomOwner
     {
@@ -119,7 +120,7 @@ namespace Tanki
         void RUN_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
         void END_GAME();
         Guid Passport { get; set; }
-        void Connect(IPEndPoint ServerEndPoint);
+        bool Connect(IPEndPoint ServerEndPoint);
 
     }
 

@@ -11,5 +11,6 @@ namespace Tanki
 	{
 		public string PlayerName { get; set; }
 		public Guid Pasport { get; set; }
+		public GameSetings GameSetings { get; set; }
 	}
 }

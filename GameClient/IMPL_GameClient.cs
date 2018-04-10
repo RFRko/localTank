@@ -23,7 +23,7 @@ namespace Tanki
         public event EventHandler<EnforceDrawingData> EnforceDrawing;
 
         //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
-        public GameClient(IPEndPoint localEP, IRoomOwner owner) 
+        public GameClient(IPEndPoint localEP, IRoomOwner owner = null) 
         {
             this.adresee_list = new Dictionary<string, IAddresssee>();
             this.tcp = new TcpClient();
@@ -126,9 +126,14 @@ namespace Tanki
             
         }
 
-        public void Connect(IPEndPoint ServerEndPoint)
+        public bool Connect(IPEndPoint ServerEndPoint)
         {
-            tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
+			try
+			{
+				tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
+				return true;
+			}
+			catch { return false; };
         }
 
         public void END_GAME()
