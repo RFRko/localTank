@@ -15,10 +15,11 @@ namespace Tanki
         private TcpClient tcp;                                      // должен быть приватный TCPClient  для коннекта к хосту
         private IEntity clientGameState;
         private int miliseconds;
-        private Guid Passport;
+        private Guid passport;
         private TimerCallback tm;                                   //должен быть приватный Timer - на callBack которого будет вызываться метод переодической отправки клинтского состояния игры на сервер.
         private IPackage package;
         private IPEndPoint endpoint;
+        event EventHandler<EnforceDrawingData> EnforceDrawing;  // дернет движок, просто делегат
 
         //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
         public GameClient(IPEndPoint localEP, IRoomOwner owner) 
@@ -100,7 +101,7 @@ namespace Tanki
             }
         }
 
-        public void RUN(IPEndPoint ServerEndPoint)                  // запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
+        public new void RUN()                  // запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
         {
             base.RUN();
         }

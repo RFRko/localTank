@@ -46,6 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClientEngine\ClientEngine.csproj">
+      <Project>{23C61106-9BB5-4C74-A206-96CAD867AE34}</Project>
+      <Name>ClientEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{b8a2415b-ad82-4c99-ae00-f9c1fd5abdd3}</Project>
       <Name>Common</Name>
