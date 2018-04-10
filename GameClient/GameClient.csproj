@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClientEngine\ClientEngine.csproj">
-      <Project>{23C61106-9BB5-4C74-A206-96CAD867AE34}</Project>
+      <Project>{23c61106-9bb5-4c74-a206-96cad867ae34}</Project>
       <Name>ClientEngine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">

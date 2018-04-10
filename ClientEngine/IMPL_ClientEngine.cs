@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tanki 
 {
-	public class ClientEngine : EngineAbs,IClientEngine
+	public class ClientEngine : EngineAbs, IClientEngine
     {
 		public override ProcessMessageHandler ProcessMessage { get; protected set; }
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
@@ -50,7 +50,7 @@ namespace Tanki
 			{
 				case MesseggeType.Map:
 					{
-						Map(msg);
+						SetMap(msg);
 						break;
 					}
 				case MesseggeType.RoomList:
@@ -68,7 +68,7 @@ namespace Tanki
 						SetRoomIpEndpoint(msg);
 						break;
 					}
-				case MesseggeType.StatGame:
+				case MesseggeType.StartGame:
 					{
 						GameStart(msg);
 						break;
@@ -82,12 +82,13 @@ namespace Tanki
 			}
 		}
 
-		private void Map(IPackage package)
+		private void SetMap(IPackage package)
 		{
-			var map = package.Data;
-			//отправить map отрисовщику
-		}
-		private void SetRoomList(IPackage package)
+			var map = package.Data as IMap;
+            OnMapChanged?.Invoke(this, map);
+            //отправить map отрисовщику - НЕ НАДО, просто установим публичное свойство и сгенерим событие OnMapChanged
+        }
+        private void SetRoomList(IPackage package)
 		{
 			//обновить roomlist
 		}
@@ -117,7 +118,7 @@ namespace Tanki
 			Guid my_passport = new Guid(); //заменить, получить passport клиента
 			Owner.Sender.SendMessage(new Package()
 			{
-				Passport = my_passport,
+				Sender_Passport = my_passport,
 				Data = entity,
 				MesseggeType = MesseggeType.Entity
 			}, room_IpEndpoint);
@@ -126,10 +127,11 @@ namespace Tanki
 		{
 			//отправить настройки и имя игрока серверу
 		}
-		public void ConnectGame(Guid room_guid)
+		public void JOINGame(Guid room_guid)
 		{
-			//отправить id комнаты и имя игрока на сервер
-		}
+            // переименовал  с ConnectGame на JOINGame, чтобы не путаться с коннектом к хосту
+            //отправить id комнаты и имя игрока на сервер
+        }
 
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {

@@ -35,8 +35,6 @@ namespace Tanki
 
         public void RUN()
         {
-            //
-
             IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
             Int32 roomPort = 50001;
             IPEndPoint roomEP = new IPEndPoint(roomAddr, roomPort);
@@ -50,14 +48,15 @@ namespace Tanki
 
         public IEnumerable<IRoomStat> getRoomsStat()
         {
-            var rSts = from r in Rooms select new RoomStat(){  Id = r.RoomId, Players_count = r.Gamers.Count()};
+            var rSts = from r in Rooms select new RoomStat(){ Pasport = r.Passport, Players_count = r.Gamers.Count(), Creator_Pasport = r.CreatorPassport};
             return rSts;
         }
 
-        public void MooveGamerToRoom(IGamer gamer, string TargetRoomId)
+        public IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId)
         {
-            var selRoom = from r in Rooms where r.RoomId == TargetRoomId select r;
+            var selRoom = from r in Rooms where r.Passport == TargetRoomId select r;
             selRoom.First().AddGamer(gamer);
+            return selRoom.First().Reciever.LockalEndPoint;
         }
 
         public IRoomStat getRoomStat(String RoomID)
@@ -65,7 +64,7 @@ namespace Tanki
             var selRooms = from r in Rooms where r.RoomId == RoomID select r;
             IRoom selRoom = selRooms.First();
 
-            return new RoomStat() { Id = selRoom.RoomId, Players_count = selRoom.Gamers.Count() };
+            return new RoomStat() {  Pasport = selRoom.Passport, Players_count = selRoom.Gamers.Count(), Creator_Pasport = selRoom.CreatorPassport };
         }
 
         public IRoom GetRoomByGuid(Guid roomGuid)

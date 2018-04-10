@@ -71,7 +71,7 @@ namespace Tanki
 		}
 		private void RoomList(IPackage package)
 		{
-			var client_id = package.Passport;
+			var client_id = package.Sender_Passport;
 			IGamer gamer = null; // нужен метод -  IGamer Gamer_by_Guid(Guid pasport) поиск игрока по guid в списке ожидающих
 			SendRoomList(gamer.RemoteEndPoint);
 		}
@@ -79,7 +79,7 @@ namespace Tanki
 		{
 			var cd = (IConectionData)package.Data;
 			var name = cd.PlayerName;
-			var client_passport = package.Passport;
+			var client_passport = package.Sender_Passport;
 			IGamer gamer = null; // нужен метод:  IGamer Gamer_by_Guid(Guid pasport); поиск игрока по guid в списке ожидающих
 			gamer.SetId(name, client_passport);
 			var room_passport = cd.Pasport;
@@ -117,7 +117,7 @@ namespace Tanki
 		private void CreatRoom(IPackage package)
 		{
 			var newGame = (IGameSetings)package.Data;
-			var client_passport = package.Passport;
+			var client_passport = package.Sender_Passport;
 			// получить Gamer по id из списка ожидающих
 			// создать комнату
 			// добавить в нее игрока
