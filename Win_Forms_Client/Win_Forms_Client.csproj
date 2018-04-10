@@ -104,9 +104,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClientEngine\ClientEngine.csproj">
+      <Project>{23c61106-9bb5-4c74-a206-96cad867ae34}</Project>
+      <Name>ClientEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{b8a2415b-ad82-4c99-ae00-f9c1fd5abdd3}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameClient\GameClient.csproj">
+      <Project>{f6709b91-8a33-4b90-a68e-3d6bed9d7ba2}</Project>
+      <Name>GameClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
