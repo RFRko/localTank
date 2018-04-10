@@ -118,18 +118,32 @@ namespace Tanki
 		{
 			var conectionData = (IConectionData)package.Data;
 			var client_passport = package.Sender_Passport;
-			var setings = conectionData.GameSetings;
+			var newGameSettings = conectionData.GameSetings;
 			var player_name = conectionData.PlayerName;
+      
+            IManagerRoom manageRoom = Owner as IManagerRoom;
 
-			var gamer = ManagerRoom.GetGamerByGuid(client_passport);
-			gamer.SetId(player_name, client_passport);
-			var newRoom_ipendpoint = ManagerRoom.CreateRoom(setings, client_passport, gamer);
+            // получить Gamer по id из списка ожидающих
+            IGamer gamer = manageRoom.GetGamerByGuid(client_passport);
+            gamer.SetId(player_name, client_passport);
+            
+            // создать комнату
+            IRoom newGameRoom = manageRoom.AddRoom(newGameSettings, client_passport);
+            newGameRoom.CreatorPassport = gamer.Passport;
 
-			Owner.Sender.SendMessage(new Package()
-			{
-				Data = newRoom_ipendpoint,
-				MesseggeType = MesseggeType.RoomEndpoint
-			}, gamer.RemoteEndPoint);
-		}
+            // добавить в нее игрока
+            manageRoom.MooveGamerToRoom(gamer, newGameRoom.Passport);
+
+            // отправить ipendpoint комнаты игроку
+            IPEndPoint newRoomEP = newGameRoom.Reciever.LockalEndPoint;
+
+
+
+            Owner.Sender.SendMessage(new Package()
+            {
+              Data = newRoomEP,
+              MesseggeType = MesseggeType.RoomEndpoint
+            }, gamer.RemoteEndPoint);
+        }
 	}
 }

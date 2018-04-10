@@ -64,7 +64,7 @@ namespace Tanki
         String RoomId { get; set; }
         Guid Passport { get; }
         Guid CreatorPassport { get; set; }
-        IGameSetings GameSetings { get; }
+        IGameSetings GameSetings { get; set; }
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
         IRoomStat getRoomStat();
@@ -77,17 +77,12 @@ namespace Tanki
 	//все что нужно для Server Manage Engine 
     public interface IManagerRoom
     {
-        IRoomStat getRoomStat(String forRoomID); //не используется
-        IEnumerable<IRoomStat> getRoomsStat(); // формирует IEnumerable<IRoomStat> 
-		IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId); //добавляет игрока в комнату, и возвращает ее ipEndPoint
-        IGamer GetGamerByGuid(Guid gamerGuid); // находит игрока по giud 
-		IRoom GetRoomByGuid(Guid roomGuid); //находит комнату по guid
-
-		//создает комнату. параметры: настройки, guid создателя, ссылка на игрока который создал комнату (чтоб сразу его в нее добавить)
-		//возвращает ipEndpoint созданной комнаты
-		IPEndPoint CreateRoom(IGameSetings setings, Guid creator_passport, IGamer gamer);
-	}
-
+        IRoomStat getRoomStat(String forRoomID);
+        IEnumerable<IRoomStat> getRoomsStat();
+        IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport);
+        IGamer GetGamerByGuid(Guid gamerGuid);
+    }
 
     public interface IRoomOwner
     {
@@ -98,6 +93,7 @@ namespace Tanki
     {
         IEnumerable<IRoomStat> getRoomsStat();
         IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport);
         IRoom GetRoomByGuid(Guid roomGuid);
     }
 
@@ -110,7 +106,7 @@ namespace Tanki
 
     public interface IRoomFabric
     {
-        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner);
+        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner, IEngine engine = null);
     }
 
     #endregion RoomInterfaces
