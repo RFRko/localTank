@@ -14,24 +14,33 @@ namespace Tanki
 {
 	public partial class ConnectionForm : Form
 	{
-		Client client;
-		public ConnectionForm()
+		GameClient GameClient;
+		public ConnectionForm(GameClient gameClient)
 		{
+			GameClient = gameClient;
 			InitializeComponent();
 			textBox1.Text = "127.0.0.1";
 			textBox2.Text = "5000";
-			textBox3.Text = "5001";
 		}
-
+		public bool Connect(IPEndPoint point)
+		{
+			var caption = "Ошибка подключения";
+			var message = "Сервер не доступен";
+			var buttons = MessageBoxButtons.RetryCancel;
+			while (GameClient.Connect(point))
+			{
+				var result = MessageBox.Show(message, caption, buttons);
+				if (result == DialogResult.Cancel) { Close(); return false; }
+			}
+			return true;
+		}
 		private void button2_Click(object sender, EventArgs e)
 		{
 			string s1 = textBox1.Text;
 			string s2 = textBox2.Text;
-			string s3 = textBox3.Text;
 
 			if (!string.IsNullOrEmpty(s1)
-				&& !string.IsNullOrEmpty(s2)
-				&& !string.IsNullOrEmpty(s3))
+				&& !string.IsNullOrEmpty(s2))
 			{
 				IPAddress iP;
 				ushort remote_port;
@@ -47,37 +56,17 @@ namespace Tanki
 					label3.Text = "Не коректный порт сервера";
 					return;
 				}
-				if (!ushort.TryParse(s3, out lockal_port) || lockal_port > 65535)
-				{
-					label3.Text = "Не коректный локальный порт";
-					return;
-				}
 
 				IPEndPoint point = new IPEndPoint(iP, remote_port);
-
-				client = new Client(point, lockal_port);
-
-				if (Connect())
+				if (Connect(point))
 				{
-					Lobby lobby = new Lobby(client);
+					Lobby lobby = new Lobby(GameClient);
 					lobby.Show();
 					Hide();
 				}
+				else { Close(); }
 			}
 			else label3.Text = "Error: Заполните все поля";
-		}
-
-		public bool Connect()
-		{
-			var caption = "Ошибка подключения";
-			var message = "Сервер не доступен";
-			var buttons = MessageBoxButtons.RetryCancel;
-			while (!client.RUN())
-			{
-				var result = MessageBox.Show(message, caption, buttons);
-				if (result == DialogResult.Cancel) { Close(); return false; }
-			}
-			return true;
 		}
 
 		private void button1_Click(object sender, EventArgs e)

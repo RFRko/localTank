@@ -11,7 +11,7 @@ namespace Tanki
 	{
 		public override ProcessMessageHandler ProcessMessage { get; protected set; }
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
-		private IManagerRoomOwner ManagerRoom;
+		private IManagerRoom ManagerRoom;
 
 		public ServerManageEngine() : base() { }
 		public ServerManageEngine(IRoom inRoom) : base(inRoom)
@@ -19,7 +19,7 @@ namespace Tanki
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
 
-			ManagerRoom = Owner as IManagerRoomOwner;
+			ManagerRoom = Owner as IManagerRoom;
 		}
 
 		private void ProcessMessageHandler(IPackage msg)
@@ -72,7 +72,7 @@ namespace Tanki
 		private void RoomList(IPackage package)
 		{
 			var client_id = package.Sender_Passport;
-			IGamer gamer = null; // нужен метод -  IGamer Gamer_by_Guid(Guid pasport) поиск игрока по guid в списке ожидающих
+			IGamer gamer = ManagerRoom.GetGamerByGuid(client_id);
 			SendRoomList(gamer.RemoteEndPoint);
 		}
 		private void RoomConnect(IPackage package)
@@ -80,15 +80,15 @@ namespace Tanki
 			var cd = (IConectionData)package.Data;
 			var name = cd.PlayerName;
 			var client_passport = package.Sender_Passport;
-			IGamer gamer = null; // нужен метод:  IGamer Gamer_by_Guid(Guid pasport); поиск игрока по guid в списке ожидающих
+			IGamer gamer = ManagerRoom.GetGamerByGuid(client_passport);
 			gamer.SetId(name, client_passport);
 			var room_passport = cd.Pasport;
-			var room = Owner as IRoom; // нужен метод:  IRoom Room_by_Guid(Guid pasport); поиск комнаты по guid
+			var room = ManagerRoom.GetRoomByGuid(room_passport);
 			if (room != null)
 			{
 				if (room.Gamers.Count() < room.GameSetings.MaxPlayersCount)
 				{
-					IPEndPoint room_ipendpoint = ManagerRoom.MooveGamerToRoom(gamer, cd.Pasport);
+					IPEndPoint room_ipendpoint = ManagerRoom.MooveGamerToRoom(gamer, room_passport);
 
 					Owner.Sender.SendMessage(new Package()
 					{
@@ -116,12 +116,20 @@ namespace Tanki
 		}
 		private void CreatRoom(IPackage package)
 		{
-			var newGame = (IGameSetings)package.Data;
+			var conectionData = (IConectionData)package.Data;
 			var client_passport = package.Sender_Passport;
-			// получить Gamer по id из списка ожидающих
-			// создать комнату
-			// добавить в нее игрока
-			// отправить ipendpoint комнаты игроку
+			var setings = conectionData.GameSetings;
+			var player_name = conectionData.PlayerName;
+
+			var gamer = ManagerRoom.GetGamerByGuid(client_passport);
+			gamer.SetId(player_name, client_passport);
+			var newRoom_ipendpoint = ManagerRoom.CreateRoom(setings, client_passport, gamer);
+
+			Owner.Sender.SendMessage(new Package()
+			{
+				Data = newRoom_ipendpoint,
+				MesseggeType = MesseggeType.RoomEndpoint
+			}, gamer.RemoteEndPoint);
 		}
 	}
 }

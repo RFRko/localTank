@@ -12,23 +12,53 @@ namespace Tanki
 		public override ProcessMessageHandler ProcessMessage { get; protected set; }
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 
-        public IEnumerable<IRoomStat> RoomsStat { get { return _RoomsStat; } protected set { SetRoomsStat(_RoomsStat); } }
+        public IEnumerable<IRoomStat> RoomsStat
+		{
+			get { return RoomsStat; }
+			protected set
+			{
+				OnRoomsStatChanged?.Invoke(this, new RoomStatChangeData() { RoomsStat = value });
+			}
+		}
         public IMap Map { get; protected set; }
-        public IEntity Entity { get; protected set; }
+        public IEntity Entity
+		{
+			get { return Entity; }
+			protected set
+			{
+				lock (locker)
+				{
+					Entity = value;
+				}
+				IPEndPoint room_IpEndpoint = Owner.adresee_list["Room"];
+				Guid my_passport = Owner.Passport;
+				Owner.Sender.SendMessage(new Package()
+				{
+					Sender_Passport = my_passport,
+					Data = value,
+					MesseggeType = MesseggeType.Entity
+				}, room_IpEndpoint);
+			}
+		}
+		public string RoomError { get { return _roomError; } protected set { SetRoomError(value);  } }
 
-        private IGameEngineOwner Owner;
-        private List<IRoomStat> _RoomsStat = new List<IRoomStat>();
+		//private IGameEngineOwner Owner;
+		//private List<IRoomStat> _RoomsStat = new List<IRoomStat>();
+		//private IEntity _entity;
+		//private string _roomError = "";
+
+		private object locker;
 
 
         public event EventHandler<RoomStatChangeData> OnRoomsStatChanged;
         public event EventHandler<IMap> OnMapChanged;
+		public event EventHandler<string> OnRoomError;
 
-        public ClientEngine()
+		public ClientEngine()
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
 		}
-
         public ClientEngine(IGameEngineOwner owner)
         {
             ProcessMessage += ProcessMessageHandler;
@@ -37,12 +67,37 @@ namespace Tanki
         }
 
 
+		private void SetEntity(IEntity entity)
+		{
+			lock (locker)
+			{
+				_entity = entity;
+			}
+			IPEndPoint room_IpEndpoint = Owner.adresee_list["Room"];
+			Guid my_passport = Owner.Passport;
+			Owner.Sender.SendMessage(new Package()
+			{
+				Sender_Passport = my_passport,
+				Data = entity,
+				MesseggeType = MesseggeType.Entity
+			}, room_IpEndpoint);
+		}
         private void SetRoomsStat(List<IRoomStat> newVal)
         {
-            _RoomsStat = newVal;
+			lock (locker)
+			{
+				_RoomsStat = newVal;
+			}
             OnRoomsStatChanged?.Invoke(this, new RoomStatChangeData() { RoomsStat = _RoomsStat });
         }
-
+		private void SetRoomError(string text)
+		{
+			lock (locker)
+			{
+				_roomError = text;
+			}
+			OnRoomsStatChanged?.Invoke(this, new RoomStatChangeData() { RoomsStat = _RoomsStat });
+		}
 
         private void ProcessMessageHandler(IPackage msg)
 		{
@@ -86,19 +141,18 @@ namespace Tanki
 		{
 			var map = package.Data as IMap;
             OnMapChanged?.Invoke(this, map);
-            //отправить map отрисовщику - НЕ НАДО, просто установим публичное свойство и сгенерим событие OnMapChanged
         }
         private void SetRoomList(IPackage package)
 		{
-			//обновить roomlist
+			SetRoomsStat(package.Data as List<IRoomStat>);
 		}
 		private void SetPassport(IPackage package)
 		{
-			//set passport
+			Owner.Passport = (Guid)package.Data;
 		}
 		private void SetRoomIpEndpoint(IPackage package)
 		{
-			//set room_endpoint
+			Owner.adresee_list.Add("Room", package.Data as IAddresssee);
 		}
 		private void GameStart(IPackage package)
 		{
@@ -110,49 +164,54 @@ namespace Tanki
 			//остановить отрисовку
 			//перейти в окно со списком комнат
 		}
-
-		public void On_Entity_Update_Handler(IEntity entity)
+		private void SetRoomError(IPackage package)
 		{
-			//ловит уведомления от отрисовщика об изменнении Entity и отправляет его на сервер
-			IPEndPoint room_IpEndpoint = null; //заменить, получить ipendpoint текущего room
-			Guid my_passport = new Guid(); //заменить, получить passport клиента
+			_roomError = package.Data;
+		}
+
+		public void CreateGame(GameSetings gameSetings, string player_name)
+		{
+			var connectionData = new ConectionData()
+			{
+				GameSetings = gameSetings,
+				PlayerName = player_name
+			};
+
 			Owner.Sender.SendMessage(new Package()
 			{
-				Sender_Passport = my_passport,
-				Data = entity,
-				MesseggeType = MesseggeType.Entity
-			}, room_IpEndpoint);
+				Sender_Passport = Owner.Passport,
+				Data = connectionData,
+				MesseggeType = MesseggeType.CreateRoom
+			}, Owner.adresee_list["Host"]);
 		}
-		public void CreateGame(GameSetings gameSetings)
+		public void JOINGame(Guid room_guid, string player_name)
 		{
-			//отправить настройки и имя игрока серверу
+			var connectionData = new ConectionData()
+			{
+				Pasport = room_guid,
+				PlayerName = player_name
+			};
+
+			Owner.Sender.SendMessage(new Package()
+			{
+				Sender_Passport = Owner.Passport,
+				Data = connectionData,
+				MesseggeType = MesseggeType.CreateRoom
+			}, Owner.adresee_list["Host"]);
 		}
-		public void JOINGame(Guid room_guid)
-		{
-            // переименовал  с ConnectGame на JOINGame, чтобы не путаться с коннектом к хосту
-            //отправить id комнаты и имя игрока на сервер
-        }
 
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {
             throw new NotImplementedException();
         }
 
-
         public void OnViewCommandHandler(object Sender, object evntData)
         {
             throw new NotImplementedException();
         }
-
         public void OnEntityHandler(object Sender, IEntity evntData)
         {
             throw new NotImplementedException();
         }
-
-        //событие о рум эндпоинт
-        //событие о мап
-        //событие о энтити
-        //событие о старте игры
-        //событие о конце игры
     }
 }
