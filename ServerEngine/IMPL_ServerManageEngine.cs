@@ -82,8 +82,8 @@ namespace Tanki
 			var client_passport = package.Sender_Passport;
 			IGamer gamer = ManagerRoom.GetGamerByGuid(client_passport);
 			gamer.SetId(name, client_passport);
-			var room_passport = cd.Pasport;
-			var room = ManagerRoom.GetRoomByGuid(room_passport);
+			var room_passport = cd.RoomPasport;
+			var room = (Owner as IManagerRoomOwner).GetRoomByGuid(room_passport);
 			if (room != null)
 			{
 				if (room.Gamers.Count() < room.GameSetings.MaxPlayersCount)
@@ -101,7 +101,7 @@ namespace Tanki
 					Owner.Sender.SendMessage(new Package()
 					{
 						Data = "Room is full",
-						MesseggeType = MesseggeType.RoomError
+						MesseggeType = MesseggeType.Error
 					}, gamer.RemoteEndPoint);
 				}
 			}
@@ -110,7 +110,7 @@ namespace Tanki
 				Owner.Sender.SendMessage(new Package()
 				{
 					Data = "Room is not exist",
-					MesseggeType = MesseggeType.RoomError
+					MesseggeType = MesseggeType.Error
 				}, gamer.RemoteEndPoint);
 			}
 		}
@@ -121,27 +121,21 @@ namespace Tanki
 			var newGameSettings = conectionData.GameSetings;
 			var player_name = conectionData.PlayerName;
       
-            IManagerRoom manageRoom = Owner as IManagerRoom;
-
             // получить Gamer по id из списка ожидающих
-            IGamer gamer = manageRoom.GetGamerByGuid(client_passport);
+            IGamer gamer = ManagerRoom.GetGamerByGuid(client_passport);
             gamer.SetId(player_name, client_passport);
             
             // создать комнату
-            IRoom newGameRoom = manageRoom.AddRoom(newGameSettings, client_passport);
+            IRoom newGameRoom = ManagerRoom.AddRoom(newGameSettings, client_passport);
             newGameRoom.CreatorPassport = gamer.Passport;
 
-            // добавить в нее игрока
-            manageRoom.MooveGamerToRoom(gamer, newGameRoom.Passport);
-
-            // отправить ipendpoint комнаты игроку
-            IPEndPoint newRoomEP = newGameRoom.Reciever.LockalEndPoint;
-
-
+			// добавить в нее игрока
+			var room_endpoint = ManagerRoom.MooveGamerToRoom(gamer, newGameRoom.Passport);
+			
 
             Owner.Sender.SendMessage(new Package()
             {
-              Data = newRoomEP,
+              Data = room_endpoint,
               MesseggeType = MesseggeType.RoomEndpoint
             }, gamer.RemoteEndPoint);
         }

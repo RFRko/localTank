@@ -58,22 +58,16 @@
 		Passport,
 		/// <summary> Отравка серверу id выбранной комнаты </summary>
 		RoomID,
-		/// <summary> Подключение к серверу </summary>
-		Connect,
+		/// <summary> Отравка клиенту ipEndpoint выбранной/созданной комнаты </summary>
+		RoomEndpoint,
 		/// <summary> Отправка клиенту сообщения об ошибке </summary>
-		RoomError,
+		Error,
 		/// <summary> Отправка серверу сообщения о создании новой комнаты </summary>
 		CreateRoom,
 		/// <summary> Отправка клиентам сообщения о начале игры </summary>
 		StartGame,
 		/// <summary> Отправка клиентам сообщения о конце игры </summary>
 		EndGame,
-		/// <summary> Отправка серерверу сообщения об убийстве</summary>
-		Kill,
-		/// <summary> Настройки </summary>
-		Settings,
-		/// <summary> IPEndPoint созданной/подключенной комнаты</summary>
-		RoomEndpoint,
 		/// <summary> Oбъект отправляемый клиентом на сервер</summary>
 		Entity
 	}

@@ -121,14 +121,15 @@ namespace Tanki
         void END_GAME();
         Guid Passport { get; set; }
         bool Connect(IPEndPoint ServerEndPoint);
-
-    }
+		void AddAddressee(String Id, IAddresssee addresssee);
+		IAddresssee this[String id] { get; }
+	}
 
     public interface IClient: IGameClient
     {
-        void AddAddressee(String Id, IAddresssee addresssee);   // добавляем нового адресата 
+        //void AddAddressee(String Id, IAddresssee addresssee);   // добавляем нового адресата 
 
-        IAddresssee this[String id] { get; } //свойство идексатор для возврата Адресата по текстовому имени\ид.  
+        //IAddresssee this[String id] { get; } //свойство идексатор для возврата Адресата по текстовому имени\ид.  
                                              //Адресат это объект с IPEndPoint комнаты (может быть как минимум два аддерсата - управляющая комната, текущая игровая комната
 
 
