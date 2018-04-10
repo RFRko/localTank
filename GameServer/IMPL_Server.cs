@@ -12,16 +12,23 @@ namespace Tanki
     {
         private GameServer() { }
 
-        public GameServer(IListener listener, ISystemSettings sysSettings, IEngine mngEngine = null, IEngine gameEngine = null)
+        public GameServer(IListener listener, ISystemSettings sysSettings, IRoomFabric RoomFabric = null, IServerEngineFabric EngineFabric = null)
         {
             _sys_settings = sysSettings;
             _next_room_port = sysSettings.RoomPortMin;
 
             ServerListner = listener;
             RegisterListener(ServerListner);
-            _mngEngine = mngEngine;
-            _gameEngine = gameEngine;
+
+            if (RoomFabric != null)
+                _roomFabric = RoomFabric;
+
+            _engineFabric = EngineFabric;
         }
+
+        private IRoomFabric _roomFabric;
+        private IServerEngineFabric _engineFabric;
+
 
         private List<IRoom> _rooms = new List<IRoom>();
         private ISystemSettings _sys_settings;
@@ -95,12 +102,15 @@ namespace Tanki
             return _next_room_port++;
         }
 
-        public IRoom AddRoom()
+        public IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport)
         {
             IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
             Int32 roomPort = GetNextRoomPort();
 
             IRoom newGameRoom = (new RoomFabric()).CreateRoom("",new IPEndPoint(roomAddr,roomPort), RoomType.rtGameRoom, this ,_gameEngine);
+            newGameRoom.GameSetings = gameSettings;
+            newGameRoom.CreatorPassport = Creator_Passport;
+
             return newGameRoom;
         }
     }

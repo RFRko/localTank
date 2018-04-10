@@ -116,7 +116,7 @@ namespace Tanki
 		}
 		private void CreatRoom(IPackage package)
 		{
-			var newGame = (IGameSetings)package.Data;
+			var newGameSettings = (IGameSetings)package.Data;
 			var client_passport = package.Sender_Passport;
 
             IManagerRoom manageRoom = Owner as IManagerRoom;
@@ -125,7 +125,7 @@ namespace Tanki
             IGamer gamer = manageRoom.GetGamerByGuid(client_passport);
 
             // создать комнату
-            IRoom newGameRoom = manageRoom.AddRoom();
+            IRoom newGameRoom = manageRoom.AddRoom(newGameSettings, client_passport);
             newGameRoom.CreatorPassport = gamer.Passport;
 
             // добавить в нее игрока

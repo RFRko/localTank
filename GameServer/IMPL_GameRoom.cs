@@ -118,10 +118,10 @@ namespace Tanki
             return mO.MooveGamerToRoom(gamer,TargetRoomId);
         }
 
-        public IRoom AddRoom()
+        public IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport)
         {
             IManagerRoomOwner mO = Owner as IManagerRoomOwner;
-            return mO.AddRoom();
+            return mO.AddRoom(gameSettings, Creator_Passport);
         }
 
     }
