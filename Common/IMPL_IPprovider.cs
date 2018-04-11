@@ -43,27 +43,37 @@ namespace Tanki
 
     public class PredefinedIP : IPEndPointProviderAbs
     {
-        public PredefinedIP(String IpAddr) : base()
+        public PredefinedIP(String IpV6addr, String IpV4addr) : base()
         {
-            _PredefinedIp = IpAddr;
+            _PredefinedIpV6 = IpV6addr;
+            _PredefinedIpV4 = IpV4addr;
+
         }
 
-        private String _PredefinedIp;
-        private AddressFamily _addrFamily;
+        private String _PredefinedIpV6;
+        private String _PredefinedIpV4;
+        
         public override IPEndPoint CreateIPEndPoint(AddressFamily ipAddrFamily, int port)
         {
-            ipAddress = IPAddress.Parse(_PredefinedIp);
+            IPAddress addr = null;
+            String strAddr = null;
 
-            if (ipAddress.AddressFamily != _addrFamily)
-            {
-                throw new Exception(_PredefinedIp + " is not "+_addrFamily.ToString());
-            }
+            if (ipAddrFamily == AddressFamily.InterNetworkV6)
+                strAddr = _PredefinedIpV6;
+
+            if (ipAddrFamily == AddressFamily.InterNetwork)
+                strAddr = _PredefinedIpV4;
+
+            if (!IPAddress.TryParse(strAddr, out addr))
+                throw new Exception(strAddr + "Not Valid " + ipAddrFamily.ToString());
+            
+
 
             IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
 
             var foundInHost = from a in HostEntry.AddressList where a == ipAddress select a;
             if (foundInHost.Count() == 0)
-                throw new Exception(_PredefinedIp + " is out of host addresses");
+                throw new Exception(strAddr + " is out of host addresses");
 
             return new IPEndPoint(ipAddress, port);
         }
