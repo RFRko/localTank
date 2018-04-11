@@ -100,6 +100,14 @@ namespace Tanki
 				MesseggeType = MesseggeType.RoomID
 			}, client["Host"]);
 		}
+		public void GetRoomList()
+		{
+			Owner.Sender.SendMessage(new Package()
+			{
+				Sender_Passport = client.Passport,
+				MesseggeType = MesseggeType.GetRoomList
+			}, client["Host"]);
+		}
 
 
 		public void OnEntityHandler(object Sender, IEntity evntData)
