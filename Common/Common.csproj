@@ -58,6 +58,7 @@
     <Compile Include="IMPL_RoomStat.cs" />
     <Compile Include="IMPL_Sender.cs" />
     <Compile Include="IMPL_Serializator.cs" />
+    <Compile Include="IMPL_SystemSettings.cs" />
     <Compile Include="IMPL__MessageQueue.cs" />
     <Compile Include="INTF_Common.cs" />
     <Compile Include="INTF_LibDependcy.cs" />

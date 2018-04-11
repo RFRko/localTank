@@ -8,22 +8,21 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    public abstract class IPproviderAbs : IIpProvider
+    public abstract class IPEndPointProviderAbs : IIpEPprovider
     {
-        public IPproviderAbs() { }
+        public IPEndPointProviderAbs() { }
         protected IPAddress ipAddress { get; set; }
-        protected Int32 Port { get; set; }
 
-        public abstract IPEndPoint CreateIPEndPoint();
+        public abstract IPEndPoint CreateIPEndPoint(AddressFamily ipAddrFamily, int port);
     }
 
 
-    public class FirstAvailableIP : IPproviderAbs
+    public class FirstAvailableIP : IPEndPointProviderAbs
     {
-        public FirstAvailableIP(AddressFamily addrFamily, Int32 port) : base() { _addrFamily = addrFamily; Port = port; }
+        public FirstAvailableIP() : base() {}
 
         private AddressFamily _addrFamily;
-        public override IPEndPoint CreateIPEndPoint()
+        public override IPEndPoint CreateIPEndPoint(AddressFamily ipAddrFamily, int port)
         {
             IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
 
@@ -37,23 +36,21 @@ namespace Tanki
 
             }
 
-            return new IPEndPoint(ipAddress.Address, Port);
+            return new IPEndPoint(ipAddress, port);
         }
     }
 
 
-    public class PredefinedIP : IPproviderAbs
+    public class PredefinedIP : IPEndPointProviderAbs
     {
-        public PredefinedIP(String IpAddr, AddressFamily addrFamily, Int32 port) : base()
+        public PredefinedIP(String IpAddr) : base()
         {
             _PredefinedIp = IpAddr;
-            _addrFamily = addrFamily;
-            Port = port;
         }
 
         private String _PredefinedIp;
         private AddressFamily _addrFamily;
-        public override IPEndPoint CreateIPEndPoint()
+        public override IPEndPoint CreateIPEndPoint(AddressFamily ipAddrFamily, int port)
         {
             ipAddress = IPAddress.Parse(_PredefinedIp);
 
@@ -64,25 +61,20 @@ namespace Tanki
 
             IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
 
-            foreach (var a in HostEntry.AddressList)
-            {
-
-            }
-
             var foundInHost = from a in HostEntry.AddressList where a == ipAddress select a;
             if (foundInHost.Count() == 0)
                 throw new Exception(_PredefinedIp + " is out of host addresses");
 
-            return new IPEndPoint(ipAddress.Address, Port);
+            return new IPEndPoint(ipAddress, port);
         }
     }
 
     //Не реализован
-    public class IPfromConfigFile : IPproviderAbs
+    public class IPfromConfigFile : IPEndPointProviderAbs
     {
-        public IPfromConfigFile(Int32 Port):base() { }
+        public IPfromConfigFile():base() { }
 
-        public override IPEndPoint CreateIPEndPoint()
+        public override IPEndPoint CreateIPEndPoint(AddressFamily ipAddrFamily, int port)
         {
             throw new NotImplementedException();
         }

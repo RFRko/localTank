@@ -27,14 +27,18 @@ namespace Tanki
 
     public class Listener : IListener
     {
-        public Listener(Int32 Port)
+        public Listener(IIpEPprovider ipEPprovider, Int32 Port)
         {
             IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipv4Addr = HostEntry.AddressList[2];
-            IPAddress ipv6Addr = HostEntry.AddressList[0];
 
-            IPEndPoint ipv4EP = new IPEndPoint(ipv4Addr, Port);
-            IPEndPoint ipv6EP = new IPEndPoint(ipv6Addr, Port);
+            //IPAddress ipv4Addr = HostEntry.AddressList[2];
+            //IPAddress ipv6Addr = HostEntry.AddressList[0];
+
+            //IPEndPoint ipv4EP = new IPEndPoint(ipv4Addr, Port);
+            //IPEndPoint ipv6EP = new IPEndPoint(ipv6Addr, Port);
+
+            IPEndPoint ipv4EP = ipEPprovider.CreateIPEndPoint(AddressFamily.InterNetwork, Port);
+            IPEndPoint ipv6EP = ipEPprovider.CreateIPEndPoint(AddressFamily.InterNetworkV6, Port);
 
             ipv4_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             ipv4_listener.Bind(ipv4EP);

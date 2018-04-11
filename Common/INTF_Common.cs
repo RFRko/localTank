@@ -237,6 +237,7 @@ namespace Tanki
     #region SystemSettings
     public interface ISystemSettings
     {
+        Int32 HostListeningPort { get; set; }
         Int32 RoomPortMin {get;set;}
         Int32 RoomPortMax { get; set; }
         Int32 ClientPortMin { get; set; }
@@ -246,9 +247,9 @@ namespace Tanki
     #endregion SystemSettings
 
 
-    public interface IIpProvider
+    public interface IIpEPprovider
     {
-        IPEndPoint CreateIPEndPoint();
+        IPEndPoint CreateIPEndPoint(AddressFamily ipAddrFamily,Int32 port);
     }
 
 
