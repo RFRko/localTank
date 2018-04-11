@@ -125,7 +125,7 @@ namespace Tanki
 		IAddresssee this[String id] { get; }
 	}
 
-    public interface IClient: IGameClient
+    public interface IClient
     {
         //void AddAddressee(String Id, IAddresssee addresssee);   // добавляем нового адресата 
 

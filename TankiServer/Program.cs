@@ -27,6 +27,11 @@ namespace Tanki
             IIpEPprovider HostEPprovider = new PredefinedIP("","127.0.0.1");
 
             IServer Srv = new GameServer(HostEPprovider,sysSettings);
+
+            Srv.AddRoom(null, Guid.NewGuid());
+            Srv.AddRoom(null, Guid.NewGuid());
+
+
             Srv.RUN();
 
 

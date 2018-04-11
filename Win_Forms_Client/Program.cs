@@ -17,6 +17,7 @@ namespace Tanki
 		{
 			IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 5000);
 			GameClient gameClient = new GameClient(endPoint);
+            gameClient.RUN();
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new ConnectionForm(gameClient));

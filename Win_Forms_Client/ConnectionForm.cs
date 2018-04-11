@@ -10,18 +10,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace Tanki
 {
 	public partial class ConnectionForm : Form
 	{
 		GameClient gameClient;
 
-		public ConnectionForm(GameClient gameClient)
+		public ConnectionForm(GameClient GameClient)
 		{
-			gameClient = gameClient;
+			gameClient = GameClient;
 			InitializeComponent();
 			textBox1.Text = "127.0.0.1";
-			textBox2.Text = "5000";
+			textBox2.Text = "11001";
 		}
 		public bool Connect(IPEndPoint point)
 		{
