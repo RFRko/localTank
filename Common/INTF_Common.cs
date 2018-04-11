@@ -245,6 +245,13 @@ namespace Tanki
     }
     #endregion SystemSettings
 
+
+    public interface IIpProvider
+    {
+        IPEndPoint CreateIPEndPoint();
+    }
+
+
     /// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
     /// Используется в IMesegeQueue, ISender, IReceiver</summary>
     /// Реализующий клас обязан иметь атрибут [Serializable]

@@ -51,6 +51,7 @@
     <Compile Include="IMPL_EventsData.cs" />
     <Compile Include="IMPL_GameSetings.cs" />
     <Compile Include="IMPL_GuidGen.cs" />
+    <Compile Include="IMPL_IPprovider.cs" />
     <Compile Include="IMPL_NetProcessorAbs.cs" />
     <Compile Include="IMPL_Package.cs" />
     <Compile Include="IMPL_Receiver.cs" />
