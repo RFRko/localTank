@@ -86,7 +86,7 @@ namespace Tanki
             StartWithParam = new ParameterizedThreadStart(StartListening);
             sThr = new Thread(StartWithParam);
 
-            if (ipv4_listener != null)
+            if (ipv6_listener != null)
             {
                 sThr.Name = "LISTENING_" + ipv6_listener.LocalEndPoint.ToString();
                 sThr.Start(ipv6_listener);
