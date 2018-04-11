@@ -25,7 +25,8 @@
                 </LinearGradientBrush>
             </TextBox.OpacityMask>
         </TextBox>
-        <Button Content="GO" HorizontalAlignment="Left" Margin="344,319,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="#FF2F5255" Click="Button_Click"/>
+        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=DataContext.GoCommand}" 
+                Content="GO" HorizontalAlignment="Left" Margin="344,325,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="#FF2F5255"/>
 
     </Grid>
 </Window>
