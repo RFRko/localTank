@@ -60,9 +60,9 @@ namespace Tanki
 				}
 
 				IPEndPoint point = new IPEndPoint(iP, remote_port);
+				Lobby lobby = new Lobby(gameClient.Engine as IClientEngine);
 				if (Connect(point))
 				{
-					Lobby lobby = new Lobby(gameClient.Engine as IClientEngine);
 					lobby.Show();
 					Hide();
 				}

@@ -112,17 +112,7 @@ namespace Tanki
 
 		public void OnEntityHandler(object Sender, IEntity evntData)
 		{
-			lock (Entity_locker) { Entity = evntData; }
-
-			var room_IpEndpoint = (IPEndPoint)client["Room"];
-			var my_passport = client.Passport;
-
-			Owner.Sender.SendMessage(new Package()
-			{
-				Sender_Passport = my_passport,
-				Data = evntData,
-				MesseggeType = MesseggeType.Entity
-			}, room_IpEndpoint);
+			Entity = evntData;
 		}
 		private void ProcessMessageHandler(IPackage package)
 		{

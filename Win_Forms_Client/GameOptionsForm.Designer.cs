@@ -139,13 +139,8 @@
 			// numericUpDown2
 			// 
 			this.numericUpDown2.Location = new System.Drawing.Point(143, 64);
-			this.numericUpDown2.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
 			this.numericUpDown2.Minimum = new decimal(new int[] {
-            1,
+            32,
             0,
             0,
             0});
@@ -153,7 +148,7 @@
 			this.numericUpDown2.Size = new System.Drawing.Size(120, 20);
 			this.numericUpDown2.TabIndex = 10;
 			this.numericUpDown2.Value = new decimal(new int[] {
-            1,
+            32,
             0,
             0,
             0});
@@ -161,23 +156,68 @@
 			// numericUpDown3
 			// 
 			this.numericUpDown3.Location = new System.Drawing.Point(143, 109);
+			this.numericUpDown3.Maximum = new decimal(new int[] {
+            1920,
+            0,
+            0,
+            0});
+			this.numericUpDown3.Minimum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
 			this.numericUpDown3.Name = "numericUpDown3";
 			this.numericUpDown3.Size = new System.Drawing.Size(52, 20);
 			this.numericUpDown3.TabIndex = 11;
+			this.numericUpDown3.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
 			// 
 			// numericUpDown4
 			// 
 			this.numericUpDown4.Location = new System.Drawing.Point(143, 152);
+			this.numericUpDown4.Maximum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+			this.numericUpDown4.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
 			this.numericUpDown4.Name = "numericUpDown4";
 			this.numericUpDown4.Size = new System.Drawing.Size(120, 20);
 			this.numericUpDown4.TabIndex = 12;
+			this.numericUpDown4.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
 			// 
 			// numericUpDown5
 			// 
 			this.numericUpDown5.Location = new System.Drawing.Point(219, 109);
+			this.numericUpDown5.Maximum = new decimal(new int[] {
+            1080,
+            0,
+            0,
+            0});
+			this.numericUpDown5.Minimum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
 			this.numericUpDown5.Name = "numericUpDown5";
 			this.numericUpDown5.Size = new System.Drawing.Size(44, 20);
 			this.numericUpDown5.TabIndex = 13;
+			this.numericUpDown5.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
 			// 
 			// comboBox1
 			// 
