@@ -237,6 +237,7 @@ namespace Tanki
     #region SystemSettings
     public interface ISystemSettings
     {
+        Int32 HostListeningPort { get; set; }
         Int32 RoomPortMin {get;set;}
         Int32 RoomPortMax { get; set; }
         Int32 ClientPortMin { get; set; }
@@ -244,6 +245,13 @@ namespace Tanki
         Int32 MaxRoomNumber { get; set; }
     }
     #endregion SystemSettings
+
+
+    public interface IIpEPprovider
+    {
+        IPEndPoint CreateIPEndPoint(AddressFamily ipAddrFamily,Int32 port);
+    }
+
 
     /// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
     /// Используется в IMesegeQueue, ISender, IReceiver</summary>

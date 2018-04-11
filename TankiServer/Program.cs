@@ -11,8 +11,22 @@ namespace Tanki
         static void Main(string[] args)
         {
 
-            IListener listener = new Listener(11001);
-            IServer Srv = new GameServer(listener);
+            ISystemSettings sysSettings = new SystemSettings()
+            {
+                MaxRoomNumber = 2,
+                HostListeningPort = 11001,
+                RoomPortMin = 50001,
+                RoomPortMax = 50099,
+                ClientPortMin = 51001,
+                ClientPortMax = 51099
+            };
+
+
+            //IIpEPprovider HostEPprovider = new FirstAvailableIP();
+
+            IIpEPprovider HostEPprovider = new PredefinedIP("","127.0.0.1");
+
+            IServer Srv = new GameServer(HostEPprovider,sysSettings);
             Srv.RUN();
 
 
