@@ -34,6 +34,7 @@ namespace Tanki
             base.Sender = new SenderUdpClientBased(Reciever);
 
 
+			Engine = new ClientEngine();
             // Нужно будет прописать создание клиентского Engine
             //IEngine _Engine =  (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
             //base.RegisterDependcy(_Engine);

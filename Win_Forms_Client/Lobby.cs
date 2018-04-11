@@ -15,15 +15,23 @@ namespace Tanki
 {
 	public partial class Lobby : Form
 	{
-		GameClient GameClient;
-		public Lobby(GameClient gameClient)
+		IClientEngine clientEngine;
+
+		public Lobby(IClientEngine clientEngine)
 		{
+			clientEngine.OnRoomsStatChanged += SetRoomList;
 			InitializeComponent();
+		}
+
+		private void SetRoomList(object sender, RoomStatChangeData data)
+		{
+			dataGridView1.DataSource = null;
+			dataGridView1.DataSource = data.newRoomsStat;
 		}
 
 		private void button3_Click(object sender, EventArgs e)
 		{
-			//обновить
+			clientEngine.GetRoomList();
 		}
 
 		private void button1_Click(object sender, EventArgs e)

@@ -283,7 +283,7 @@ namespace Tanki
 	public interface IConectionData
 	{
 		string PlayerName { get; set; }
-		Guid Pasport { get; set; }
+		Guid RoomPasport { get; set; }
 		GameSetings GameSetings { get; set; }
 	}
 }

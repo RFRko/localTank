@@ -15,7 +15,7 @@ namespace Tanki
 		[STAThread]
 		static void Main()
 		{
-			IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 5001);
+			IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 5000);
 			GameClient gameClient = new GameClient(endPoint);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);

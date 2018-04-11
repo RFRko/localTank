@@ -14,10 +14,11 @@ namespace Tanki
 {
 	public partial class ConnectionForm : Form
 	{
-		GameClient GameClient;
+		GameClient gameClient;
+
 		public ConnectionForm(GameClient gameClient)
 		{
-			GameClient = gameClient;
+			gameClient = gameClient;
 			InitializeComponent();
 			textBox1.Text = "127.0.0.1";
 			textBox2.Text = "5000";
@@ -27,7 +28,7 @@ namespace Tanki
 			var caption = "Ошибка подключения";
 			var message = "Сервер не доступен";
 			var buttons = MessageBoxButtons.RetryCancel;
-			while (GameClient.Connect(point))
+			while (!gameClient.Connect(point))
 			{
 				var result = MessageBox.Show(message, caption, buttons);
 				if (result == DialogResult.Cancel) { Close(); return false; }
@@ -60,7 +61,7 @@ namespace Tanki
 				IPEndPoint point = new IPEndPoint(iP, remote_port);
 				if (Connect(point))
 				{
-					Lobby lobby = new Lobby(GameClient);
+					Lobby lobby = new Lobby(gameClient.Engine as IClientEngine);
 					lobby.Show();
 					Hide();
 				}
