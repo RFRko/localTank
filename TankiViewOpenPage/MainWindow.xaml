@@ -16,8 +16,8 @@
         </Grid.Background>
         <TextBlock HorizontalAlignment="Left" Margin="163,316,0,0" TextWrapping="Wrap" Text="IP Adress" VerticalAlignment="Top" Foreground="White" FontFamily="Times New Roman" FontSize="14"/>
         <TextBlock HorizontalAlignment="Left" Margin="163,339,0,0" TextWrapping="Wrap" Text="Port" VerticalAlignment="Top" Foreground="White" FontFamily="Times New Roman" FontSize="14"/>
-        <TextBox HorizontalAlignment="Left" Margin="248,316,0,0" TextWrapping="Wrap" Width="70" VerticalAlignment="Top" RenderTransformOrigin="-1.615,1.066"/>
-        <TextBox HorizontalAlignment="Left" Margin="248,339,0,0" TextWrapping="Wrap" Width="70" VerticalAlignment="Top" RenderTransformOrigin="1.324,0.807" SelectionBrush="#FF4DA5EA">
+        <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Margin="248,316,0,0" TextWrapping="Wrap" Width="70" VerticalAlignment="Top" RenderTransformOrigin="-1.615,1.066"/>
+        <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="248,339,0,0" TextWrapping="Wrap" Width="70" VerticalAlignment="Top" RenderTransformOrigin="1.324,0.807" SelectionBrush="#FF4DA5EA">
             <TextBox.OpacityMask>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0"/>
@@ -25,7 +25,8 @@
                 </LinearGradientBrush>
             </TextBox.OpacityMask>
         </TextBox>
-        <Button Content="GO" HorizontalAlignment="Left" Margin="344,319,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="#FF2F5255" Click="Button_Click"/>
+        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=DataContext.GoCommand}" 
+                Content="GO" HorizontalAlignment="Left" Margin="344,325,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="#FF2F5255"/>
 
     </Grid>
 </Window>
