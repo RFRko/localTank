@@ -17,9 +17,11 @@ namespace Tanki
 	{
 		IClientEngine clientEngine;
 
-		public Lobby(IClientEngine clientEngine)
+		public Lobby(IClientEngine ClientEngine)
 		{
-			clientEngine.OnRoomsStatChanged += SetRoomList;
+            clientEngine = ClientEngine;
+
+            clientEngine.OnRoomsStatChanged += SetRoomList;
 			InitializeComponent();
 		}
 

@@ -114,7 +114,7 @@ namespace Tanki
 
         public IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport)
         {
-            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
+            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv4_listener.LocalEndPoint).Address;
             Int32 roomPort = GetNextRoomPort();
 
             IEngine _gameEngine = _engineFabric.CreateEngine(SrvEngineType.srvGameEngine);

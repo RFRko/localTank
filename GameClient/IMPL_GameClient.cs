@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-    public class GameClient:NetProcessorAbs, IClient, IGameClient
+    public class GameClient:NetProcessorAbs, IClient, IGameClient, IEngineClient
     {
         private Dictionary<string, IAddresssee> adresee_list;       // приватный Dictionary<String, IAddresssee>  для хранения перечня адрессатов
         private TcpClient tcp;                                      // должен быть приватный TCPClient  для коннекта к хосту
@@ -34,10 +34,10 @@ namespace Tanki
             base.Sender = new SenderUdpClientBased(Reciever);
 
 
-			Engine = new ClientEngine();
+			IEngine _Engine = new ClientEngine();
             // Нужно будет прописать создание клиентского Engine
             //IEngine _Engine =  (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
-            //base.RegisterDependcy(_Engine);
+            base.RegisterDependcy(_Engine);
 
             //entity = _engine.Entity;
 

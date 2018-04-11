@@ -35,6 +35,7 @@ namespace Tanki
         {
             RecievingThr = new Thread(RecievingProc);
             RecievingThr.Name = "MAIN_RECIEVING_THREAD";
+
             RecievingThr.Start();
         }
 
