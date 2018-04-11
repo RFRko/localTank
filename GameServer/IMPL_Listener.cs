@@ -40,11 +40,17 @@ namespace Tanki
             IPEndPoint ipv4EP = ipEPprovider.CreateIPEndPoint(AddressFamily.InterNetwork, Port);
             IPEndPoint ipv6EP = ipEPprovider.CreateIPEndPoint(AddressFamily.InterNetworkV6, Port);
 
-            ipv4_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            ipv4_listener.Bind(ipv4EP);
+            if (ipv4EP != null)
+            {
+                ipv4_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ipv4_listener.Bind(ipv4EP);
+            }
 
-            ipv6_listener = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
-            ipv6_listener.Bind(ipv6EP);
+            if (ipv6EP != null)
+            {
+                ipv6_listener = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+                ipv6_listener.Bind(ipv6EP);
+            }
 
 
         }
@@ -63,19 +69,32 @@ namespace Tanki
 
         public void RUN()
         {
+            Int32 startedListeningThreads = 0;
 
             if (Client == null) throw new Exception("lisnening Clien of type IListeningClient not registered");
 
             ParameterizedThreadStart StartWithParam = new ParameterizedThreadStart(StartListening);
             Thread sThr = new Thread(StartWithParam);
-            sThr.Name = "LISTENING_" + ipv4_listener.LocalEndPoint.ToString();
-            sThr.Start(ipv4_listener);
+
+            if (ipv4_listener != null)
+            {
+                sThr.Name = "LISTENING_" + ipv4_listener.LocalEndPoint.ToString();
+                sThr.Start(ipv4_listener);
+                startedListeningThreads++;
+            }
 
             StartWithParam = new ParameterizedThreadStart(StartListening);
             sThr = new Thread(StartWithParam);
-            sThr.Name = "LISTENING_" + ipv6_listener.LocalEndPoint.ToString();
-            sThr.Start(ipv6_listener);
 
+            if (ipv4_listener != null)
+            {
+                sThr.Name = "LISTENING_" + ipv6_listener.LocalEndPoint.ToString();
+                sThr.Start(ipv6_listener);
+                startedListeningThreads++;
+            }
+
+
+            if (startedListeningThreads == 0) throw new Exception("No listening threads started");
         }
 
 

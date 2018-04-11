@@ -70,10 +70,10 @@ namespace Tanki
 
 
             IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
-
-            var foundInHost = from a in HostEntry.AddressList where a == ipAddress select a;
-            if (foundInHost.Count() == 0)
-                throw new Exception(strAddr + " is out of host addresses");
+            
+            //var foundInHost = from a in HostEntry.AddressList where a == ipAddress select a;
+            //if (foundInHost.Count() == 0)
+            //    throw new Exception(strAddr + " is out of host addresses");
 
             return new IPEndPoint(ipAddress, port);
         }
