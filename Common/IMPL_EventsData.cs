@@ -22,10 +22,14 @@ namespace Tanki
         public IAddresssee newAddresssee { get; set; }
     }
 
+	public class ErrorData : EventArgs
+	{
+		public string errorText { get; set; }
+	}
 
-    public class GameStateChangeData : EventArgs
+	public class GameStateChangeData : EventArgs
     {
-        public IEntity newGameState { get; set; }
+        public IMap newMap { get; set; }
     }
 
     public class EnforceDrawingData : EventArgs
@@ -35,11 +39,11 @@ namespace Tanki
 
     public class RoomStatChangeData : EventArgs
     {
-        public IEnumerable<IRoomStat> RoomsStat { get; set; }
+        public IEnumerable<IRoomStat> newRoomsStat { get; set; }
     }
 
     public class GameStatusChangedData : EventArgs
-	  {
+	{
 		  public GameStatus newStatus { get; set; }
-	  }
+	}
 }

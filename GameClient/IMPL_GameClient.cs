@@ -19,6 +19,7 @@ namespace Tanki
         private TimerCallback tm;                                   //должен быть приватный Timer - на callBack которого будет вызываться метод переодической отправки клинтского состояния игры на сервер.
         private IPackage package;
         private IPEndPoint endpoint;
+        
 
         public event EventHandler<EnforceDrawingData> EnforceDrawing;
 
@@ -33,8 +34,9 @@ namespace Tanki
             base.Sender = new SenderUdpClientBased(Reciever);
 
 
+			Engine = new ClientEngine();
             // Нужно будет прописать создание клиентского Engine
-            //IEngine _Engine = (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
+            //IEngine _Engine =  (new ServerEngineFabric()).CreateEngine(SrvEngineType.srvManageEngine);
             //base.RegisterDependcy(_Engine);
 
             //entity = _engine.Entity;
@@ -91,6 +93,8 @@ namespace Tanki
             }
         }
 
+
+
         Guid IGameClient.Passport { get; set ; }
 
         public void RUN(IPEndPoint ServerEndPoint)                  // запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
@@ -105,11 +109,12 @@ namespace Tanki
             int num = 0;
             this.tm = new TimerCallback(ProceedQueue);
             Timer timer = new Timer(tm, num, 0, this.MiliSeconds);
+            
         }
 
         private void ProceedQueue(object state)          //должен будет быть приватный метод  'void ProceedQueue(Object state)' который будет передаваться time-ру как callback 
         {                                                           // этот метод должен с периодиностью таймера отправлять клиентское состояние игры на сервер    
-
+            
             var e = Engine as IClientEngine;
 
             package = new Package()
@@ -126,14 +131,19 @@ namespace Tanki
             
         }
 
-        public void Connect(IPEndPoint ServerEndPoint)
+        public bool Connect(IPEndPoint ServerEndPoint)
         {
-            tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
+			try
+			{
+				tcp.Connect(ServerEndPoint.Address, ServerEndPoint.Port);
+				return true;
+			}
+			catch { return false; };
         }
 
         public void END_GAME()
         {
-            throw new NotImplementedException();
+            //base
         }
 
         public void OnClientGameStateChangedHandler(object Sender, GameStateChangeData evntData)

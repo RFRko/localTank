@@ -11,6 +11,8 @@ ClientEngine/obj/
 ClientEngine/bin/
 TankiViewOpenPage/obj/
 TankiViewOpenPage/bin/
+TankiServer/obj/
+TankiServer/bin/
 Win_Forms_Client/obj/
 Win_Forms_Client/bin/
 packages

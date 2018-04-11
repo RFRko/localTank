@@ -12,13 +12,38 @@ namespace Tanki
     {
         private GameServer() { }
 
-        public GameServer(IListener listener)
+        //public GameServer(IListener listener, ISystemSettings sysSettings, IRoomFabric RoomFabric = null, IServerEngineFabric EngineFabric = null)
+        public GameServer(IIpEPprovider ipEpProvider, ISystemSettings sysSettings, IRoomFabric RoomFabric = null, IServerEngineFabric EngineFabric = null)
         {
-            ServerListner = listener;
+            _sys_settings = sysSettings;
+            _next_room_port = sysSettings.RoomPortMin;
+
+            ServerListner = new Listener(ipEpProvider,sysSettings.HostListeningPort);
             RegisterListener(ServerListner);
+
+            if (RoomFabric != null)
+                _roomFabric = RoomFabric;
+            else
+                _roomFabric = new RoomFabric();
+
+            if (EngineFabric != null)
+                _engineFabric = EngineFabric;
+            else
+                _engineFabric = new ServerEngineFabric();
+
+
+
         }
 
+        private IRoomFabric _roomFabric;
+        private IServerEngineFabric _engineFabric;
+
+
         private List<IRoom> _rooms = new List<IRoom>();
+        private ISystemSettings _sys_settings;
+        //private IEngine _mngEngine;
+        //private IEngine _gameEngine;
+        private Int32 _next_room_port;
 
         public IListener ServerListner { get; private set; }
         public IEnumerable<IRoom> Rooms { get { return _rooms; } }
@@ -36,11 +61,13 @@ namespace Tanki
         public void RUN()
         {
             IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
-            Int32 roomPort = 50001;
+            Int32 roomPort = GetNextRoomPort();
             IPEndPoint roomEP = new IPEndPoint(roomAddr, roomPort);
 
-            IRoom managerRoom = (new RoomFabric()).CreateRoom("", roomEP, RoomType.rtMngRoom,this);
+            IEngine _mngEngine = _engineFabric.CreateEngine(SrvEngineType.srvManageEngine);
+            IRoom managerRoom = _roomFabric.CreateRoom("", roomEP, RoomType.rtMngRoom, this, _mngEngine);
             _rooms.Add(managerRoom);
+
             managerRoom.RUN();
 
             ServerListner.RUN();
@@ -77,6 +104,25 @@ namespace Tanki
             foundRoom = r.FirstOrDefault();
 
             return foundRoom;
+        }
+
+        Int32 GetNextRoomPort()
+        {
+            if (_next_room_port > _sys_settings.RoomPortMax) throw new Exception("RoomPortMax is exceeded");
+            return _next_room_port++;
+        }
+
+        public IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport)
+        {
+            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
+            Int32 roomPort = GetNextRoomPort();
+
+            IEngine _gameEngine = _engineFabric.CreateEngine(SrvEngineType.srvGameEngine);
+            IRoom newGameRoom = _roomFabric.CreateRoom("",new IPEndPoint(roomAddr,roomPort), RoomType.rtGameRoom, this ,_gameEngine);
+            newGameRoom.GameSetings = gameSettings;
+            newGameRoom.CreatorPassport = Creator_Passport;
+
+            return newGameRoom;
         }
     }
 }

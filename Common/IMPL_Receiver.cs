@@ -16,7 +16,7 @@ namespace Tanki
         public ReceiverUdpClientBased(IPEndPoint withLockalEP)
         {
             LockalEndPoint = withLockalEP;
-            NetClient = new UdpClient(LockalEndPoint);
+            NetClient = new UdpClient(LockalEndPoint.Port);
         }
         public IPEndPoint LockalEndPoint { get; private set; }
 

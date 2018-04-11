@@ -64,7 +64,7 @@ namespace Tanki
         String RoomId { get; set; }
         Guid Passport { get; }
         Guid CreatorPassport { get; set; }
-        IGameSetings GameSetings { get; }
+        IGameSetings GameSetings { get; set; }
         IEnumerable<IGamer> Gamers { get; }
         void AddGamer(IGamer newGamer);
         IRoomStat getRoomStat();
@@ -73,14 +73,16 @@ namespace Tanki
 		void RUN();
 	}
 
+
+	//все что нужно для Server Manage Engine 
     public interface IManagerRoom
     {
         IRoomStat getRoomStat(String forRoomID);
         IEnumerable<IRoomStat> getRoomsStat();
-        void MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport);
         IGamer GetGamerByGuid(Guid gamerGuid);
     }
-
 
     public interface IRoomOwner
     {
@@ -91,6 +93,7 @@ namespace Tanki
     {
         IEnumerable<IRoomStat> getRoomsStat();
         IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport);
         IRoom GetRoomByGuid(Guid roomGuid);
     }
 
@@ -103,7 +106,7 @@ namespace Tanki
 
     public interface IRoomFabric
     {
-        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner);
+        IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner, IEngine engine = null);
     }
 
     #endregion RoomInterfaces
@@ -117,15 +120,16 @@ namespace Tanki
         void RUN_GAME(); // запускает таймер переодической отправки клиентского состоянения игры на сервер
         void END_GAME();
         Guid Passport { get; set; }
-        void Connect(IPEndPoint ServerEndPoint);
-
-    }
+        bool Connect(IPEndPoint ServerEndPoint);
+		void AddAddressee(String Id, IAddresssee addresssee);
+		IAddresssee this[String id] { get; }
+	}
 
     public interface IClient: IGameClient
     {
-        void AddAddressee(String Id, IAddresssee addresssee);   // добавляем нового адресата 
+        //void AddAddressee(String Id, IAddresssee addresssee);   // добавляем нового адресата 
 
-        IAddresssee this[String id] { get; } //свойство идексатор для возврата Адресата по текстовому имени\ид.  
+        //IAddresssee this[String id] { get; } //свойство идексатор для возврата Адресата по текстовому имени\ид.  
                                              //Адресат это объект с IPEndPoint комнаты (может быть как минимум два аддерсата - управляющая комната, текущая игровая комната
 
 

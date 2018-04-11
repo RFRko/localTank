@@ -12,7 +12,9 @@ namespace Tanki
 {
 	public partial class GameOptionsForm : Form
 	{
-		public GameSetings gameSetings;
+		IGameSetings gameSetings;
+		bool ok;
+
 		public GameOptionsForm()
 		{
 			InitializeComponent();
@@ -20,38 +22,25 @@ namespace Tanki
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			var speed = numericUpDown1.Value;
-			var object_size = numericUpDown2.Value;
-			var x = numericUpDown3.Value;
-			var y = numericUpDown4.Value;
-			var players = numericUpDown5.Value;
-			var game_type = comboBox1.SelectedItem.ToString();
+			var gameSpeed = (int)numericUpDown1.Value;
+			var object_size = (int)numericUpDown2.Value;
+			Size MapSize = new Size(
+					(int)numericUpDown3.Value,
+					(int)numericUpDown4.Value);
+			var players_count = numericUpDown5.Value;
+			var game_type = Enum.Parse(typeof(GameType), comboBox1.SelectedText);
 
-
-			if (speed != 0 
-				&& object_size != 0 
-				&& x != 0
-				&& y != 0
-				&& players != 0 && 
-				!string.IsNullOrEmpty(game_type))
+			if (gameSpeed != 0 &&
+				object_size != 0 &&
+				MapSize.Height != 0 &&
+				MapSize.Width != 0 &&
+				players_count < 0)
 			{
-				if (players < 2)
-				{
-					label6.Text = "Игроков должно быть больше одного";
-					return;
-				}
+				if (gameSpeed < 10) { label6.Text = "Скрорость должна быть меньше 10"; return; }
+				if (object_size < 10) { label6.Text = "Размер должен быть меньше 10"; return; }
+				if (players_count < 2) { label6.Text = "Ироков должно быть больше 2"; return; }
 			}
-			else label6.Text = "Error: Заполните все поля";
-
-			gameSetings = new GameSetings()
-			{
-				GameSpeed = (int)speed,
-				ObjectsSize = (int)object_size,
-				MapSize = new Size((int)x, (int)y),
-				MaxPlayersCount = (int)players,
-				GameType = (GameType)Enum.Parse(typeof(GameType), game_type)
-			};
-			Close();
+			else label6.Text = "Заполните все поля";
 		}
 
 		private void button2_Click(object sender, EventArgs e)

@@ -10,6 +10,7 @@ namespace Tanki
 	public class ConectionData : IConectionData
 	{
 		public string PlayerName { get; set; }
-		public Guid Pasport { get; set; }
+		public Guid RoomPasport { get; set; }
+		public GameSetings GameSetings { get; set; }
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,9 +15,11 @@ namespace Tanki
 		[STAThread]
 		static void Main()
 		{
+			IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 5000);
+			GameClient gameClient = new GameClient(endPoint);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new ConnectionForm());
+			Application.Run(new ConnectionForm(gameClient));
 		}
 	}
 }
