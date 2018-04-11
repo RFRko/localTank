@@ -57,6 +57,7 @@ namespace Tanki
         {
             IPAddress addr = null;
             String strAddr = null;
+            IPEndPoint res = null;
 
             if (ipAddrFamily == AddressFamily.InterNetworkV6)
                 strAddr = _PredefinedIpV6;
@@ -64,18 +65,22 @@ namespace Tanki
             if (ipAddrFamily == AddressFamily.InterNetwork)
                 strAddr = _PredefinedIpV4;
 
-            if (!IPAddress.TryParse(strAddr, out addr))
-                throw new Exception(strAddr + "Not Valid " + ipAddrFamily.ToString());
-            
+            if (strAddr != null && strAddr != String.Empty)
+            {
+                if (!IPAddress.TryParse(strAddr, out addr))
+                    throw new Exception(strAddr + "Not Valid " + ipAddrFamily.ToString());
 
+                IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
 
-            IPHostEntry HostEntry = Dns.GetHostEntry(Dns.GetHostName());
+                //var foundInHost = from a in HostEntry.AddressList where a == ipAddress select a;
+                //if (foundInHost.Count() == 0)
+                //    throw new Exception(strAddr + " is out of host addresses");
 
-            var foundInHost = from a in HostEntry.AddressList where a == ipAddress select a;
-            if (foundInHost.Count() == 0)
-                throw new Exception(strAddr + " is out of host addresses");
+                res = new IPEndPoint(addr, port);
 
-            return new IPEndPoint(ipAddress, port);
+            }
+
+            return res;
         }
     }
 

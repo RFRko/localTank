@@ -60,7 +60,7 @@ namespace Tanki
 
         public void RUN()
         {
-            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv6_listener.LocalEndPoint).Address;
+            IPAddress roomAddr = ((IPEndPoint)ServerListner.ipv4_listener.LocalEndPoint).Address;
             Int32 roomPort = GetNextRoomPort();
             IPEndPoint roomEP = new IPEndPoint(roomAddr, roomPort);
 
