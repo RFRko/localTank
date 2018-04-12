@@ -122,6 +122,8 @@ namespace Tanki
             newGameRoom.GameSetings = gameSettings;
             newGameRoom.CreatorPassport = Creator_Passport;
 
+            _rooms.Add(newGameRoom);
+
             return newGameRoom;
         }
     }

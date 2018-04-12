@@ -13,27 +13,39 @@ using System.Windows.Forms;
 
 namespace Tanki
 {
-	public partial class Lobby : Form
-	{
-		IClientEngine clientEngine;
+    public partial class Lobby : Form
+    {
+        IClientEngine clientEngine;
 
-		public Lobby(IClientEngine ClientEngine)
-		{
+        public Lobby(IClientEngine ClientEngine)
+        {
             clientEngine = ClientEngine;
 
             clientEngine.OnRoomsStatChanged += SetRoomList;
-			clientEngine.OnError += ErrorHandler;
+            clientEngine.OnError += ErrorHandler;
 
-			InitializeComponent();
-		}
+            onRoomListRecieved = onRoomListRecievedProc;
 
-		// подписан на событие, обновляет список комнат
-		private void SetRoomList(object sender, RoomStatChangeData data)
-		{
-			dataGridView1.DataSource = null;
-			dataGridView1.DataSource = data.newRoomsStat;
-			dataGridView1.Refresh();
-		}
+            InitializeComponent();
+        }
+
+        private Object _locker = new Object();
+
+        // подписан на событие, обновляет список комнат
+        private void SetRoomList(object sender, RoomStatChangeData data)
+        {
+               this.Invoke(onRoomListRecieved,data.newRoomsStat);            
+        }
+
+        private Action<IEnumerable<IRoomStat>> onRoomListRecieved;
+        private void onRoomListRecievedProc(IEnumerable<IRoomStat> RoomList)
+        {
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = RoomList;
+                dataGridView1.Refresh();
+
+        }
+
 
 		// обновить
 		private void button3_Click(object sender, EventArgs e)

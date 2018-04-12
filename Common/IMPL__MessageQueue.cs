@@ -85,7 +85,7 @@ namespace Tanki
 
                 if (msg != null)
                 {
-                    //_serverEngine.ProcessMessage(msg); - НУЖНА ЕЩЕ РЕАЛИЗАЦИЯ ProcessMessage  c параметром 'просто единичный IProtocol'
+                    _serverEngine.ProcessMessage(msg); //- НУЖНА ЕЩЕ РЕАЛИЗАЦИЯ ProcessMessage  c параметром 'просто единичный IProtocol'
                 }
                 else
                     _ifReady.WaitOne();
