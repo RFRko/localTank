@@ -21,6 +21,11 @@ namespace Tanki
     }
 
 
+    public interface IRoomsStat
+    {
+        IEnumerable<IRoomStat> RoomsStat { get; }
+    }
+
     /// <summary>
     /// Интерфейс описующий информацию об игровом поле.
     /// Предназначен для обмена между клиентом/серверером

@@ -13,7 +13,7 @@ namespace Tanki
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
-			client = Owner as IGameClient;
+			//client = Owner as IGameClient; в конструкторе он еще не известен, становится известен при registerdependency
 		}
 
 
@@ -21,14 +21,17 @@ namespace Tanki
 		private object Map_locker;
 		private object Entity_locker;
 
-		public IEnumerable<IRoomStat> RoomsStat
+        private IEnumerable<IRoomStat> _RoomsStat = null;
+
+
+        public IEnumerable<IRoomStat> RoomsStat
 		{
-			get { return RoomsStat;  }
+			get { return _RoomsStat;  }
 
 			protected set
 			{
-				RoomsStat = value;
-				OnRoomsStatChanged?.Invoke(this, new RoomStatChangeData() { newRoomsStat = value });
+                _RoomsStat = value; //айяйяй циклическая ссылка RoomsStat = value; 
+                OnRoomsStatChanged?.Invoke(this, new RoomStatChangeData() { newRoomsStat = value });
 			}
 		}
 		public IMap Map
@@ -116,6 +119,7 @@ namespace Tanki
 		}
 		private void ProcessMessageHandler(IPackage package)
 		{
+            client = Owner as IGameClient;
             switch (package.MesseggeType)
 			{
 				case MesseggeType.Map:
@@ -125,8 +129,8 @@ namespace Tanki
 					}
 				case MesseggeType.RoomList:
 					{
-						RoomsStat = package.Data as IEnumerable<IRoomStat>;
-						break;
+                        RoomsStat = (package.Data as IRoomsStat).RoomsStat;//as IEnumerable<IRoomStat>; IEnumerable не может быть сериализуемый, должен быть специальный тип для data
+                        break;
 					}
 				case MesseggeType.Passport:
 					{

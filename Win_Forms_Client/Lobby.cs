@@ -27,13 +27,18 @@ namespace Tanki
 			InitializeComponent();
 		}
 
+        private Object _locker = new Object();
+
 		// подписан на событие, обновляет список комнат
 		private void SetRoomList(object sender, RoomStatChangeData data)
 		{
-			dataGridView1.DataSource = null;
-			dataGridView1.DataSource = data.newRoomsStat;
-			dataGridView1.Refresh();
-		}
+            lock(_locker)
+            {
+                dataGridView1.DataSource = null;
+                //dataGridView1.DataSource = data.newRoomsStat;
+                //dataGridView1.Refresh();
+            }
+        }
 
 		// обновить
 		private void button3_Click(object sender, EventArgs e)
