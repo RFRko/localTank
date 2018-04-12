@@ -29,6 +29,7 @@ namespace Tanki
             this.adresee_list = new Dictionary<string, IAddresssee>();
             this.tcp = new TcpClient();
             this.package = new Package();
+
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
             base.Sender = new SenderUdpClientBased(Reciever);

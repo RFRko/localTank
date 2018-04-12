@@ -22,7 +22,7 @@ namespace Tanki
         public IAddresssee newAddresssee { get; set; }
     }
 
-	public class ErrorData : EventArgs
+    public class ErrorData : EventArgs
 	{
 		public string errorText { get; set; }
 	}

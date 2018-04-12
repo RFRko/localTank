@@ -47,7 +47,7 @@ namespace Tanki
 
 		public override void OnNewAddresssee_Handler(object sender, NewAddressseeData evntData)
 		{
-			var gamer = evntData as IGamer;
+			var gamer = evntData.newAddresssee as IGamer;
 			if (gamer != null)
 			{
 				Owner.Sender.SendMessage(new Package()
