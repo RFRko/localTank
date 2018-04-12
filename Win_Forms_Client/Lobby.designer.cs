@@ -35,12 +35,13 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
+			this.label3 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(226, 204);
+			this.button1.Location = new System.Drawing.Point(225, 216);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(89, 23);
 			this.button1.TabIndex = 0;
@@ -50,7 +51,7 @@
 			// 
 			// button2
 			// 
-			this.button2.Location = new System.Drawing.Point(330, 204);
+			this.button2.Location = new System.Drawing.Point(330, 216);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(89, 23);
 			this.button2.TabIndex = 1;
@@ -80,7 +81,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(18, 209);
+			this.label2.Location = new System.Drawing.Point(18, 221);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(57, 13);
 			this.label2.TabIndex = 4;
@@ -88,7 +89,7 @@
 			// 
 			// textBox1
 			// 
-			this.textBox1.Location = new System.Drawing.Point(92, 206);
+			this.textBox1.Location = new System.Drawing.Point(92, 218);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(118, 20);
 			this.textBox1.TabIndex = 5;
@@ -104,11 +105,21 @@
 			this.dataGridView1.Size = new System.Drawing.Size(407, 152);
 			this.dataGridView1.TabIndex = 6;
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.ForeColor = System.Drawing.Color.Red;
+			this.label3.Location = new System.Drawing.Point(94, 196);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(0, 13);
+			this.label3.TabIndex = 7;
+			// 
 			// Lobby
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.BackColor = System.Drawing.SystemColors.ControlDark;
-			this.ClientSize = new System.Drawing.Size(431, 236);
+			this.ClientSize = new System.Drawing.Size(431, 250);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.dataGridView1);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.label2);
@@ -136,5 +147,6 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.Label label3;
 	}
 }

@@ -19,7 +19,8 @@ namespace Tanki
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
 
-			ManagerRoom = Owner as IManagerRoom;
+            if (Owner != null) // owner реально присваивается в registerdependecy родительского объекта - поэтому тут он может быть еще пустой если явно не передавался через конструктор
+                ManagerRoom = Owner as IManagerRoom; 
 		}
 
 		private void ProcessMessageHandler(IPackage msg)
@@ -47,11 +48,10 @@ namespace Tanki
 
 		public override void OnNewAddresssee_Handler(object sender, NewAddressseeData evntData)
 		{
-			var gamer = evntData as IGamer;
+			var gamer = evntData.newAddresssee as IGamer;
 			if (gamer != null)
 			{
 				Owner.Sender.SendMessage(new Package()
-
 				{
 					Data = gamer.Passport,
 					MesseggeType = MesseggeType.Passport
@@ -63,9 +63,13 @@ namespace Tanki
 		}
 		private void SendRoomList(IPEndPoint addresssee)
 		{
-			Owner.Sender.SendMessage(new Package()
+            ManagerRoom = Owner as IManagerRoom;
+
+            IRoomsStat roomsData = new RoomsListData(ManagerRoom.getRoomsStat()); // должен быть сериализуемый объект
+
+            Owner.Sender.SendMessage(new Package()
 			{
-				Data = ManagerRoom.getRoomsStat(),
+				Data = roomsData,
 				MesseggeType = MesseggeType.RoomList
 			}, addresssee);
 		}

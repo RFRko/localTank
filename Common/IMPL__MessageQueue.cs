@@ -64,7 +64,7 @@ namespace Tanki
         public override void RUN()
         {
             _proceedingThread = new Thread(ProceedQueue);
-            _proceedingThread.Name = "SERVER_MSG_PROCEEDING";
+            _proceedingThread.Name = "MSG_PROCEEDING_ONEBYONE";
             _proceedingThread.Start();
         }
 
@@ -85,7 +85,7 @@ namespace Tanki
 
                 if (msg != null)
                 {
-                    //_serverEngine.ProcessMessage(msg); - НУЖНА ЕЩЕ РЕАЛИЗАЦИЯ ProcessMessage  c параметром 'просто единичный IProtocol'
+                    _serverEngine.ProcessMessage(msg); //- НУЖНА ЕЩЕ РЕАЛИЗАЦИЯ ProcessMessage  c параметром 'просто единичный IProtocol'
                 }
                 else
                     _ifReady.WaitOne();
