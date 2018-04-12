@@ -12,7 +12,7 @@ namespace Tanki
     {
         IEnumerable<IRoomStat> RoomsStat { get; }
         IMap Map { get; }
-        IEntity Entity { get; }
+        ITank Entity { get; set; }
 		string ErrorText { get; }
 		Size Map_size { get; }
 		void CreateGame(GameSetings gameSetings, string player_name);
@@ -24,7 +24,7 @@ namespace Tanki
 		event EventHandler<RoomStatChangeData> OnRoomsStatChanged;
         event EventHandler<GameStateChangeData> OnMapChanged;
 		event EventHandler<ErrorData> OnError;
-		void OnEntityHandler(Object Sender, IEntity evntData);
+		void OnEntityHandler(Object Sender, ITank evntData);
         void OnViewCommandHandler(Object Sender, Object evntData);
     }
 }

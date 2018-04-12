@@ -29,8 +29,6 @@ namespace Tanki
             InitializeComponent();
         }
 
-        private Object _locker = new Object();
-
         // подписан на событие, обновляет список комнат
         private void SetRoomList(object sender, RoomStatChangeData data)
         {
@@ -43,7 +41,6 @@ namespace Tanki
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = RoomList;
                 dataGridView1.Refresh();
-
         }
 
 

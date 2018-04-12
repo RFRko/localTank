@@ -18,12 +18,12 @@ namespace Tanki
 		}
 
 		private IGameClient client;
-		private object Map_locker;
-		private object Entity_locker;
+		private static object Map_locker = new object();
+		private static object Entity_locker = new object();
 
-        private IEnumerable<IRoomStat> _RoomsStat = null;
+		private IEnumerable<IRoomStat> _RoomsStat = null;
 		private IMap _Map = null;
-		private IEntity _Entity = null;
+		private ITank _Entity = null;
 		private string _ErrorText = null;
 
 
@@ -48,11 +48,11 @@ namespace Tanki
 				OnMapChanged?.BeginInvoke(this, new GameStateChangeData() { newMap = value }, null, null);
 			}
 		}
-		public IEntity Entity
+		public ITank Entity
 		{
 			get { lock (Entity_locker) { return _Entity; } }
 
-			protected set
+			set
 			{
 				lock (Entity_locker) { _Entity = value; }
 
@@ -127,7 +127,7 @@ namespace Tanki
 		}
 
 
-		public void OnEntityHandler(object Sender, IEntity evntData)
+		public void OnEntityHandler(object Sender, ITank evntData)
 		{
 			Entity = evntData;
 		}

@@ -26,7 +26,7 @@ namespace Tanki
         //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
         public GameClient(IPEndPoint localEP, IRoomOwner owner = null) 
         {
-            this.miliseconds = 500;
+			this.miliseconds = 200;
             this.adresee_list = new Dictionary<string, IAddresssee>();
             this.tcp = new TcpClient(localEP);
             this.package = new Package();
@@ -34,7 +34,6 @@ namespace Tanki
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
             base.Sender = new SenderUdpClientBased(Reciever);
-
 
 			IEngine _Engine = new ClientEngine();
             // Нужно будет прописать создание клиентского Engine
@@ -45,8 +44,7 @@ namespace Tanki
 
             IMessageQueue _MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqOneByOneProcc);
             base.RegisterDependcy(_MessageQueue);
-
-        }
+		}
 
         public void AddAddressee(string Id, IAddresssee addresssee)
         {
