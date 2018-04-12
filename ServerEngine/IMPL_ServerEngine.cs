@@ -254,19 +254,10 @@ namespace Tanki
 		{
             var room = Owner as IRoom;
 			int tankCount = room.Gamers.Count();
-			int objectCount = (this.height * this.width) / (this.height + this.width);
+			int objectCount = (this.height * this.width) / (room.GameSetings.ObjectsSize*room.GameSetings.ObjectsSize*room.GameSetings.MaxPlayersCount);
             foreach (var t in room.Gamers)
             {
 				this.NewGamer(t);
-				//var obj = new object() as ITank;
-				//obj.Tank_ID = t.Passport;
-				//obj.Lives = 5;
-				//obj.Is_Alive = true;
-				//obj.Can_Shoot = true;
-				//obj.Direction = Direction.Up;
-				//this.Reload(obj);
-				//tanks.Add(obj);
-				//objects.Add(obj);
 			}
 			while(objectCount>0)
 			{
@@ -292,40 +283,43 @@ namespace Tanki
 				if (tmp is ITank)
 				{
 					var tank = tmp as ITank;
-					switch (tank.Direction)
+					if (this.canMove(tank))
 					{
-						case Direction.Left:
-							if (tank.Position.X > 0)
-							{
-								var pos = new Point(tank.Position.X - 1, tank.Position.Y);
-								tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
-							}
-							break;
+						switch (tank.Direction)
+						{
+							case Direction.Left:
+								if (tank.Position.X > 0)
+								{
+									var pos = new Point(tank.Position.X - 1, tank.Position.Y);
+									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+								}
+								break;
 
-						case Direction.Right:
-							if (tank.Position.X < width)
-							{
-								var pos = new Point(tank.Position.X + 1, tank.Position.Y);
-								tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
-							}
-							break;
+							case Direction.Right:
+								if (tank.Position.X < width)
+								{
+									var pos = new Point(tank.Position.X + 1, tank.Position.Y);
+									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+								}
+								break;
 
-						case Direction.Up:
-							if (tank.Position.Y > 0)
-							{
-								var pos = new Point(tank.Position.X, tank.Position.Y - 1);
-								tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
-							}
-							break;
+							case Direction.Up:
+								if (tank.Position.Y > 0)
+								{
+									var pos = new Point(tank.Position.X, tank.Position.Y - 1);
+									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+								}
+								break;
 
-						case Direction.Down:
+							case Direction.Down:
 
-							if (tank.Position.Y < height)
-							{
-								var pos = new Point(tank.Position.X, tank.Position.Y + 1);
-								tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
-							}
-							break;
+								if (tank.Position.Y < height)
+								{
+									var pos = new Point(tank.Position.X, tank.Position.Y + 1);
+									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+								}
+								break;
+						}
 					}
 					tank.Command = EntityAction.None;
 				}
@@ -368,9 +362,37 @@ namespace Tanki
 							break;
 					}
 					this.HitTarget(bullet);
+					this.bulletOnBoard(bullet);
 				}
 			}
         }
+		/// <summary>
+		/// Предикат определяющий, может ли объект произвести движение
+		/// </summary>
+		/// <param name="entity"> Объект пытающийся произвести движение</param>
+		/// <returns></returns>
+		private bool canMove(IEntity entity)
+		{
+			var tmp = objects.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position));
+			if (tmp != null)
+				return false;
+			return true;
+		}
+		/// <summary>
+		/// Предикат, проверяющий наличие пули в игровом поле
+		/// </summary>
+		/// <param name="bullet"> Пуля</param>
+		/// <returns></returns>
+		private bool bulletOnBoard(IBullet bullet)
+		{
+			var Board = new Rectangle(0, 0, this.width, this.height);
+			if(Board.Contains(bullet.Position))
+			{
+				return true;
+			}
+			this.Death(bullet);
+			return false;
+		}
 		/// <summary>
 		/// Реализация попадания пули в другую сущность
 		/// </summary>
@@ -383,6 +405,7 @@ namespace Tanki
 				this.Death(tmp);
 				this.Death(bullet);
 			}
+			
 		}
 		/// <summary>
 		/// Гененация расположения для сущности
@@ -454,7 +477,6 @@ namespace Tanki
 			tanks.Add(obj);
 			objects.Add(obj);
 		}
-		//Андрей, если я правильно понял - то ожидалась такая реализация?
 		/// <summary>
 		/// Обработка события добавления нового игрока
 		/// </summary>
@@ -477,6 +499,5 @@ namespace Tanki
 			if (statusData.newStatus == GameStatus.Start)
 				this.SendStartGame();
 		}
-		//public event EventHandler<GameStatusChangedData> OnNewGameStatus; - вот это нужно
 	}
 }
