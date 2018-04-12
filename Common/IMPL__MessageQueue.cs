@@ -64,7 +64,7 @@ namespace Tanki
         public override void RUN()
         {
             _proceedingThread = new Thread(ProceedQueue);
-            _proceedingThread.Name = "SERVER_MSG_PROCEEDING";
+            _proceedingThread.Name = "MSG_PROCEEDING_ONEBYONE";
             _proceedingThread.Start();
         }
 

@@ -16,7 +16,7 @@ namespace Tanki
         public ReceiverUdpClientBased(IPEndPoint withLockalEP)
         {
             LockalEndPoint = withLockalEP;
-            NetClient = new UdpClient(LockalEndPoint.Port);
+            NetClient = new UdpClient(LockalEndPoint);    //было LockalEndPoint.Port
         }
         public IPEndPoint LockalEndPoint { get; private set; }
 
@@ -46,15 +46,19 @@ namespace Tanki
         {
             Alive = true;
             //UdpClient Client = new UdpClient(LocalPort);
-            IPEndPoint remoteIp = null;
             try
             {
                 while (Alive)
                 {
+                    IPEndPoint remoteIp = null;
+
+                    Console.WriteLine("recieving.. ");
 
                     byte[] data = NetClient.Receive(ref remoteIp);
                     ISerializator obj = new BinSerializator();
                     IPackage p = obj.Deserialize(data);
+
+                    if (p != null) Console.WriteLine("recieved " + p.ToString());
 
                     Owner.MessageQueue.Enqueue(p);      //!!!!!!!!!!!!!!!!!!!!!!!
                     //return p;
