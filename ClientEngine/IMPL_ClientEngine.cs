@@ -31,7 +31,7 @@ namespace Tanki
 			protected set
 			{
                 _RoomsStat = value; //айяйяй циклическая ссылка RoomsStat = value; 
-                OnRoomsStatChanged?.Invoke(this, new RoomStatChangeData() { newRoomsStat = value });
+                OnRoomsStatChanged?.BeginInvoke(this, new RoomStatChangeData() { newRoomsStat = value },null,null);
 			}
 		}
 		public IMap Map
