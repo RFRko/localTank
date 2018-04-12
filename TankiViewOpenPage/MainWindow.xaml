@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TankiViewOpenPage"
         mc:Ignorable="d"
+        xmlns:b="clr-namespace:TankiViewOpenPage"
+        d:DataContext="{d:DesignInstance b:MainWindowViewModel, IsDesignTimeCreatable=False}"
         Title="BattleCity" Height="400" Width="525">
+    <Window.DataContext>
+        <local:MainWindowViewModel></local:MainWindowViewModel>
+    </Window.DataContext>
     <Grid>
         <Grid.Background>
             <ImageBrush>
@@ -25,7 +30,7 @@
                 </LinearGradientBrush>
             </TextBox.OpacityMask>
         </TextBox>
-        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=DataContext.GoCommand}" 
+        <Button Command="{Binding GoCommand}" 
                 Content="GO" HorizontalAlignment="Left" Margin="344,325,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="#FF2F5255"/>
 
     </Grid>
