@@ -109,6 +109,7 @@ namespace Common
         private int _lives;
         private Team _team;
 		    private Guid _tank_ID;
+		
         public Tank()
         {
 
@@ -125,7 +126,7 @@ namespace Common
             get { return this._lives; }
             set { this._lives = value; }
         }
-
+		public string Name { get; set; }
 
 		    public Guid Tank_ID { get; set; }
 		    public Team Team

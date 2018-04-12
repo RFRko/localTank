@@ -100,6 +100,10 @@ namespace Tanki
 				MesseggeType = MesseggeType.RoomID
 			}, client["Host"]);
 		}
+		public Guid GetPassport()
+		{
+			return client.Passport;
+		}
 		public void GetRoomList()
 		{
 			Owner.Sender.SendMessage(new Package()

@@ -64,7 +64,7 @@ namespace Tanki
 				{
 					clientEngine.CreateGame(gameOptionsForm.gameSetings, name);
 
-					var gameForm = new GameForm();
+					var gameForm = new GameForm(clientEngine, gameOptionsForm.gameSetings.MapSize);
 					gameForm.Show();
 					Hide();
 				}

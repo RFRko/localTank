@@ -15,6 +15,7 @@ namespace Tanki
 		string RoomError { get; }
 		void CreateGame(GameSetings gameSetings, string player_name);
 		void JOINGame(Guid room_guid, string player_name);
+		Guid GetPassport();
 		void GetRoomList();
 
 
