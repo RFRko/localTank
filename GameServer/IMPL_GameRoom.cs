@@ -36,6 +36,7 @@ namespace Tanki
         public virtual void AddGamer(IGamer newGamer)
         {
             _gamers.Add(newGamer);
+            OnNewAddresssee?.Invoke(this, new NewAddressseeData() { newAddresssee = newGamer });
         }
 
         public virtual new void RUN()
