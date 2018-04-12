@@ -151,5 +151,14 @@
   <ItemGroup>
     <None Include="Resources\player_up.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enemy.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wall.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

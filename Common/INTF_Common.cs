@@ -292,4 +292,9 @@ namespace Tanki
 		Guid RoomPasport { get; set; }
 		GameSetings GameSetings { get; set; }
 	}
+	public interface IRoomInfo
+	{
+		IPEndPoint roomEndpoint { get; set; }
+		Size mapSize { get; set; }
+	}
 }

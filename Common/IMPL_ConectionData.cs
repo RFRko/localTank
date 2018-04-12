@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +31,13 @@ namespace Tanki
 
         public IEnumerable<IRoomStat> RoomsStat { get { return _rooms_stat; } }
     }
+
+	[Serializable]
+	public class RoomInfo : IRoomInfo
+	{
+		public IPEndPoint roomEndpoint { get; set; }
+		public Size mapSize { get; set; }
+	}
 
 
 }

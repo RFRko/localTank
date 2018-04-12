@@ -88,16 +88,22 @@ namespace Tanki
 			gamer.SetId(name, client_passport);
 			var room_passport = cd.RoomPasport;
 			var room = (Owner as IManagerRoomOwner).GetRoomByGuid(room_passport);
+			var map_Size = room.GameSetings.MapSize;
 			if (room != null)
 			{
 				if (room.Gamers.Count() < room.GameSetings.MaxPlayersCount)
 				{
 					IPEndPoint room_ipendpoint = ManagerRoom.MooveGamerToRoom(gamer, room_passport);
+					var roominfo = new RoomInfo()
+					{
+						roomEndpoint = room_ipendpoint,
+						mapSize = map_Size
+					};
 
 					Owner.Sender.SendMessage(new Package()
 					{
-						Data = room_ipendpoint,
-						MesseggeType = MesseggeType.RoomEndpoint
+						Data = roominfo,
+						MesseggeType = MesseggeType.RoomInfo
 					}, gamer.RemoteEndPoint);
 				}
 				else
@@ -135,13 +141,18 @@ namespace Tanki
 
 			// добавить в нее игрока
 			var room_endpoint = ManagerRoom.MooveGamerToRoom(gamer, newGameRoom.Passport);
-			
 
-            Owner.Sender.SendMessage(new Package()
+			var roominfo = new RoomInfo()
+			{
+				roomEndpoint = room_endpoint,
+				mapSize = newGameSettings.MapSize
+			};
+
+			Owner.Sender.SendMessage(new Package()
             {
-              Data = room_endpoint,
-              MesseggeType = MesseggeType.RoomEndpoint
-            }, gamer.RemoteEndPoint);
+              Data = roominfo,
+              MesseggeType = MesseggeType.RoomInfo
+			}, gamer.RemoteEndPoint);
         }
 	}
 }
