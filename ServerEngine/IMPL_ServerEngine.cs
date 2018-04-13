@@ -57,7 +57,7 @@ namespace Tanki
 		/// <summary>
 		/// Список всех сущностей на игровом поле
 		/// </summary>
-        private List<IEntity> objects;
+        private List<IEntity> objects=new List<IEntity>();
         private int width;
         private int height;
 		/// <summary>
