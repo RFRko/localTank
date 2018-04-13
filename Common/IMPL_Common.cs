@@ -17,25 +17,23 @@ namespace Common
     [Serializable]
     public abstract class GameEntity : IEntity
     {
-        private bool _can_shoot;
         private bool _can_destroy;
         private bool _is_alive;
-        private int _speed;
 		private int _size;
         private Direction _direction;
         private Rectangle _position;
+        private EntityAction _command;
 
         public GameEntity()
         {
 
         }
 
-        public GameEntity(bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position,Direction Direction,int size)
+        public GameEntity(bool CanDestroy, bool IsAlive, Rectangle Position,Direction Direction,int size,EntityAction Command)
         {
+            this._command = Command;
             this._can_destroy = CanDestroy;
-            this._can_shoot = CanShoot;
             this._is_alive = IsAlive;
-            this._speed = Speed;
             this._position = Position;
             this._direction = Direction;
 			this._size = size;
@@ -45,7 +43,11 @@ namespace Common
 		/// <summary>
 		/// Текущая позиция X Y.
 		/// </summary>
-		public Rectangle Position { get; set; }
+		public Rectangle Position
+        {
+            get { return this._position; }
+            set { this._position = value; }
+        }
 		/// <summary>
 		/// Направление движения.
 		/// </summary>
@@ -54,14 +56,6 @@ namespace Common
         {
             get { return this._direction; }
             set { this._direction = value; }
-        }
-        /// <summary>
-        /// Возможно ли произвести выстрел в данный момент.
-        /// </summary>
-        public bool Can_Shoot
-        {
-            get { return this._can_shoot; }
-            set { this._can_shoot = value; }
         }
         /// <summary>
         /// Состояние объект. 
@@ -82,13 +76,12 @@ namespace Common
         /// <summary>
         /// Скорость движения объекта.
         /// </summary>
-        public int Speed
-        {
-            get { return this._speed; }
-            set { this._speed = value; }
-        }
 
-        public EntityAction Command { get; set; }
+        public EntityAction Command
+        {
+            get { return this._command; }
+            set { this._command = value; }
+        }
 
 		public int Size
 		{
@@ -108,16 +101,21 @@ namespace Common
     {
         private int _lives;
         private Team _team;
-		    private Guid _tank_ID;
+		private Guid _tank_ID;
+        private bool _can_shoot;
+        private int _speed;
+
         public Tank()
         {
 
         }
 
-        public Tank(int Lives,Team Team,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size) : base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction,Size)
+        public Tank(int Lives,Team Team,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size, Guid TankID, EntityAction Command) : base(CanDestroy,IsAlive,Position,Direction,Size,Command)
         {
             this._lives = Lives;
             this._team = Team;
+            this._speed = Speed;
+            this._can_shoot = CanShoot;
         }
 
         public int Lives
@@ -127,11 +125,28 @@ namespace Common
         }
 
 
-		    public Guid Tank_ID { get; set; }
+		    public Guid Tank_ID
+        {
+            get { return this._tank_ID; }
+            set { this._tank_ID = value; }
+        }
+
 		    public Team Team
         {
             get { return this._team; }
             set { this._team = value; }
+        }
+
+        public int Speed
+        {
+            get { return this._speed; }
+            set { this._speed = value; }
+        }
+
+        public bool Can_Shoot
+        {
+            get { return this._can_shoot; }
+            set { this._can_shoot= value; }
         }
     }
 
@@ -145,21 +160,28 @@ namespace Common
     public class Bullet : GameEntity, IBullet
     {
         private Guid _parent_id;
+        private int _speed;
 
         public Bullet()
         {
             
         }
 
-        public Bullet(Guid Parent_Id,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size) : base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction,Size)
+        public Bullet(Guid Parent_Id,bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size,EntityAction Command) : base(CanDestroy,IsAlive,Position,Direction,Size,Command)
         {
             this._parent_id = Parent_Id;
         }
 
         public Guid Parent_Id
         {
-			get;
-			set;
+            get { return this._parent_id; }
+            set { this._parent_id = value; }
+        }
+
+        public int Speed
+        {
+            get { return this._speed; }
+            set { this._speed = value; }
         }
     }
 
@@ -177,7 +199,7 @@ namespace Common
 
         }
 
-        public Block(bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Rectangle Position, Direction Direction,int Size) :base(CanShoot,CanDestroy,IsAlive,Speed,Position,Direction,Size)
+        public Block(bool CanDestroy, bool IsAlive, Rectangle Position, Direction Direction,int Size, EntityAction Command) :base(CanDestroy,IsAlive,Position,Direction,Size,Command)
         {
                 
         }
@@ -194,5 +216,21 @@ namespace Common
 	  }
 
 
+    public class GameObjectFactory : IGameObjectFactory
+    {
+        public IBlock CreateBlock()
+        {
+            return new Block();
+        }
 
+        public IBullet CreateBullet()
+        {
+            return new Bullet();
+        }
+
+        public ITank CreateTank()
+        {
+            return new Tank();
+        }
+    }
 }
