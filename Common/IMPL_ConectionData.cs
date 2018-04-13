@@ -43,7 +43,7 @@ namespace Tanki
 	  [Serializable]
 	  public class RoomInfo : IRoomInfo
 	  {
-		  public IPEndPoint roomEndpoint { get; set; }
+		  public IAddresssee roomEndpoint { get; set; }
 		  public Size mapSize { get; set; }
 	  }
 }

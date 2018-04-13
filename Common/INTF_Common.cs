@@ -87,6 +87,7 @@ namespace Tanki
     {
         Guid Parent_Id { get; set; }
         int Speed { get; set; }
+
     }
 
 
@@ -302,7 +303,7 @@ namespace Tanki
 
     public interface IRoomInfo
     {
-      IPEndPoint roomEndpoint { get; set; }
+      IAddresssee roomEndpoint { get; set; }
       Size mapSize { get; set; }
     }
 

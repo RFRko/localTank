@@ -244,7 +244,6 @@ namespace Tanki
 				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
 				bullet.Is_Alive = true;
 				bullet.Can_Be_Destroyed = false;
-				bullet.Can_Shoot = false;
 				bullet.Position = tmp.Position;
 				bullet.Command = EntityAction.Move;
 				bullets.Add(bullet);
@@ -268,7 +267,6 @@ namespace Tanki
 				var obj = new object() as IBlock;
 				this.Reload(obj);
 				obj.Can_Be_Destroyed = true;
-				obj.Can_Shoot = false;
 				obj.Is_Alive = true;
 				blocks.Add(obj);
 				objects.Add(obj);
