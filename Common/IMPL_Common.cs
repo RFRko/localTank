@@ -251,4 +251,10 @@ namespace Tanki
             return new Tank();
         }
     }
+	public class Map : IMap
+	{
+		public IEnumerable<IBlock> Blocks { get; set; }
+		public IEnumerable<IBullet> Bullets { get; set; }
+		public IEnumerable<ITank> Tanks { get; set; }
+	}
 }

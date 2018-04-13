@@ -183,10 +183,11 @@ namespace Tanki
 			if (this.status == GameStatus.Start)
 			{
 				this.CheckAlive(list);
-				foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
-				{
-					this.Move(x);
-				}
+				Parallel.ForEach(bullets, x => this.Move(x));
+				//foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
+				//{
+				//	this.Move(x);
+				//}
 				foreach (var t in list)
 				{
 					var tmp = t.Data as IEntity;
@@ -221,6 +222,12 @@ namespace Tanki
 				{
 					tank.Lives--;
 				}
+				else
+				{
+					var room = Owner as IRoom;
+					var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
+					Owner.Sender.SendMessage(new Package() {Data="Game Over!",MesseggeType=MesseggeType.Error }, adress);	
+				}
 			}
 			else if(tmp is IBullet)
 			{
@@ -238,7 +245,10 @@ namespace Tanki
 			var tmp = objects.FirstOrDefault(t => t == entity) as ITank;
 			if (tmp.Can_Shoot)
 			{
-				var bullet = new object() as IBullet;
+				var bullet = new GameObjectFactory().CreateBullet();
+				//var bullet = new Bullet();
+				var room = Owner as IRoom;
+				bullet.Size = room.GameSetings.ObjectsSize; //???
 				bullet.Direction = tmp.Direction;				
 				bullet.Parent_Id = tmp.Tank_ID;
 				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
@@ -264,7 +274,9 @@ namespace Tanki
 			}
 			while(objectCount>0)
 			{
-				var obj = new object() as IBlock;
+				var obj = new GameObjectFactory().CreateBlock();
+				//var obj = new Block();
+				obj.Size = room.GameSetings.ObjectsSize;
 				this.Reload(obj);
 				obj.Can_Be_Destroyed = true;
 				obj.Is_Alive = true;
@@ -434,11 +446,11 @@ namespace Tanki
 		/// </summary>
 		public void Send()
 		{       
-            var t = new object() as IMap;
+            IMap t = new Map();
             t.Blocks = blocks;
             t.Bullets = bullets;
             t.Tanks = tanks;
-			var pack = new object() as IPackage;
+			IPackage pack = new Package();
 			pack.Data = t;
 			pack.MesseggeType = MesseggeType.Map;
 			var adress = Owner as IRoom;
@@ -449,14 +461,14 @@ namespace Tanki
 		/// </summary>
 		private void SendEndGame()
 		{
-			var pack = new object() as IPackage;
+			IPackage pack = new Package();
 			pack.MesseggeType = MesseggeType.EndGame;
 			var adress = Owner as IRoom;
 			Owner.Sender.SendMessage(pack, adress.Gamers);
 		}
 		private void SendStartGame()
 		{
-			var pack = new object() as IPackage;
+			IPackage pack = new Package();
 			pack.MesseggeType = MesseggeType.StartGame;
 			var adress = Owner as IRoom;
 			Owner.Sender.SendMessage(pack, adress.Gamers);
@@ -469,7 +481,10 @@ namespace Tanki
 		/// <param name="gamer"> Новый игрок</param>
 		public void NewGamer(IGamer gamer)
 		{
-			var obj = new Tank();
+			var obj = new GameObjectFactory().CreateTank();
+			//var obj = new Tank();
+			var room = Owner as IRoom;
+			obj.Size = room.GameSetings.ObjectsSize;
 			obj.Tank_ID = gamer.Passport;  
 			obj.Lives = 5;
 			obj.Is_Alive = true;
