@@ -20,7 +20,7 @@ namespace Tanki
 			InitializeComponent();
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void button2_Click(object sender, EventArgs e)
 		{
 			var gameSpeed = (int)numericUpDown1.Value;
 			var object_size = (int)numericUpDown2.Value;
@@ -28,7 +28,7 @@ namespace Tanki
 					(int)numericUpDown3.Value,
 					(int)numericUpDown4.Value);
 			var players_count = (int)numericUpDown5.Value;
-			var game_type = (GameType)Enum.Parse(typeof(GameType), comboBox1.SelectedText);
+			var game_type = (GameType)Enum.Parse(typeof(GameType), comboBox1.SelectedItem.ToString());
 
 			gameSetings = new GameSetings()
 			{
@@ -42,7 +42,7 @@ namespace Tanki
 			Close();
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void button1_Click(object sender, EventArgs e)
 		{
 			ok = false;
 			Close();

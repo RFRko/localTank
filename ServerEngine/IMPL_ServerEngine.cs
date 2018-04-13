@@ -23,7 +23,11 @@ namespace Tanki
 		/// <summary>
 		/// Конструктор игрового движка
 		/// </summary>
-        public ServerGameEngine() : base() { }
+        public ServerGameEngine() : base()
+        {
+            this.ProcessMessages += MessagesHandler;
+            this.ProcessMessage = null;
+        }
 		/// <summary>
 		/// Конструктор игрового движка
 		/// </summary>
@@ -467,8 +471,7 @@ namespace Tanki
 		/// <param name="gamer"> Новый игрок</param>
 		public void NewGamer(IGamer gamer)
 		{
-			var obj = new object() as ITank;
-			obj.Name = gamer.Name;
+			var obj = new Tank();
 			obj.Tank_ID = gamer.Passport;  
 			obj.Lives = 5;
 			obj.Is_Alive = true;

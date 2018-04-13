@@ -148,7 +148,10 @@ namespace Tanki
 					}
 				case MesseggeType.Passport:
 					{
-						client.Passport = (Guid)package.Data;
+                        IinitialConectionData initConnData = package.Data as IinitialConectionData;
+                        client.Passport = initConnData.passport;
+
+                        client.AddAddressee("Host", initConnData.manageRoomEndpoint);
 						break;
 					}
 				case MesseggeType.RoomInfo:

@@ -29,10 +29,10 @@ namespace Tanki
             IServer Srv = new GameServer(HostEPprovider,sysSettings);
 
             //Srv.AddRoom(null, Guid.NewGuid());
-            //Srv.AddRoom(null, Guid.NewGuid());
 
 
             Srv.RUN();
+            Srv.AddRoom(null, Guid.NewGuid());
 
 
 
