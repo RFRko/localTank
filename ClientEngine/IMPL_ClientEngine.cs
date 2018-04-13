@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -16,59 +17,68 @@ namespace Tanki
 			//client = Owner as IGameClient; в конструкторе он еще не известен, становится известен при registerdependency
 		}
 
-
 		private IGameClient client;
-		private object Map_locker;
-		private object Entity_locker;
+		private static object Map_locker = new object();
+		private static object Entity_locker = new object();
 
-        private IEnumerable<IRoomStat> _RoomsStat = null;
+		private IEnumerable<IRoomStat> _RoomsStat = null;
+		private IMap _Map = null;
+		private ITank _Entity = null;
+		private string _ErrorText = null;
 
 
-        public IEnumerable<IRoomStat> RoomsStat
+		public Size Map_size { get; protected set; }
+		public IEnumerable<IRoomStat> RoomsStat
 		{
 			get { return _RoomsStat;  }
 
 			protected set
 			{
                 _RoomsStat = value; //айяйяй циклическая ссылка RoomsStat = value; 
-                OnRoomsStatChanged?.BeginInvoke(this, new RoomStatChangeData() { newRoomsStat = value },null,null);
+                OnRoomsStatChanged?.BeginInvoke(this, new RoomStatChangeData() { newRoomsStat = value }, null, null);
 			}
 		}
 		public IMap Map
 		{
-			get { lock (Map_locker) { return Map; } }
+			get { lock (Map_locker) { return _Map; } }
 
 			protected set
 			{
-				lock (Map_locker) { Map = value; }
-				OnMapChanged?.Invoke(this, new GameStateChangeData() { newMap = Map });
+				lock (Map_locker) { _Map = value; }
+				OnMapChanged?.BeginInvoke(this, new GameStateChangeData() { newMap = value }, null, null);
 			}
 		}
-		public IEntity Entity
+		public ITank Entity
 		{
-			get { lock (Entity_locker) { return Entity; } }
+			get { lock (Entity_locker) { return _Entity; } }
 
-			protected set
+			set
 			{
-				lock (Entity_locker) { Entity = value; }
+				lock (Entity_locker) { _Entity = value; }
 
-				var room_IpEndpoint = (IPEndPoint)client["Room"];
-				var my_passport = client.Passport;
+				//мы решили отправлять Entity только по таймеру
 
-				Owner.Sender.SendMessage(new Package()
-				{
-					Sender_Passport = my_passport,
-					Data = value,
-					MesseggeType = MesseggeType.Entity
-				}, room_IpEndpoint);
+
+
+
+
+				//var room_IpEndpoint = (IPEndPoint)client["Room"];
+				//var my_passport = client.Passport;
+
+				//Owner.Sender.SendMessage(new Package()
+				//{
+				//	Sender_Passport = my_passport,
+				//	Data = value,
+				//	MesseggeType = MesseggeType.Entity
+				//}, room_IpEndpoint);
 			}
 		}
-		public string RoomError 
+		public string ErrorText 
 		{
-			get { return RoomError; }
+			get { return _ErrorText; }
 			protected set
 			{
-				RoomError = value;
+				_ErrorText = value;
 				OnError?.Invoke(this, new ErrorData() { errorText = value });
 			}
 		}
@@ -103,6 +113,10 @@ namespace Tanki
 				MesseggeType = MesseggeType.RoomID
 			}, client["Host"]);
 		}
+		public Guid GetPassport()
+		{
+			return client.Passport;
+		}
 		public void GetRoomList()
 		{
 			Owner.Sender.SendMessage(new Package()
@@ -113,7 +127,7 @@ namespace Tanki
 		}
 
 
-		public void OnEntityHandler(object Sender, IEntity evntData)
+		public void OnEntityHandler(object Sender, ITank evntData)
 		{
 			Entity = evntData;
 		}
@@ -137,9 +151,11 @@ namespace Tanki
 						client.Passport = (Guid)package.Data;
 						break;
 					}
-				case MesseggeType.RoomEndpoint:
+				case MesseggeType.RoomInfo:
 					{
-						client.AddAddressee("Room", package.Data as IAddresssee);
+						var roomInfo = package.Data as RoomInfo;
+						client.AddAddressee("Room", roomInfo.roomEndpoint as IAddresssee);
+						Map_size = roomInfo.mapSize;
 						break;
 					}
 				case MesseggeType.StartGame:
@@ -154,7 +170,7 @@ namespace Tanki
 					}
 				case MesseggeType.Error:
 					{
-						RoomError = package.Data as string;
+						ErrorText = package.Data as string;
 						break;
 					}
 				default: throw new Exception("Undefine MessaggeType");

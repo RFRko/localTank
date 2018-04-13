@@ -67,6 +67,7 @@ namespace Tanki
     /// </summary>
     public interface ITank : IEntity
     {
+		string Name { get; set; }
         Guid Tank_ID { get; set; }
         int Lives { get; set; }
         Team Team { get; set; }
@@ -291,6 +292,12 @@ namespace Tanki
 		string PlayerName { get; set; }
 		Guid RoomPasport { get; set; }
 		GameSetings GameSetings { get; set; }
+	}
+
+	public interface IRoomInfo
+	{
+		IPEndPoint roomEndpoint { get; set; }
+		Size mapSize { get; set; }
 	}
 
     public interface IGameObjectFactory

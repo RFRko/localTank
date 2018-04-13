@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{912EC702-B17C-4A5F-9289-6C051AE84D38}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Win_Forms_Client</RootNamespace>
+    <RootNamespace>Tanki</RootNamespace>
     <AssemblyName>Win_Forms_Client</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -75,6 +75,9 @@
     <EmbeddedResource Include="ConnectionForm.resx">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GameForm.resx">
+      <DependentUpon>GameForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GameOptionsForm.resx">
       <DependentUpon>GameOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -83,17 +86,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -116,6 +120,39 @@
       <Project>{f6709b91-8a33-4b90-a68e-3d6bed9d7ba2}</Project>
       <Name>GameClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\background.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bullet.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wall.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enemy_down.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enemy_left.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enemy_right.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enemy_up.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player_down.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player_left.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player_right.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player_up.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

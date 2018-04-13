@@ -101,10 +101,9 @@ namespace Common
     {
         private int _lives;
         private Team _team;
-		private Guid _tank_ID;
+		    private Guid _tank_ID;
         private bool _can_shoot;
         private int _speed;
-
         public Tank()
         {
 
@@ -123,7 +122,7 @@ namespace Common
             get { return this._lives; }
             set { this._lives = value; }
         }
-
+		public string Name { get; set; }
 
 		    public Guid Tank_ID
         {
