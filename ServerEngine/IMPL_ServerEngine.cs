@@ -444,7 +444,7 @@ namespace Tanki
 		/// <param name="gamer"> Новый игрок</param>
 		public void NewGamer(IGamer gamer)
 		{
-			var obj = new object() as ITank;
+			var obj = new Tank();
 			obj.Tank_ID = gamer.Passport;  
 			obj.Lives = 5;
 			obj.Is_Alive = true;

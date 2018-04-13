@@ -133,8 +133,11 @@ namespace Tanki
                         break;
 					}
 				case MesseggeType.Passport:
-					{
-						client.Passport = (Guid)package.Data;
+					{                                                
+
+                        client.AddAddressee("Host", package.Data as IAddresssee);
+
+                        client.Passport = (Guid)package.Data;
 						break;
 					}
 				case MesseggeType.RoomEndpoint:

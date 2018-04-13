@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tanki;
 
-namespace Common
+namespace Tanki
 {
     /// <summary>
 	/// Абстрактный класс описующий информацию об объектах рендеринга.
@@ -184,14 +184,14 @@ namespace Common
     }
 
 
-    [Serializable]
-    public class RoomStat : IRoomStat
-    {
-        public RoomStat() { }
-        public int Players_count { get; set; }
-		    public Guid Pasport { get; set; }
-		    public Guid Creator_Pasport { get; set; }
-	  }
+   // [Serializable]
+   // public class RoomStat : IRoomStat
+   // {
+   //     public RoomStat() { }
+   //     public int Players_count { get; set; }
+		 //   public Guid Pasport { get; set; }
+		 //   public Guid Creator_Pasport { get; set; }
+	  //}
 
 
 
