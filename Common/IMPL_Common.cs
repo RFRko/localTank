@@ -225,11 +225,12 @@ namespace Tanki
 //		    public Guid Creator_Pasport { get; set; }
 //	  }
 
+    [Serializable]
     public class Addresssee : IAddresssee
     {
         public Addresssee(IPEndPoint ep) { RemoteEndPoint = ep; }
         public IPEndPoint RemoteEndPoint { get;}
-	  }
+	}
 
 
     public class GameObjectFactory : IGameObjectFactory
