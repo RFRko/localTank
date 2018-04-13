@@ -24,6 +24,7 @@ namespace Tanki
 			textBox1.Text = "127.0.0.1";
 			textBox2.Text = "11001";
 		}
+
 		public bool Connect(IPEndPoint point)
 		{
 			var caption = "Ошибка подключения";
@@ -36,6 +37,7 @@ namespace Tanki
 			}
 			return true;
 		}
+
 		private void button2_Click(object sender, EventArgs e)
 		{
 			string s1 = textBox1.Text;

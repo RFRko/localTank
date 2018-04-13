@@ -29,8 +29,6 @@ namespace Tanki
             InitializeComponent();
         }
 
-        private Object _locker = new Object();
-
         // подписан на событие, обновляет список комнат
         private void SetRoomList(object sender, RoomStatChangeData data)
         {
@@ -43,7 +41,6 @@ namespace Tanki
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = RoomList;
                 dataGridView1.Refresh();
-
         }
 
 
@@ -76,7 +73,7 @@ namespace Tanki
 				{
 					clientEngine.CreateGame(gameOptionsForm.gameSetings, name);
 
-					var gameForm = new GameForm();
+					var gameForm = new GameForm(clientEngine, gameOptionsForm.gameSetings.MapSize);
 					gameForm.Show();
 					Hide();
 				}
@@ -97,7 +94,7 @@ namespace Tanki
 
 				clientEngine.JOINGame(room_guid, name);
 
-				var gameForm = new GameForm();
+				var gameForm = new GameForm(clientEngine, clientEngine.Map_size);
 				gameForm.Show();
 				Hide();
 			}

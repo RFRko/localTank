@@ -51,10 +51,8 @@ namespace Tanki
         Rectangle Position { get; set; }
         Direction Direction { get; set; }
         EntityAction Command { get; set; }
-        bool Can_Shoot { get; set; }
         bool Is_Alive { get; set; }
         bool Can_Be_Destroyed { get; set; }
-        int Speed { get; set; }
         int Size { get; set; }
     }
 
@@ -69,9 +67,12 @@ namespace Tanki
     /// </summary>
     public interface ITank : IEntity
     {
+		string Name { get; set; }
         Guid Tank_ID { get; set; }
         int Lives { get; set; }
         Team Team { get; set; }
+        bool Can_Shoot { get; set; }
+        int Speed { get; set; }
     }
 
 
@@ -85,6 +86,7 @@ namespace Tanki
     public interface IBullet : IEntity
     {
         Guid Parent_Id { get; set; }
+        int Speed { get; set; }
     }
 
 
@@ -291,9 +293,23 @@ namespace Tanki
 		Guid RoomPasport { get; set; }
 		GameSetings GameSetings { get; set; }
 	}
+
     public interface IinitialConectionData
     {
         Guid passport { get; set; }
         IAddresssee manageRoomEndpoint { get; set; }
+    }
+
+    public interface IRoomInfo
+    {
+      IPEndPoint roomEndpoint { get; set; }
+      Size mapSize { get; set; }
+    }
+
+    public interface IGameObjectFactory
+    {
+        ITank CreateTank();
+        IBullet CreateBullet();
+        IBlock CreateBlock();
     }
 }

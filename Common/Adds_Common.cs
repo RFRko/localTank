@@ -59,7 +59,7 @@
 		/// <summary> Отравка серверу id выбранной комнаты </summary>
 		RoomID,
 		/// <summary> Отравка клиенту ipEndpoint выбранной/созданной комнаты </summary>
-		RoomEndpoint,
+		RoomInfo,
 		/// <summary> Отправка клиенту сообщения об ошибке </summary>
 		Error,
 		/// <summary> Отправка серверу сообщения о создании новой комнаты </summary>
