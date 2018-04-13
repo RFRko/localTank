@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Tanki;
@@ -184,15 +185,20 @@ namespace Tanki
     }
 
 
-   // [Serializable]
-   // public class RoomStat : IRoomStat
-   // {
-   //     public RoomStat() { }
-   //     public int Players_count { get; set; }
-		 //   public Guid Pasport { get; set; }
-		 //   public Guid Creator_Pasport { get; set; }
-	  //}
+    // [Serializable]
+    // public class RoomStat : IRoomStat
+    // {
+    //     public RoomStat() { }
+    //     public int Players_count { get; set; }
+    //   public Guid Pasport { get; set; }
+    //   public Guid Creator_Pasport { get; set; }
+    //}
 
-
+    [Serializable]
+    public class Addresssee : IAddresssee
+    {
+        public Addresssee(IPEndPoint ep) { RemoteEndPoint = ep; }
+        public IPEndPoint RemoteEndPoint { get;}
+    }
 
 }

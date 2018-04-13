@@ -23,7 +23,11 @@ namespace Tanki
 		/// <summary>
 		/// Конструктор игрового движка
 		/// </summary>
-        public ServerGameEngine() : base() { }
+        public ServerGameEngine() : base()
+        {
+            this.ProcessMessages += MessagesHandler;
+            this.ProcessMessage = null;
+        }
 		/// <summary>
 		/// Конструктор игрового движка
 		/// </summary>

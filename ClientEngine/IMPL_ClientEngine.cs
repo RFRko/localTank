@@ -133,11 +133,11 @@ namespace Tanki
                         break;
 					}
 				case MesseggeType.Passport:
-					{                                                
+					{
+                        IinitialConectionData initConnData = package.Data as IinitialConectionData;
+                        client.Passport = initConnData.passport;
 
-                        client.AddAddressee("Host", package.Data as IAddresssee);
-
-                        client.Passport = (Guid)package.Data;
+                        client.AddAddressee("Host", initConnData.manageRoomEndpoint);
 						break;
 					}
 				case MesseggeType.RoomEndpoint:

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,5 +31,10 @@ namespace Tanki
         public IEnumerable<IRoomStat> RoomsStat { get { return _rooms_stat; } }
     }
 
-
+    [Serializable]
+    public class initialConectionData : IinitialConectionData
+    {
+        public Guid passport { get; set; }
+        public IAddresssee manageRoomEndpoint { get; set; }
+    }
 }

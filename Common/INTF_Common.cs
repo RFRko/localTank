@@ -291,4 +291,9 @@ namespace Tanki
 		Guid RoomPasport { get; set; }
 		GameSetings GameSetings { get; set; }
 	}
+    public interface IinitialConectionData
+    {
+        Guid passport { get; set; }
+        IAddresssee manageRoomEndpoint { get; set; }
+    }
 }
