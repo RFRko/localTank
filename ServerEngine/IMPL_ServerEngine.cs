@@ -42,6 +42,7 @@ namespace Tanki
 
             gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
 			this.status = GameStatus.WaitForStart;
+			this.settings = room.GameSetings;
 
             this.Width = room.GameSetings.MapSize.Width;
             this.Height = room.GameSetings.MapSize.Height;
@@ -62,6 +63,7 @@ namespace Tanki
 		/// Список всех сущностей на игровом поле
 		/// </summary>
         private List<IEntity> objects=new List<IEntity>();
+		private IGameSetings settings;
         private int width;
         private int height;
 		/// <summary>
@@ -121,7 +123,7 @@ namespace Tanki
 						var tank = entity as ITank;
 						if (tank.Lives > 0)
 						{
-							this.Reload(entity);
+							tank.Position = this.Reload();
 						}
 						else
 						{
@@ -248,7 +250,7 @@ namespace Tanki
 				var bullet = new GameObjectFactory().CreateBullet();
 				//var bullet = new Bullet();
 				var room = Owner as IRoom;
-				bullet.Size = room.GameSetings.ObjectsSize; //???
+				bullet.Size = settings.ObjectsSize / 4; //???
 				bullet.Direction = tmp.Direction;				
 				bullet.Parent_Id = tmp.Tank_ID;
 				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
@@ -267,7 +269,7 @@ namespace Tanki
 		{
             var room = Owner as IRoom;
 			int tankCount = room.Gamers.Count();
-			int objectCount = (this.height * this.width) / (room.GameSetings.ObjectsSize*room.GameSetings.ObjectsSize*room.GameSetings.MaxPlayersCount);
+			int objectCount = (this.height * this.width) / (settings.ObjectsSize * settings.ObjectsSize * settings.MaxPlayersCount);
             foreach (var t in room.Gamers)
             {
 				this.NewGamer(t);
@@ -276,8 +278,8 @@ namespace Tanki
 			{
 				var obj = new GameObjectFactory().CreateBlock();
 				//var obj = new Block();
-				obj.Size = room.GameSetings.ObjectsSize;
-				this.Reload(obj);
+				obj.Size = settings.ObjectsSize;
+				obj.Position=this.Reload();
 				obj.Can_Be_Destroyed = true;
 				obj.Is_Alive = true;
 				blocks.Add(obj);
@@ -305,7 +307,7 @@ namespace Tanki
 								if (tank.Position.X > 0)
 								{
 									var pos = new Point(tank.Position.X - 1, tank.Position.Y);
-									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 								}
 								break;
 
@@ -313,7 +315,7 @@ namespace Tanki
 								if (tank.Position.X < width)
 								{
 									var pos = new Point(tank.Position.X + 1, tank.Position.Y);
-									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 								}
 								break;
 
@@ -321,7 +323,7 @@ namespace Tanki
 								if (tank.Position.Y > 0)
 								{
 									var pos = new Point(tank.Position.X, tank.Position.Y - 1);
-									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 								}
 								break;
 
@@ -330,7 +332,7 @@ namespace Tanki
 								if (tank.Position.Y < height)
 								{
 									var pos = new Point(tank.Position.X, tank.Position.Y + 1);
-									tank.Position = new Rectangle(pos, new Size(tank.Size, tank.Size));
+									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 								}
 								break;
 						}
@@ -346,7 +348,7 @@ namespace Tanki
 							if (bullet.Position.X > 0)
 							{
 								var pos = new Point(bullet.Position.X - 1, bullet.Position.Y);
-								bullet.Position = new Rectangle(pos, new Size(bullet.Size, bullet.Size));
+								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 							}
 							break;
 
@@ -354,7 +356,7 @@ namespace Tanki
 							if (bullet.Position.X < width)
 							{
 								var pos = new Point(bullet.Position.X + 1, bullet.Position.Y);
-								bullet.Position = new Rectangle(pos, new Size(bullet.Size, bullet.Size));
+								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 							}
 							break;
 
@@ -362,7 +364,7 @@ namespace Tanki
 							if (bullet.Position.Y > 0)
 							{
 								var pos = new Point(bullet.Position.X, bullet.Position.Y - 1);
-								bullet.Position = new Rectangle(pos, new Size(bullet.Size, bullet.Size));
+								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 							}
 							break;
 
@@ -371,7 +373,7 @@ namespace Tanki
 							if (bullet.Position.Y < height)
 							{
 								var pos = new Point(bullet.Position.X, bullet.Position.Y + 1);
-								bullet.Position = new Rectangle(pos, new Size(bullet.Size, bullet.Size));
+								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
 							}
 							break;
 					}
@@ -425,21 +427,23 @@ namespace Tanki
 		/// Гененация расположения для сущности
 		/// </summary>
 		/// <param name="entity">Сущность требующая разположения на игровом поле</param>
-		private void Reload(IEntity entity)
+		private Rectangle Reload()
         {
-			entity.Position = Rectangle.Empty;
-			while (entity.Position != Rectangle.Empty)
+			Rectangle rect = Rectangle.Empty;
+			//entity.Position = Rectangle.Empty;
+			while (rect != Rectangle.Empty)
 			{
 				Random colInd = new Random(DateTime.Now.Millisecond - 15);
 				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
 				int columnIndex = colInd.Next(0, width);
 				int rowIndex = rowInd.Next(0, height);
 				Point p = new Point(rowIndex, columnIndex);
-				if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(entity.Size, entity.Size))) == true) == null)
+				if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(settings.ObjectsSize, settings.ObjectsSize))) == true) == null)
 				{
-					entity.Position = new Rectangle(p,new Size(entity.Size,entity.Size));
+					rect = new Rectangle(p,new Size(settings.ObjectsSize, settings.ObjectsSize));
 				}
 			}
+			return rect;
 		}
 		/// <summary>
 		/// Метод реализирующий передачу данных на сендер
@@ -484,13 +488,13 @@ namespace Tanki
 			var obj = new GameObjectFactory().CreateTank();
 			//var obj = new Tank();
 			var room = Owner as IRoom;
-			obj.Size = room.GameSetings.ObjectsSize;
+			obj.Size = settings.ObjectsSize;
 			obj.Tank_ID = gamer.Passport;  
 			obj.Lives = 5;
 			obj.Is_Alive = true;
 			obj.Can_Shoot = true;
 			obj.Direction = Direction.Up;
-			this.Reload(obj);
+			obj.Position=this.Reload();
 			tanks.Add(obj);
 			objects.Add(obj);
 		}
