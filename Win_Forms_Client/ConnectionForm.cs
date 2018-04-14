@@ -21,8 +21,8 @@ namespace Tanki
 		{
 			gameClient = GameClient;
 			InitializeComponent();
-			textBox1.Text = "127.0.0.1";
-			textBox2.Text = "11001";
+			Ip_tb.Text = "127.0.0.1"; //176.8.250.156
+			Port_tb.Text = "11001";
 		}
 
 		public bool Connect(IPEndPoint point)
@@ -38,10 +38,15 @@ namespace Tanki
 			return true;
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void Cancel_btn_Click(object sender, EventArgs e)
 		{
-			string s1 = textBox1.Text;
-			string s2 = textBox2.Text;
+			Close();
+		}
+
+		private void Connect_btn_Click(object sender, EventArgs e)
+		{
+			string s1 = Ip_tb.Text;
+			string s2 = Port_tb.Text;
 
 			if (!string.IsNullOrEmpty(s1)
 				&& !string.IsNullOrEmpty(s2))
@@ -71,11 +76,6 @@ namespace Tanki
 				else { Close(); }
 			}
 			else label3.Text = "Error: Заполните все поля";
-		}
-
-		private void button1_Click(object sender, EventArgs e)
-		{
-			Close();
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Tanki
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
 			InitializeComponent();
-			this.Size = size;
+			this.ClientSize = size;
 			this.BackColor = Color.Black;
 			ClientEngine = clientEngine;
 			clientEngine.OnMapChanged += OnMapChangeHandler;
@@ -70,7 +70,7 @@ namespace Tanki
 						new PointF
 						(
 							i.Position.Location.X + 10, 
-							i.Position.Location.Y + 10
+							i.Position.Location.Y - 10
 						)
 					);
 			}
@@ -106,41 +106,35 @@ namespace Tanki
 
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			var curentState = ClientEngine.Entity;
 			switch (e.KeyCode)
 			{
 				case Keys.Left:
 					{
-						curentState.Direction = Direction.Left;
-						curentState.Command = EntityAction.Move;
-						ClientEngine.Entity = curentState;
+						ClientEngine.Entity.Direction = Direction.Left;
+						ClientEngine.Entity.Command = EntityAction.Move;
 						break;
 					}
 				case Keys.Right:
 					{
-						curentState.Direction = Direction.Right;
-						curentState.Command = EntityAction.Move;
-						ClientEngine.Entity = curentState;
+						ClientEngine.Entity.Direction = Direction.Right;
+						ClientEngine.Entity.Command = EntityAction.Move;
 						break;
 					}
 				case Keys.Up:
 					{
-						curentState.Direction = Direction.Up;
-						curentState.Command = EntityAction.Move;
-						ClientEngine.Entity = curentState;
+						ClientEngine.Entity.Direction = Direction.Up;
+						ClientEngine.Entity.Command = EntityAction.Move;
 						break;
 					}
 				case Keys.Down:
 					{
-						curentState.Direction = Direction.Down;
-						curentState.Command = EntityAction.Move;
-						ClientEngine.Entity = curentState;
+						ClientEngine.Entity.Direction = Direction.Down;
+						ClientEngine.Entity.Command = EntityAction.Move;
 						break;
 					}
 				case Keys.Space:
 					{
-						curentState.Command = EntityAction.Fire;
-						ClientEngine.Entity = curentState;
+						ClientEngine.Entity.Command = EntityAction.Fire;
 						break;
 					}
 				default: return;
@@ -149,9 +143,7 @@ namespace Tanki
 
 		private void GameForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			var curentState = ClientEngine.Entity;
-			curentState.Command = EntityAction.None;
-			ClientEngine.Entity = curentState;
+			ClientEngine.Entity.Command = EntityAction.None;
 		}
 	}
 }

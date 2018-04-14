@@ -14,7 +14,6 @@ namespace Tanki
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
-			//client = Owner as IGameClient; в конструкторе он еще не известен, становится известен при registerdependency
 		}
 
 		private IGameClient client;
@@ -34,7 +33,7 @@ namespace Tanki
 
 			protected set
 			{
-                _RoomsStat = value; //айяйяй циклическая ссылка RoomsStat = value; 
+                _RoomsStat = value;
                 OnRoomsStatChanged?.BeginInvoke(this, new RoomStatChangeData() { newRoomsStat = value }, null, null);
 			}
 		}
@@ -143,7 +142,7 @@ namespace Tanki
 					}
 				case MesseggeType.RoomList:
 					{
-                        RoomsStat = (package.Data as IRoomsStat).RoomsStat;//as IEnumerable<IRoomStat>; IEnumerable не может быть сериализуемый, должен быть специальный тип для data
+                        RoomsStat = (package.Data as IRoomsStat).RoomsStat;
                         break;
 					}
 				case MesseggeType.Passport:

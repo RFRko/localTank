@@ -28,46 +28,46 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
+			this.Create_Room_btn = new System.Windows.Forms.Button();
+			this.Conect_btn = new System.Windows.Forms.Button();
+			this.Refresh_btn = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.dataGridView1 = new System.Windows.Forms.DataGridView();
+			this.Name_tb = new System.Windows.Forms.TextBox();
+			this.DGV_RoomList = new System.Windows.Forms.DataGridView();
 			this.label3 = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.DGV_RoomList)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// button1
+			// Create_Room_btn
 			// 
-			this.button1.Location = new System.Drawing.Point(225, 216);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(89, 23);
-			this.button1.TabIndex = 0;
-			this.button1.Text = "Создать";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.Create_Room_btn.Location = new System.Drawing.Point(225, 216);
+			this.Create_Room_btn.Name = "Create_Room_btn";
+			this.Create_Room_btn.Size = new System.Drawing.Size(89, 23);
+			this.Create_Room_btn.TabIndex = 0;
+			this.Create_Room_btn.Text = "Создать";
+			this.Create_Room_btn.UseVisualStyleBackColor = true;
+			this.Create_Room_btn.Click += new System.EventHandler(this.Create_Room_btn_Click);
 			// 
-			// button2
+			// Conect_btn
 			// 
-			this.button2.Location = new System.Drawing.Point(330, 216);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(89, 23);
-			this.button2.TabIndex = 1;
-			this.button2.Text = "Подключится";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.Conect_btn.Location = new System.Drawing.Point(330, 216);
+			this.Conect_btn.Name = "Conect_btn";
+			this.Conect_btn.Size = new System.Drawing.Size(89, 23);
+			this.Conect_btn.TabIndex = 1;
+			this.Conect_btn.Text = "Подключится";
+			this.Conect_btn.UseVisualStyleBackColor = true;
+			this.Conect_btn.Click += new System.EventHandler(this.Conect_btn_Click);
 			// 
-			// button3
+			// Refresh_btn
 			// 
-			this.button3.Location = new System.Drawing.Point(344, 3);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(75, 23);
-			this.button3.TabIndex = 2;
-			this.button3.Text = "Обновить";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
+			this.Refresh_btn.Location = new System.Drawing.Point(344, 3);
+			this.Refresh_btn.Name = "Refresh_btn";
+			this.Refresh_btn.Size = new System.Drawing.Size(75, 23);
+			this.Refresh_btn.TabIndex = 2;
+			this.Refresh_btn.Text = "Обновить";
+			this.Refresh_btn.UseVisualStyleBackColor = true;
+			this.Refresh_btn.Click += new System.EventHandler(this.Refresh_btn_Click);
 			// 
 			// label1
 			// 
@@ -87,23 +87,23 @@
 			this.label2.TabIndex = 4;
 			this.label2.Text = "Ваше имя";
 			// 
-			// textBox1
+			// Name_tb
 			// 
-			this.textBox1.Location = new System.Drawing.Point(92, 218);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(118, 20);
-			this.textBox1.TabIndex = 5;
+			this.Name_tb.Location = new System.Drawing.Point(92, 218);
+			this.Name_tb.Name = "Name_tb";
+			this.Name_tb.Size = new System.Drawing.Size(118, 20);
+			this.Name_tb.TabIndex = 5;
 			// 
-			// dataGridView1
+			// DGV_RoomList
 			// 
-			this.dataGridView1.AllowUserToAddRows = false;
-			this.dataGridView1.AllowUserToDeleteRows = false;
-			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Location = new System.Drawing.Point(12, 32);
-			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.ReadOnly = true;
-			this.dataGridView1.Size = new System.Drawing.Size(407, 152);
-			this.dataGridView1.TabIndex = 6;
+			this.DGV_RoomList.AllowUserToAddRows = false;
+			this.DGV_RoomList.AllowUserToDeleteRows = false;
+			this.DGV_RoomList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.DGV_RoomList.Location = new System.Drawing.Point(12, 32);
+			this.DGV_RoomList.Name = "DGV_RoomList";
+			this.DGV_RoomList.ReadOnly = true;
+			this.DGV_RoomList.Size = new System.Drawing.Size(407, 152);
+			this.DGV_RoomList.TabIndex = 6;
 			// 
 			// label3
 			// 
@@ -120,19 +120,19 @@
 			this.BackColor = System.Drawing.SystemColors.ControlDark;
 			this.ClientSize = new System.Drawing.Size(431, 250);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this.dataGridView1);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.DGV_RoomList);
+			this.Controls.Add(this.Name_tb);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.button3);
-			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.Refresh_btn);
+			this.Controls.Add(this.Conect_btn);
+			this.Controls.Add(this.Create_Room_btn);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "Lobby";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Lobby";
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.DGV_RoomList)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -140,13 +140,13 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button Create_Room_btn;
+		private System.Windows.Forms.Button Conect_btn;
+		private System.Windows.Forms.Button Refresh_btn;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.TextBox Name_tb;
+		private System.Windows.Forms.DataGridView DGV_RoomList;
 		private System.Windows.Forms.Label label3;
 	}
 }
