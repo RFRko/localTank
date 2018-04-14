@@ -26,7 +26,11 @@ namespace Tanki
 		private string _ErrorText = null;
 
 
-		public Size Map_size { get; protected set; }
+		public Size Map_size
+		{
+			get;
+			protected set;
+		}
 		public IEnumerable<IRoomStat> RoomsStat
 		{
 			get { return _RoomsStat;  }
