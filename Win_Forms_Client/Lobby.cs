@@ -85,6 +85,7 @@ namespace Tanki
 
 				clientEngine.JOINGame(room_guid, name);
 
+				Thread.Sleep(500);
 				var gameForm = new GameForm(clientEngine, clientEngine.Map_size);
 				gameForm.Show();
 				Hide();
