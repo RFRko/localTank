@@ -43,10 +43,12 @@
 		/// <summary> Защита флага </summary>
 		FlagDefence,
 		/// <summary>Игра до определенного количества убийств </summary>
-		FragCount
-	}
-	/// <summary> Тип системного сообщения для отправки </summary>
-	public enum MesseggeType
+		FragCount,
+        /// <summary>для не игровой комнаты </summary>
+        NotGame
+    }
+    /// <summary> Тип системного сообщения для отправки </summary>
+    public enum MesseggeType
 	{
 		/// <summary> Обмен обЪектами</summary>
 		Map,

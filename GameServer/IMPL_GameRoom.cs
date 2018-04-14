@@ -13,6 +13,7 @@ namespace Tanki
         private RoomAbs() { }
         public RoomAbs(String id, IPEndPoint localEP, IRoomOwner owner) :base()
         {
+            Room_Type = RoomType.rtAbstract;
             RoomId = id;
             Owner = owner;
             Passport = Guid.NewGuid();
@@ -22,15 +23,17 @@ namespace Tanki
 
         private List<IGamer> _gamers = new List<IGamer>();
 
+        public RoomType Room_Type { get; protected set; }
+        public Guid Passport { get; protected set; }
+        public Guid CreatorPassport { get; set; }
+
         public IRoomOwner Owner { get; protected set; }
         public string RoomId { get; set; }        
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
 
-		public IGameSetings GameSetings { get; set; }
+        public IGameSetings GameSetings { get; set; }
 		public GameStatus Status { get; set; }
 
-        public Guid Passport { get; protected set; }
-        public Guid CreatorPassport { get; set ; }
 
         public virtual void AddGamer(IGamer newGamer)
         {
@@ -50,10 +53,7 @@ namespace Tanki
 
         public IEnumerable<IGamer> GetAddresssees() {return _gamers;}
 
-        public IRoomStat getRoomStat()
-        {
-            return new RoomStat() { Pasport = this.Passport, Players_count = Gamers.Count(), Creator_Pasport = this.CreatorPassport };
-        }
+        public abstract IRoomStat getRoomStat();
 
         public IAddresssee this[string id] {
             get
@@ -71,6 +71,8 @@ namespace Tanki
     {
         public ManagingRoom(string id, IPEndPoint localEP, IRoomOwner owner, IEngine engine = null) : base(id, localEP, owner)
         {
+            Room_Type = RoomType.rtMngRoom;
+
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
 
@@ -100,6 +102,19 @@ namespace Tanki
             return foundGamer;
         }
 
+        public override IRoomStat getRoomStat()
+        {
+            return new RoomStat()
+            {
+                Pasport = this.Passport,
+                Players_count = Gamers.Count(),
+                /*Creator_Pasport = this.CreatorPassport*/
+                CreatorName = "SERVER",
+                Game_Type = GameType.NotGame,
+                MaxPlayersCount = GameSetings != null ? GameSetings.MaxPlayersCount : 0
+            };
+        }
+
         public IEnumerable<IRoomStat> getRoomsStat()
         {
             IManagerRoomOwner mO = Owner as IManagerRoomOwner;
@@ -124,12 +139,20 @@ namespace Tanki
             return mO.AddRoom(gameSettings, Creator_Passport);
         }
 
+        public IRoom GetRoomByGuid(Guid roomGuid)
+        {
+            IManagerRoomOwner mO = Owner as IManagerRoomOwner;
+            return mO.GetRoomByGuid(roomGuid);
+
+        }
     }
 
     public class GameRoom : RoomAbs, IGameRoom
     {
         public GameRoom(string id, IPEndPoint localEP, IRoomOwner owner, IEngine engine = null) : base(id, localEP, owner)
         {
+            Room_Type = RoomType.rtGameRoom;
+
             Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(Reciever);
 
@@ -145,6 +168,35 @@ namespace Tanki
             MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqByTimerProcc);
             base.RegisterDependcy(MessageQueue);
 
+        }
+
+        public int MaxPlayerCount { get; protected set; }
+
+        public override IRoomStat getRoomStat()
+        {
+            return new RoomStat()
+            {
+                Pasport = this.Passport,
+                Players_count = Gamers.Count(),
+                /*Creator_Pasport = this.CreatorPassport*/
+                CreatorName = this.Creator != null ? this.Creator.Name: "" ,
+                Game_Type = GameSetings !=null ? GameSetings.GameType : GameType.NotGame,
+                MaxPlayersCount = GameSetings != null ? GameSetings.MaxPlayersCount : 0
+            };
+        }
+
+        public IGamer Creator
+        {
+            get
+            {
+                if (CreatorPassport == null) throw new Exception("CreatorPassport not set yet..");
+
+                IGamer creator;
+                var found = from g in Gamers where g.Passport == CreatorPassport select g;
+
+                creator = found.FirstOrDefault();
+                return creator;
+            }
         }
 
         public event EventHandler<GameStatusChangedData> OnNewGameStatus;

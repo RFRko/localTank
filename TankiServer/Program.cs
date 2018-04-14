@@ -32,7 +32,7 @@ namespace Tanki
 
 
             Srv.RUN();
-            Srv.AddRoom(null, Guid.NewGuid());
+            //Srv.AddRoom(null, Guid.NewGuid());
 
 
 
