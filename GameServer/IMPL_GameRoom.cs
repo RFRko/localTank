@@ -50,10 +50,7 @@ namespace Tanki
 
         public IEnumerable<IGamer> GetAddresssees() {return _gamers;}
 
-        public IRoomStat getRoomStat()
-        {
-            return new RoomStat() { Pasport = this.Passport, Players_count = Gamers.Count(), Creator_Pasport = this.CreatorPassport };
-        }
+        public abstract IRoomStat getRoomStat();
 
         public IAddresssee this[string id] {
             get
@@ -71,6 +68,8 @@ namespace Tanki
     {
         public ManagingRoom(string id, IPEndPoint localEP, IRoomOwner owner, IEngine engine = null) : base(id, localEP, owner)
         {
+            Room_Type = RoomType.rtMngRoom;
+
             IReciever _Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(_Reciever);
 
@@ -88,6 +87,8 @@ namespace Tanki
 
         }
 
+        public RoomType Room_Type { get; }
+
         public IGamer GetGamerByGuid(Guid gamerGuid)
         {
             IGamer foundGamer = null;
@@ -98,6 +99,19 @@ namespace Tanki
             foundGamer = g.FirstOrDefault();
 
             return foundGamer;
+        }
+
+        public override IRoomStat getRoomStat()
+        {
+            return new RoomStat()
+            {
+                Pasport = this.Passport,
+                Players_count = Gamers.Count(),
+                /*Creator_Pasport = this.CreatorPassport*/
+                CreatorName = "SERVER",
+                Game_Type = GameType.NotGame,
+                MaxPlayersCount = GameSetings != null ? GameSetings.MaxPlayersCount : 0
+            };
         }
 
         public IEnumerable<IRoomStat> getRoomsStat()
@@ -130,6 +144,8 @@ namespace Tanki
     {
         public GameRoom(string id, IPEndPoint localEP, IRoomOwner owner, IEngine engine = null) : base(id, localEP, owner)
         {
+            Room_Type = RoomType.rtGameRoom;
+
             Reciever = new ReceiverUdpClientBased(localEP);
             base.RegisterDependcy(Reciever);
 
@@ -145,6 +161,37 @@ namespace Tanki
             MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqByTimerProcc);
             base.RegisterDependcy(MessageQueue);
 
+        }
+
+        public RoomType Room_Type { get; }
+
+        public int MaxPlayerCount { get; protected set; }
+
+        public override IRoomStat getRoomStat()
+        {
+            return new RoomStat()
+            {
+                Pasport = this.Passport,
+                Players_count = Gamers.Count(),
+                /*Creator_Pasport = this.CreatorPassport*/
+                CreatorName = this.Creator.Name,
+                Game_Type = GameSetings !=null ? GameSetings.GameType : GameType.NotGame,
+                MaxPlayersCount = GameSetings != null ? GameSetings.MaxPlayersCount : 0
+            };
+        }
+
+        public IGamer Creator
+        {
+            get
+            {
+                if (CreatorPassport == null) throw new Exception("CreatorPassport not set yet..");
+
+                IGamer creator;
+                var found = from g in Gamers where g.Passport == CreatorPassport select g;
+
+                creator = found.FirstOrDefault();
+                return creator;
+            }
         }
 
         public event EventHandler<GameStatusChangedData> OnNewGameStatus;

@@ -17,7 +17,10 @@ namespace Tanki
     {
         Guid Pasport { get; set; }
         int Players_count { get; set; }
-        Guid Creator_Pasport { get; set; }
+        Int32 MaxPlayersCount { get; set; }
+        //Guid Creator_Pasport { get; set; }
+        String CreatorName { get; set; }
+        GameType Game_Type { get; set; }
     }
 
 

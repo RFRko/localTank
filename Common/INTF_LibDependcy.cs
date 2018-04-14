@@ -77,6 +77,7 @@ namespace Tanki
 	//все что нужно для Server Manage Engine 
     public interface IManagerRoom
     {
+        RoomType Room_Type { get; }
         IRoomStat getRoomStat(String forRoomID);
         IEnumerable<IRoomStat> getRoomsStat();
         IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
@@ -100,6 +101,9 @@ namespace Tanki
 
     public interface IGameRoom
     {
+        RoomType Room_Type { get; }
+        Int32 MaxPlayerCount { get; }
+        IGamer Creator { get; }
         event EventHandler<GameStatusChangedData> OnNewGameStatus;
     }
 
