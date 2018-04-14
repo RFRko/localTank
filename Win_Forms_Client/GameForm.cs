@@ -22,7 +22,7 @@ namespace Tanki
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
 			InitializeComponent();
-			this.Size = size;
+			this.ClientSize = size;
 			this.BackColor = Color.Black;
 			ClientEngine = clientEngine;
 			clientEngine.OnMapChanged += OnMapChangeHandler;
@@ -70,7 +70,7 @@ namespace Tanki
 						new PointF
 						(
 							i.Position.Location.X + 10, 
-							i.Position.Location.Y + 10
+							i.Position.Location.Y - 10
 						)
 					);
 			}
@@ -92,7 +92,7 @@ namespace Tanki
 		private void onMapChangedProc(IMap map)
 		{
 			Map = map;
-			base.Refresh();
+			base.Invalidate();
 		}
 
 		private void ErrorHandler(object sender, ErrorData e)

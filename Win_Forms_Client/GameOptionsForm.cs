@@ -20,15 +20,21 @@ namespace Tanki
 			InitializeComponent();
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void GameOptionsForm_Load(object sender, EventArgs e)
 		{
-			var gameSpeed = (int)numericUpDown1.Value;
-			var object_size = (int)numericUpDown2.Value;
+			var enumlist = Enum.GetNames(typeof(GameType));
+			VictoryCondition_cb.DataSource = enumlist;
+		}
+
+		private void CreateRoom_btn_Click(object sender, EventArgs e)
+		{
+			var gameSpeed = (int)GameSpeed_nud.Value;
+			var object_size = (int)ObjectSize_nud.Value;
 			Size mapSize = new Size(
-					(int)numericUpDown3.Value,
-					(int)numericUpDown4.Value);
-			var players_count = (int)numericUpDown5.Value;
-			var game_type = (GameType)Enum.Parse(typeof(GameType), comboBox1.SelectedText);
+					(int)MapWidth_nud.Value,
+					(int)MapHeight_nud.Value);
+			var players_count = (int)NamberOfPlayer_nud.Value;
+			var game_type = (GameType)Enum.Parse(typeof(GameType), VictoryCondition_cb.SelectedItem.ToString());
 
 			gameSetings = new GameSetings()
 			{
@@ -42,16 +48,10 @@ namespace Tanki
 			Close();
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void Cancel_btn_Click(object sender, EventArgs e)
 		{
 			ok = false;
 			Close();
-		}
-
-		private void GameOptionsForm_Load(object sender, EventArgs e)
-		{
-			var enumlist = Enum.GetNames(typeof(GameType));
-			comboBox1.DataSource = enumlist;
 		}
 	}
 }

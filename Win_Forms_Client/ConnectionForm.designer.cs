@@ -28,28 +28,28 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.Ip_tb = new System.Windows.Forms.TextBox();
+			this.Port_tb = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
+			this.Cancel_btn = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// textBox1
+			// Ip_tb
 			// 
-			this.textBox1.Location = new System.Drawing.Point(103, 13);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(100, 20);
-			this.textBox1.TabIndex = 0;
+			this.Ip_tb.Location = new System.Drawing.Point(103, 13);
+			this.Ip_tb.Name = "Ip_tb";
+			this.Ip_tb.Size = new System.Drawing.Size(100, 20);
+			this.Ip_tb.TabIndex = 0;
 			// 
-			// textBox2
+			// Port_tb
 			// 
-			this.textBox2.Location = new System.Drawing.Point(103, 56);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(100, 20);
-			this.textBox2.TabIndex = 1;
+			this.Port_tb.Location = new System.Drawing.Point(103, 56);
+			this.Port_tb.Name = "Port_tb";
+			this.Port_tb.Size = new System.Drawing.Size(100, 20);
+			this.Port_tb.TabIndex = 1;
 			// 
 			// label1
 			// 
@@ -69,25 +69,25 @@
 			this.label2.TabIndex = 4;
 			this.label2.Text = "Remote port";
 			// 
-			// button1
+			// Cancel_btn
 			// 
-			this.button1.Location = new System.Drawing.Point(28, 112);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 5;
-			this.button1.Text = "Cancel";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.Cancel_btn.Location = new System.Drawing.Point(28, 112);
+			this.Cancel_btn.Name = "Cancel_btn";
+			this.Cancel_btn.Size = new System.Drawing.Size(75, 23);
+			this.Cancel_btn.TabIndex = 5;
+			this.Cancel_btn.Text = "Cancel";
+			this.Cancel_btn.UseVisualStyleBackColor = true;
+			this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click);
 			// 
-			// button2
+			// Connect_btn
 			// 
 			this.button2.Location = new System.Drawing.Point(128, 112);
-			this.button2.Name = "button2";
+			this.button2.Name = "Connect_btn";
 			this.button2.Size = new System.Drawing.Size(75, 23);
 			this.button2.TabIndex = 6;
 			this.button2.Text = "Connect";
 			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.button2.Click += new System.EventHandler(this.Connect_btn_Click);
 			// 
 			// label3
 			// 
@@ -105,11 +105,11 @@
 			this.ClientSize = new System.Drawing.Size(237, 148);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.Cancel_btn);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.textBox2);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.Port_tb);
+			this.Controls.Add(this.Ip_tb);
 			this.Name = "ConnectionForm";
 			this.Text = "ConnectionForm";
 			this.ResumeLayout(false);
@@ -119,11 +119,11 @@
 
 		#endregion
 
-		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.TextBox Ip_tb;
+		private System.Windows.Forms.TextBox Port_tb;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button Cancel_btn;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Label label3;
 	}
