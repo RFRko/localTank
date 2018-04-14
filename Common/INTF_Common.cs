@@ -87,6 +87,7 @@ namespace Tanki
     {
         Guid Parent_Id { get; set; }
         int Speed { get; set; }
+
     }
 
 
@@ -294,11 +295,17 @@ namespace Tanki
 		GameSetings GameSetings { get; set; }
 	}
 
-	public interface IRoomInfo
-	{
-		IPEndPoint roomEndpoint { get; set; }
-		Size mapSize { get; set; }
-	}
+    public interface IinitialConectionData
+    {
+        Guid passport { get; set; }
+        IAddresssee manageRoomEndpoint { get; set; }
+    }
+
+    public interface IRoomInfo
+    {
+      IAddresssee roomEndpoint { get; set; }
+      Size mapSize { get; set; }
+    }
 
     public interface IGameObjectFactory
     {

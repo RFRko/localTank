@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Tanki;
 
-namespace Common
+namespace Tanki
 {
     /// <summary>
 	/// Абстрактный класс описующий информацию об объектах рендеринга.
@@ -205,14 +206,31 @@ namespace Common
     }
 
 
+    // [Serializable]
+    // public class RoomStat : IRoomStat
+    // {
+    //     public RoomStat() { }
+    //     public int Players_count { get; set; }
+    //   public Guid Pasport { get; set; }
+    //   public Guid Creator_Pasport { get; set; }
+    //}
+
+    //[Serializable]
+    //public class Addresssee : IAddresssee
+    //{
+//
+//        public RoomStat() { }
+//        public int Players_count { get; set; }
+//		    public Guid Pasport { get; set; }
+//		    public Guid Creator_Pasport { get; set; }
+//	  }
+
     [Serializable]
-    public class RoomStat : IRoomStat
+    public class Addresssee : IAddresssee
     {
-        public RoomStat() { }
-        public int Players_count { get; set; }
-		    public Guid Pasport { get; set; }
-		    public Guid Creator_Pasport { get; set; }
-	  }
+        public Addresssee(IPEndPoint ep) { RemoteEndPoint = ep; }
+        public IPEndPoint RemoteEndPoint { get;}
+	}
 
 
     public class GameObjectFactory : IGameObjectFactory
@@ -227,9 +245,16 @@ namespace Common
             return new Bullet();
         }
 
+
         public ITank CreateTank()
         {
             return new Tank();
         }
     }
+	public class Map : IMap
+	{
+		public IEnumerable<IBlock> Blocks { get; set; }
+		public IEnumerable<IBullet> Bullets { get; set; }
+		public IEnumerable<ITank> Tanks { get; set; }
+	}
 }

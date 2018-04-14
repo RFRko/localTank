@@ -60,7 +60,7 @@ namespace Tanki
 			{
 				label3.Text = "";
 				var gameOptionsForm = new GameOptionsForm();
-				gameOptionsForm.Show();
+				gameOptionsForm.ShowDialog();
 				if (gameOptionsForm.ok)
 				{
 					clientEngine.CreateGame(gameOptionsForm.gameSetings, name);

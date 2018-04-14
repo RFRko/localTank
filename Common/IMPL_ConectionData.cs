@@ -32,12 +32,18 @@ namespace Tanki
         public IEnumerable<IRoomStat> RoomsStat { get { return _rooms_stat; } }
     }
 
-	[Serializable]
-	public class RoomInfo : IRoomInfo
-	{
-		public IPEndPoint roomEndpoint { get; set; }
-		public Size mapSize { get; set; }
-	}
 
+    [Serializable]
+    public class initialConectionData : IinitialConectionData
+    {
+        public Guid passport { get; set; }
+        public IAddresssee manageRoomEndpoint { get; set; }
+    }
 
+	  [Serializable]
+	  public class RoomInfo : IRoomInfo
+	  {
+		  public IAddresssee roomEndpoint { get; set; }
+		  public Size mapSize { get; set; }
+	  }
 }

@@ -13,8 +13,12 @@ namespace Tanki
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; }
 		private IManagerRoom ManagerRoom;
 
-		public ServerManageEngine() : base() { }
-		public ServerManageEngine(IRoom inRoom) : base(inRoom)
+		public ServerManageEngine() : base()
+        {
+            ProcessMessage += ProcessMessageHandler;
+            ProcessMessages = null;
+        }
+        public ServerManageEngine(IRoom inRoom) : base(inRoom)
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
@@ -51,9 +55,16 @@ namespace Tanki
 			var gamer = evntData.newAddresssee as IGamer;
 			if (gamer != null)
 			{
-				Owner.Sender.SendMessage(new Package()
+
+                var conectdata = new initialConectionData()
+                {
+                    passport = gamer.Passport,
+                    manageRoomEndpoint = new Addresssee((sender as IRoom).Reciever.LockalEndPoint)
+                };
+
+                Owner.Sender.SendMessage(new Package()
 				{
-					Data = gamer.Passport,
+					Data = conectdata,
 					MesseggeType = MesseggeType.Passport
 				}, gamer.RemoteEndPoint);
 
@@ -94,9 +105,11 @@ namespace Tanki
 				if (room.Gamers.Count() < room.GameSetings.MaxPlayersCount)
 				{
 					IPEndPoint room_ipendpoint = ManagerRoom.MooveGamerToRoom(gamer, room_passport);
+          Addresssee addres = new Addresssee(room_ipendpoint );
+
 					var roominfo = new RoomInfo()
 					{
-						roomEndpoint = room_ipendpoint,
+						roomEndpoint = addres,
 						mapSize = map_Size
 					};
 
@@ -141,10 +154,12 @@ namespace Tanki
 
 			// добавить в нее игрока
 			var room_endpoint = ManagerRoom.MooveGamerToRoom(gamer, newGameRoom.Passport);
+      Addresssee addres = new Addresssee(room_endpoint );
+
 
 			var roominfo = new RoomInfo()
 			{
-				roomEndpoint = room_endpoint,
+				roomEndpoint = addres,
 				mapSize = newGameSettings.MapSize
 			};
 
@@ -153,6 +168,7 @@ namespace Tanki
               Data = roominfo,
               MesseggeType = MesseggeType.RoomInfo
 			}, gamer.RemoteEndPoint);
+
         }
 	}
 }

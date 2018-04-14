@@ -1,5 +1,4 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -49,6 +48,7 @@ namespace Tanki
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
+            if (Map == null) return;
 
 			var myPassport = ClientEngine.GetPassport();
 
