@@ -31,22 +31,22 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.CreateRoom_btn = new System.Windows.Forms.Button();
+			this.Cancel_btn = new System.Windows.Forms.Button();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.GameSpeed_nud = new System.Windows.Forms.NumericUpDown();
+			this.ObjectSize_nud = new System.Windows.Forms.NumericUpDown();
+			this.MapWidth_nud = new System.Windows.Forms.NumericUpDown();
+			this.NamberOfPlayer_nud = new System.Windows.Forms.NumericUpDown();
+			this.MapHeight_nud = new System.Windows.Forms.NumericUpDown();
+			this.VictoryCondition_cb = new System.Windows.Forms.ComboBox();
 			this.label6 = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.GameSpeed_nud)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.ObjectSize_nud)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.MapWidth_nud)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.NamberOfPlayer_nud)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.MapHeight_nud)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -76,25 +76,25 @@
 			this.label3.TabIndex = 2;
 			this.label3.Text = "Map size";
 			// 
-			// button1
+			// CreateRoom_btn
 			// 
-			this.button1.Location = new System.Drawing.Point(94, 265);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "Create";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.CreateRoom_btn.Location = new System.Drawing.Point(94, 265);
+			this.CreateRoom_btn.Name = "CreateRoom_btn";
+			this.CreateRoom_btn.Size = new System.Drawing.Size(75, 23);
+			this.CreateRoom_btn.TabIndex = 4;
+			this.CreateRoom_btn.Text = "Create";
+			this.CreateRoom_btn.UseVisualStyleBackColor = true;
+			this.CreateRoom_btn.Click += new System.EventHandler(this.CreateRoom_btn_Click);
 			// 
-			// button2
+			// Cancel_btn
 			// 
-			this.button2.Location = new System.Drawing.Point(188, 265);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 5;
-			this.button2.Text = "Cancel";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.Cancel_btn.Location = new System.Drawing.Point(188, 265);
+			this.Cancel_btn.Name = "Cancel_btn";
+			this.Cancel_btn.Size = new System.Drawing.Size(75, 23);
+			this.Cancel_btn.TabIndex = 5;
+			this.Cancel_btn.Text = "Cancel";
+			this.Cancel_btn.UseVisualStyleBackColor = true;
+			this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click);
 			// 
 			// label4
 			// 
@@ -114,118 +114,118 @@
 			this.label5.TabIndex = 7;
 			this.label5.Text = "Victory condition";
 			// 
-			// numericUpDown1
+			// GameSpeed_nud
 			// 
-			this.numericUpDown1.Location = new System.Drawing.Point(143, 20);
-			this.numericUpDown1.Maximum = new decimal(new int[] {
+			this.GameSpeed_nud.Location = new System.Drawing.Point(143, 20);
+			this.GameSpeed_nud.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-			this.numericUpDown1.Minimum = new decimal(new int[] {
+			this.GameSpeed_nud.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-			this.numericUpDown1.Name = "numericUpDown1";
-			this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-			this.numericUpDown1.TabIndex = 9;
-			this.numericUpDown1.Value = new decimal(new int[] {
+			this.GameSpeed_nud.Name = "GameSpeed_nud";
+			this.GameSpeed_nud.Size = new System.Drawing.Size(120, 20);
+			this.GameSpeed_nud.TabIndex = 9;
+			this.GameSpeed_nud.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
 			// 
-			// numericUpDown2
+			// ObjectSize_nud
 			// 
-			this.numericUpDown2.Location = new System.Drawing.Point(143, 64);
-			this.numericUpDown2.Minimum = new decimal(new int[] {
+			this.ObjectSize_nud.Location = new System.Drawing.Point(143, 64);
+			this.ObjectSize_nud.Minimum = new decimal(new int[] {
             32,
             0,
             0,
             0});
-			this.numericUpDown2.Name = "numericUpDown2";
-			this.numericUpDown2.Size = new System.Drawing.Size(120, 20);
-			this.numericUpDown2.TabIndex = 10;
-			this.numericUpDown2.Value = new decimal(new int[] {
+			this.ObjectSize_nud.Name = "ObjectSize_nud";
+			this.ObjectSize_nud.Size = new System.Drawing.Size(120, 20);
+			this.ObjectSize_nud.TabIndex = 10;
+			this.ObjectSize_nud.Value = new decimal(new int[] {
             32,
             0,
             0,
             0});
 			// 
-			// numericUpDown3
+			// MapWidth_nud
 			// 
-			this.numericUpDown3.Location = new System.Drawing.Point(143, 109);
-			this.numericUpDown3.Maximum = new decimal(new int[] {
+			this.MapWidth_nud.Location = new System.Drawing.Point(143, 109);
+			this.MapWidth_nud.Maximum = new decimal(new int[] {
             1920,
             0,
             0,
             0});
-			this.numericUpDown3.Minimum = new decimal(new int[] {
+			this.MapWidth_nud.Minimum = new decimal(new int[] {
             500,
             0,
             0,
             0});
-			this.numericUpDown3.Name = "numericUpDown3";
-			this.numericUpDown3.Size = new System.Drawing.Size(52, 20);
-			this.numericUpDown3.TabIndex = 11;
-			this.numericUpDown3.Value = new decimal(new int[] {
+			this.MapWidth_nud.Name = "MapWidth_nud";
+			this.MapWidth_nud.Size = new System.Drawing.Size(52, 20);
+			this.MapWidth_nud.TabIndex = 11;
+			this.MapWidth_nud.Value = new decimal(new int[] {
             500,
             0,
             0,
             0});
 			// 
-			// numericUpDown4
+			// NamberOfPlayer_nud
 			// 
-			this.numericUpDown4.Location = new System.Drawing.Point(143, 152);
-			this.numericUpDown4.Maximum = new decimal(new int[] {
+			this.NamberOfPlayer_nud.Location = new System.Drawing.Point(143, 152);
+			this.NamberOfPlayer_nud.Maximum = new decimal(new int[] {
             8,
             0,
             0,
             0});
-			this.numericUpDown4.Minimum = new decimal(new int[] {
+			this.NamberOfPlayer_nud.Minimum = new decimal(new int[] {
             2,
             0,
             0,
             0});
-			this.numericUpDown4.Name = "numericUpDown4";
-			this.numericUpDown4.Size = new System.Drawing.Size(120, 20);
-			this.numericUpDown4.TabIndex = 12;
-			this.numericUpDown4.Value = new decimal(new int[] {
+			this.NamberOfPlayer_nud.Name = "NamberOfPlayer_nud";
+			this.NamberOfPlayer_nud.Size = new System.Drawing.Size(120, 20);
+			this.NamberOfPlayer_nud.TabIndex = 12;
+			this.NamberOfPlayer_nud.Value = new decimal(new int[] {
             2,
             0,
             0,
             0});
 			// 
-			// numericUpDown5
+			// MapHeight_nud
 			// 
-			this.numericUpDown5.Location = new System.Drawing.Point(219, 109);
-			this.numericUpDown5.Maximum = new decimal(new int[] {
+			this.MapHeight_nud.Location = new System.Drawing.Point(219, 109);
+			this.MapHeight_nud.Maximum = new decimal(new int[] {
             1080,
             0,
             0,
             0});
-			this.numericUpDown5.Minimum = new decimal(new int[] {
+			this.MapHeight_nud.Minimum = new decimal(new int[] {
             500,
             0,
             0,
             0});
-			this.numericUpDown5.Name = "numericUpDown5";
-			this.numericUpDown5.Size = new System.Drawing.Size(44, 20);
-			this.numericUpDown5.TabIndex = 13;
-			this.numericUpDown5.Value = new decimal(new int[] {
+			this.MapHeight_nud.Name = "MapHeight_nud";
+			this.MapHeight_nud.Size = new System.Drawing.Size(44, 20);
+			this.MapHeight_nud.TabIndex = 13;
+			this.MapHeight_nud.Value = new decimal(new int[] {
             500,
             0,
             0,
             0});
 			// 
-			// comboBox1
+			// VictoryCondition_cb
 			// 
-			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(143, 205);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(120, 21);
-			this.comboBox1.TabIndex = 14;
+			this.VictoryCondition_cb.FormattingEnabled = true;
+			this.VictoryCondition_cb.Location = new System.Drawing.Point(143, 205);
+			this.VictoryCondition_cb.Name = "VictoryCondition_cb";
+			this.VictoryCondition_cb.Size = new System.Drawing.Size(120, 21);
+			this.VictoryCondition_cb.TabIndex = 14;
 			// 
 			// label6
 			// 
@@ -242,27 +242,27 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(284, 303);
 			this.Controls.Add(this.label6);
-			this.Controls.Add(this.comboBox1);
-			this.Controls.Add(this.numericUpDown5);
-			this.Controls.Add(this.numericUpDown4);
-			this.Controls.Add(this.numericUpDown3);
-			this.Controls.Add(this.numericUpDown2);
-			this.Controls.Add(this.numericUpDown1);
+			this.Controls.Add(this.VictoryCondition_cb);
+			this.Controls.Add(this.MapHeight_nud);
+			this.Controls.Add(this.NamberOfPlayer_nud);
+			this.Controls.Add(this.MapWidth_nud);
+			this.Controls.Add(this.ObjectSize_nud);
+			this.Controls.Add(this.GameSpeed_nud);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.Cancel_btn);
+			this.Controls.Add(this.CreateRoom_btn);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Name = "GameOptionsForm";
 			this.Text = "GameOptions_Form";
 			this.Load += new System.EventHandler(this.GameOptionsForm_Load);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.GameSpeed_nud)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.ObjectSize_nud)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.MapWidth_nud)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.NamberOfPlayer_nud)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.MapHeight_nud)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -273,16 +273,16 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button CreateRoom_btn;
+		private System.Windows.Forms.Button Cancel_btn;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.NumericUpDown numericUpDown1;
-		private System.Windows.Forms.NumericUpDown numericUpDown2;
-		private System.Windows.Forms.NumericUpDown numericUpDown3;
-		private System.Windows.Forms.NumericUpDown numericUpDown4;
-		private System.Windows.Forms.NumericUpDown numericUpDown5;
-		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.NumericUpDown GameSpeed_nud;
+		private System.Windows.Forms.NumericUpDown ObjectSize_nud;
+		private System.Windows.Forms.NumericUpDown MapWidth_nud;
+		private System.Windows.Forms.NumericUpDown NamberOfPlayer_nud;
+		private System.Windows.Forms.NumericUpDown MapHeight_nud;
+		private System.Windows.Forms.ComboBox VictoryCondition_cb;
 		private System.Windows.Forms.Label label6;
 	}
 }

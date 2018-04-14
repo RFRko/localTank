@@ -50,7 +50,8 @@ namespace Tanki
     public enum RoomType
     {
         rtMngRoom,
-        rtGameRoom
+        rtGameRoom,
+        rtAbstract
     }
 
     /// <summary>
@@ -69,8 +70,9 @@ namespace Tanki
         void AddGamer(IGamer newGamer);
         IRoomStat getRoomStat();
 		GameStatus Status { get; set; }
+        RoomType Room_Type { get; }
 
-		void RUN();
+        void RUN();
 	}
 
 
@@ -81,6 +83,7 @@ namespace Tanki
         IEnumerable<IRoomStat> getRoomsStat();
         IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
         IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport);
+        IRoom GetRoomByGuid(Guid roomGuid);
         IGamer GetGamerByGuid(Guid gamerGuid);
     }
 
@@ -92,7 +95,7 @@ namespace Tanki
     public interface IManagerRoomOwner: IRoomOwner
     {
         IEnumerable<IRoomStat> getRoomsStat();
-        IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);
+        IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId);        
         IRoom AddRoom(IGameSetings gameSettings, Guid Creator_Passport);
         IRoom GetRoomByGuid(Guid roomGuid);
     }
@@ -100,6 +103,8 @@ namespace Tanki
 
     public interface IGameRoom
     {
+        Int32 MaxPlayerCount { get; }
+        IGamer Creator { get; }
         event EventHandler<GameStatusChangedData> OnNewGameStatus;
     }
 
@@ -108,6 +113,10 @@ namespace Tanki
     {
         IRoom CreateRoom(String roomId, IPEndPoint localEP, RoomType roomType, IRoomOwner owner, IEngine engine = null);
     }
+
+
+
+
 
     #endregion RoomInterfaces
 

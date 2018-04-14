@@ -27,9 +27,9 @@ namespace Tanki
             onRoomListRecieved = onRoomListRecievedProc;
 
             InitializeComponent();
+			Name_tb.Text = "Vasya";
         }
-
-        // подписан на событие, обновляет список комнат
+		
         private void SetRoomList(object sender, RoomStatChangeData data)
         {
                this.Invoke(onRoomListRecieved,data.newRoomsStat);            
@@ -38,19 +38,11 @@ namespace Tanki
         private Action<IEnumerable<IRoomStat>> onRoomListRecieved;
         private void onRoomListRecievedProc(IEnumerable<IRoomStat> RoomList)
         {
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = RoomList;
-                dataGridView1.Refresh();
+                DGV_RoomList.DataSource = null;
+                DGV_RoomList.DataSource = RoomList;
+                DGV_RoomList.Refresh();
         }
-
-
-		// обновить
-		private void button3_Click(object sender, EventArgs e)
-		{
-			clientEngine.GetRoomList();
-		}
-
-		//подписан на событие, ловит ошибки присланные сервером
+		
 		private void ErrorHandler(object sender, ErrorData e)
 		{
 			var caption = "Ошибка";
@@ -60,12 +52,12 @@ namespace Tanki
 
 			clientEngine.GetRoomList();
 		}
-
-		// создать игру
-		private void button1_Click(object sender, EventArgs e)
+		
+		private void Create_Room_btn_Click(object sender, EventArgs e)
 		{
-			var name = textBox1.Text;
-			if (!string.IsNullOrEmpty(name)) {
+			var name = Name_tb.Text;
+			if (!string.IsNullOrEmpty(name))
+			{
 				label3.Text = "";
 				var gameOptionsForm = new GameOptionsForm();
 				gameOptionsForm.ShowDialog();
@@ -82,14 +74,13 @@ namespace Tanki
 			else label3.Text = "Укажите ваше имя";
 		}
 
-		// подключится к комнате
-		private void button2_Click(object sender, EventArgs e)
+		private void Conect_btn_Click(object sender, EventArgs e)
 		{
-			var name = textBox1.Text;
+			var name = Name_tb.Text;
 			if (!string.IsNullOrEmpty(name))
 			{
 				label3.Text = "";
-				var room_index = dataGridView1.SelectedRows[0].Index;
+				var room_index = DGV_RoomList.SelectedRows[0].Index;
 				var room_guid = clientEngine.RoomsStat.ElementAt(room_index).Pasport;
 
 				clientEngine.JOINGame(room_guid, name);
@@ -99,6 +90,11 @@ namespace Tanki
 				Hide();
 			}
 			else label3.Text = "Укажите ваше имя";
+		}
+
+		private void Refresh_btn_Click(object sender, EventArgs e)
+		{
+			clientEngine.GetRoomList();
 		}
 	}
 }

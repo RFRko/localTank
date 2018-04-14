@@ -74,7 +74,15 @@ namespace Tanki
 
         public IEnumerable<IRoomStat> getRoomsStat()
         {
-            var rSts = from r in Rooms select new RoomStat(){ Pasport = r.Passport, Players_count = r.Gamers.Count(), Creator_Pasport = r.CreatorPassport};
+            //var rSts = from r in Rooms select new RoomStat(){
+            //    Pasport = r.Passport,
+            //    Players_count = r.Gamers.Count(),
+            //    /*Creator_Pasport = r.CreatorPassport*/                 
+
+            //};
+
+            var rSts = from r in Rooms where r.Room_Type == RoomType.rtGameRoom select r.getRoomStat();
+
             return rSts;
         }
 
@@ -87,10 +95,21 @@ namespace Tanki
 
         public IRoomStat getRoomStat(String RoomID)
         {
+            IRoomStat res = null;
             var selRooms = from r in Rooms where r.RoomId == RoomID select r;
-            IRoom selRoom = selRooms.First();
+            IRoom selRoom = selRooms.FirstOrDefault();
 
-            return new RoomStat() {  Pasport = selRoom.Passport, Players_count = selRoom.Gamers.Count(), Creator_Pasport = selRoom.CreatorPassport };
+            if (selRoom != null) res = selRoom.getRoomStat();
+
+            return res;
+
+            //return new RoomStat() {
+            //    Pasport = selRoom.Passport,
+            //    Players_count = selRoom.Gamers.Count(),
+            //    /*Creator_Pasport = selRoom.CreatorPassport*/
+            //};
+
+
         }
 
         public IRoom GetRoomByGuid(Guid roomGuid)
@@ -122,6 +141,7 @@ namespace Tanki
             newGameRoom.CreatorPassport = Creator_Passport;
 
             _rooms.Add(newGameRoom);
+            newGameRoom.RUN();
 
             return newGameRoom;
         }
