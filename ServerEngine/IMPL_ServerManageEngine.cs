@@ -86,26 +86,32 @@ namespace Tanki
 		}
 		private void RoomList(IPackage package)
 		{
-			var client_id = package.Sender_Passport;
+            ManagerRoom = Owner as IManagerRoom;
+
+            var client_id = package.Sender_Passport;
 			IGamer gamer = ManagerRoom.GetGamerByGuid(client_id);
 			SendRoomList(gamer.RemoteEndPoint);
 		}
 		private void RoomConnect(IPackage package)
 		{
-			var cd = (IConectionData)package.Data;
+            ManagerRoom = Owner as IManagerRoom;
+
+            var cd = (IConectionData)package.Data;
 			var name = cd.PlayerName;
 			var client_passport = package.Sender_Passport;
-			IGamer gamer = ManagerRoom.GetGamerByGuid(client_passport);
+
+            IGamer gamer = ManagerRoom.GetGamerByGuid(client_passport);
 			gamer.SetId(name, client_passport);
-			var room_passport = cd.RoomPasport;
-			var room = (Owner as IManagerRoomOwner).GetRoomByGuid(room_passport);
+			var room_passport = cd.RoomPasport;            
+            
+            var room = ManagerRoom.GetRoomByGuid(room_passport);
 			var map_Size = room.GameSetings.MapSize;
 			if (room != null)
 			{
 				if (room.Gamers.Count() < room.GameSetings.MaxPlayersCount)
 				{
 					IPEndPoint room_ipendpoint = ManagerRoom.MooveGamerToRoom(gamer, room_passport);
-          Addresssee addres = new Addresssee(room_ipendpoint );
+                    Addresssee addres = new Addresssee(room_ipendpoint );
 
 					var roominfo = new RoomInfo()
 					{

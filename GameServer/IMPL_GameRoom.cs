@@ -13,6 +13,7 @@ namespace Tanki
         private RoomAbs() { }
         public RoomAbs(String id, IPEndPoint localEP, IRoomOwner owner) :base()
         {
+            Room_Type = RoomType.rtAbstract;
             RoomId = id;
             Owner = owner;
             Passport = Guid.NewGuid();
@@ -22,15 +23,17 @@ namespace Tanki
 
         private List<IGamer> _gamers = new List<IGamer>();
 
+        public RoomType Room_Type { get; protected set; }
+        public Guid Passport { get; protected set; }
+        public Guid CreatorPassport { get; set; }
+
         public IRoomOwner Owner { get; protected set; }
         public string RoomId { get; set; }        
         public IEnumerable<IGamer> Gamers { get { return _gamers; } }
 
-		public IGameSetings GameSetings { get; set; }
+        public IGameSetings GameSetings { get; set; }
 		public GameStatus Status { get; set; }
 
-        public Guid Passport { get; protected set; }
-        public Guid CreatorPassport { get; set ; }
 
         public virtual void AddGamer(IGamer newGamer)
         {
@@ -87,8 +90,6 @@ namespace Tanki
 
         }
 
-        public RoomType Room_Type { get; }
-
         public IGamer GetGamerByGuid(Guid gamerGuid)
         {
             IGamer foundGamer = null;
@@ -138,6 +139,12 @@ namespace Tanki
             return mO.AddRoom(gameSettings, Creator_Passport);
         }
 
+        public IRoom GetRoomByGuid(Guid roomGuid)
+        {
+            IManagerRoomOwner mO = Owner as IManagerRoomOwner;
+            return mO.GetRoomByGuid(roomGuid);
+
+        }
     }
 
     public class GameRoom : RoomAbs, IGameRoom
@@ -162,8 +169,6 @@ namespace Tanki
             base.RegisterDependcy(MessageQueue);
 
         }
-
-        public RoomType Room_Type { get; }
 
         public int MaxPlayerCount { get; protected set; }
 
