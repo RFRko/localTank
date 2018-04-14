@@ -179,7 +179,7 @@ namespace Tanki
                 Pasport = this.Passport,
                 Players_count = Gamers.Count(),
                 /*Creator_Pasport = this.CreatorPassport*/
-                CreatorName = this.Creator.Name,
+                CreatorName = this.Creator != null ? this.Creator.Name: "" ,
                 Game_Type = GameSetings !=null ? GameSetings.GameType : GameType.NotGame,
                 MaxPlayersCount = GameSetings != null ? GameSetings.MaxPlayersCount : 0
             };

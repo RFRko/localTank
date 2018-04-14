@@ -141,7 +141,7 @@ namespace Tanki
             newGameRoom.CreatorPassport = Creator_Passport;
 
             _rooms.Add(newGameRoom);
-            //newGameRoom.RUN();
+            newGameRoom.RUN();
 
             return newGameRoom;
         }

@@ -158,8 +158,9 @@ namespace Tanki
             //_proceedingThread.Name = "SERVER_MSG_PROCEEDING";
             //_proceedingThread.Start();
             _ifEnqueReady.Set();
-            _timer = new Timer(ProceedQueue, _ifReady, 0, 1000);
-            _finish_timer.WaitOne();
+            _timer = new Timer(ProceedQueue, _ifReady, 0, 10000);
+            
+            //_finish_timer.WaitOne();
         }
 
         private void ProceedQueue(Object state)
