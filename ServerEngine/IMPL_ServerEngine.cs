@@ -248,7 +248,7 @@ namespace Tanki
 				var bullet = new GameObjectFactory().CreateBullet();
 				//var bullet = new Bullet();
 				var room = Owner as IRoom;
-				bullet.Size = room.GameSetings.ObjectsSize; //???
+				bullet.Size = room.GameSetings.ObjectsSize/4; //???
 				bullet.Direction = tmp.Direction;				
 				bullet.Parent_Id = tmp.Tank_ID;
 				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
