@@ -92,7 +92,7 @@ namespace Tanki
 		private void onMapChangedProc(IMap map)
 		{
 			Map = map;
-			base.Invalidate();
+			Invalidate();
 		}
 
 		private void ErrorHandler(object sender, ErrorData e)
