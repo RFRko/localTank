@@ -42,7 +42,6 @@ namespace Tanki
 
             gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
 			this.status = GameStatus.WaitForStart;
-			this.settings = room.GameSetings;
 
             this.Width = room.GameSetings.MapSize.Width;
             this.Height = room.GameSetings.MapSize.Height;
@@ -63,7 +62,6 @@ namespace Tanki
 		/// Список всех сущностей на игровом поле
 		/// </summary>
         private List<IEntity> objects=new List<IEntity>();
-		private IGameSetings settings;
         private int width;
         private int height;
 		/// <summary>
@@ -250,7 +248,7 @@ namespace Tanki
 				var bullet = new GameObjectFactory().CreateBullet();
 				//var bullet = new Bullet();
 				var room = Owner as IRoom;
-				bullet.Size = settings.ObjectsSize / 4; //???
+				bullet.Size = room.GameSetings.ObjectsSize / 4; //???
 				bullet.Direction = tmp.Direction;				
 				bullet.Parent_Id = tmp.Tank_ID;
 				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
@@ -269,7 +267,7 @@ namespace Tanki
 		{
             var room = Owner as IRoom;
 			int tankCount = room.Gamers.Count();
-			int objectCount = (this.height * this.width) / (settings.ObjectsSize * settings.ObjectsSize * settings.MaxPlayersCount);
+			int objectCount = (this.height * this.width) / (room.GameSetings.ObjectsSize * room.GameSetings.ObjectsSize * room.GameSetings.MaxPlayersCount);
             foreach (var t in room.Gamers)
             {
 				this.NewGamer(t);
@@ -278,7 +276,7 @@ namespace Tanki
 			{
 				var obj = new GameObjectFactory().CreateBlock();
 				//var obj = new Block();
-				obj.Size = settings.ObjectsSize;
+				obj.Size = room.GameSetings.ObjectsSize;
 				obj.Position=this.Reload();
 				obj.Can_Be_Destroyed = true;
 				obj.Is_Alive = true;
@@ -293,6 +291,7 @@ namespace Tanki
 		/// <param name="entity">Сущность осуществляющая движение</param>
 		private void Move(IEntity entity)
 		{
+			var room = Owner as IRoom;
 			var tmp = objects.FirstOrDefault(t => t == entity);
 			if (tmp.Is_Alive)
 			{
@@ -307,7 +306,7 @@ namespace Tanki
 								if (tank.Position.X > 0)
 								{
 									var pos = new Point(tank.Position.X - 1, tank.Position.Y);
-									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+									tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 								}
 								break;
 
@@ -315,7 +314,7 @@ namespace Tanki
 								if (tank.Position.X < width)
 								{
 									var pos = new Point(tank.Position.X + 1, tank.Position.Y);
-									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+									tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 								}
 								break;
 
@@ -323,7 +322,7 @@ namespace Tanki
 								if (tank.Position.Y > 0)
 								{
 									var pos = new Point(tank.Position.X, tank.Position.Y - 1);
-									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+									tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 								}
 								break;
 
@@ -332,7 +331,7 @@ namespace Tanki
 								if (tank.Position.Y < height)
 								{
 									var pos = new Point(tank.Position.X, tank.Position.Y + 1);
-									tank.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+									tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 								}
 								break;
 						}
@@ -348,7 +347,7 @@ namespace Tanki
 							if (bullet.Position.X > 0)
 							{
 								var pos = new Point(bullet.Position.X - 1, bullet.Position.Y);
-								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 							}
 							break;
 
@@ -356,7 +355,7 @@ namespace Tanki
 							if (bullet.Position.X < width)
 							{
 								var pos = new Point(bullet.Position.X + 1, bullet.Position.Y);
-								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 							}
 							break;
 
@@ -364,7 +363,7 @@ namespace Tanki
 							if (bullet.Position.Y > 0)
 							{
 								var pos = new Point(bullet.Position.X, bullet.Position.Y - 1);
-								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 							}
 							break;
 
@@ -373,7 +372,7 @@ namespace Tanki
 							if (bullet.Position.Y < height)
 							{
 								var pos = new Point(bullet.Position.X, bullet.Position.Y + 1);
-								bullet.Position = new Rectangle(pos, new Size(settings.ObjectsSize, settings.ObjectsSize));
+								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 							}
 							break;
 					}
@@ -429,6 +428,7 @@ namespace Tanki
 		/// <param name="entity">Сущность требующая разположения на игровом поле</param>
 		private Rectangle Reload()
         {
+			var room = Owner as IRoom;
 			Rectangle rect = Rectangle.Empty;
 			//entity.Position = Rectangle.Empty;
 			while (rect != Rectangle.Empty)
@@ -438,9 +438,9 @@ namespace Tanki
 				int columnIndex = colInd.Next(0, width);
 				int rowIndex = rowInd.Next(0, height);
 				Point p = new Point(rowIndex, columnIndex);
-				if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(settings.ObjectsSize, settings.ObjectsSize))) == true) == null)
+				if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
 				{
-					rect = new Rectangle(p,new Size(settings.ObjectsSize, settings.ObjectsSize));
+					rect = new Rectangle(p,new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 				}
 			}
 			return rect;
@@ -488,7 +488,7 @@ namespace Tanki
 			var obj = new GameObjectFactory().CreateTank();
 			//var obj = new Tank();
 			var room = Owner as IRoom;
-			obj.Size = settings.ObjectsSize;
+			obj.Size = room.GameSetings.ObjectsSize;
 			obj.Tank_ID = gamer.Passport;  
 			obj.Lives = 5;
 			obj.Is_Alive = true;
