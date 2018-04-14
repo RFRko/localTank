@@ -21,7 +21,7 @@ namespace Tanki
 		{
 			gameClient = GameClient;
 			InitializeComponent();
-			Ip_tb.Text = "127.0.0.1";
+			Ip_tb.Text = "127.0.0.1"; //176.8.250.156
 			Port_tb.Text = "11001";
 		}
 
