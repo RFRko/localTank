@@ -27,7 +27,8 @@ namespace Tanki
         {
             this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
-        }
+			this.status = GameStatus.WaitForStart;
+		}
 		/// <summary>
 		/// Конструктор игрового движка
 		/// </summary>
@@ -43,8 +44,8 @@ namespace Tanki
             gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
 			this.status = GameStatus.WaitForStart;
 
-            this.Width = room.GameSetings.MapSize.Width;
-            this.Height = room.GameSetings.MapSize.Height;
+            //this.Width = room.GameSetings.MapSize.Width;
+            //this.Height = room.GameSetings.MapSize.Height;
 
             //Это должно быть не тут:  
             // - подписка на OnNewAddresssee происходит в  EngineAbs
@@ -270,6 +271,8 @@ namespace Tanki
         private void GenerateMap()
 		{
             var room = Owner as IRoom;
+			this.Width = room.GameSetings.MapSize.Width;
+			this.Height = room.GameSetings.MapSize.Height;
 			int tankCount = room.Gamers.Count();
 			int objectCount = (this.height * this.width) / (room.GameSetings.ObjectsSize * room.GameSetings.ObjectsSize * room.GameSetings.MaxPlayersCount);
             foreach (var t in room.Gamers)
@@ -512,6 +515,7 @@ namespace Tanki
 			var room = Owner as IRoom;
 			var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
 			this.NewGamer(gamer);
+			this.Send();
         }
 		/// <summary>
 		/// Обработка события изменения игрового статуса
