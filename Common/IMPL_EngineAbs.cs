@@ -15,9 +15,10 @@ namespace Tanki
         public abstract ProcessMessagesHandler ProcessMessages { get; protected set; }
         public IEngineClient Owner { get; protected set; }
 
-        public abstract void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData);
+        
         public abstract void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData);
-        public abstract void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData);
+		public abstract void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData);
+		public abstract void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData);
 
 
         public virtual void OnRegistered_EventHandler(object Sender, RegEngineData evntData)

@@ -463,10 +463,13 @@ namespace Tanki
 				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
 				int columnIndex = colInd.Next(0, width);
 				int rowIndex = rowInd.Next(0, height);
-				Point p = new Point(rowIndex, columnIndex);
-				if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
+				if (columnIndex >= 0 && columnIndex <= width - room.GameSetings.ObjectsSize&& rowIndex>=0&&rowIndex<=height-room.GameSetings.ObjectsSize)
 				{
-					rect = new Rectangle(p,new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+					Point p = new Point(rowIndex, columnIndex);
+					if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
+					{
+						rect = new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+					}
 				}
 			}
 			return rect;
