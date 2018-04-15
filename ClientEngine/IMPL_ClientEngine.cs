@@ -14,6 +14,7 @@ namespace Tanki
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
+			_Entity = new Tank();
 		}
 
 		private IGameClient client;
