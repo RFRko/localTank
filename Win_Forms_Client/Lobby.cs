@@ -48,7 +48,7 @@ namespace Tanki
 
 		private void RoomConnect(object sender, RoomConnect data)
 		{
-			this.Invoke(onRoomListRecieved, data.MapSize);
+			this.Invoke(onRoomConnect, data.MapSize);
 		}
 
 		private Action<Size> onRoomConnect;
