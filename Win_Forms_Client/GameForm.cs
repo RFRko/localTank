@@ -20,13 +20,30 @@ namespace Tanki
 
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
-			InitializeComponent();
-			this.ClientSize = size;
-			this.BackColor = Color.Black;
 			ClientEngine = clientEngine;
 			clientEngine.OnMapChanged += OnMapChangeHandler;
 			onMapChanged += onMapChangedProc;
 			clientEngine.OnError += ErrorHandler;
+
+			Enemies = new Dictionary<Direction, Bitmap>()
+			{
+				{ Direction.Down, Resources.enemy_down },
+				{ Direction.Left, Resources.enemy_left },
+				{ Direction.Right, Resources.enemy_right },
+				{ Direction.Up, Resources.enemy_up },
+			};
+
+			Player = new Dictionary<Direction, Bitmap>()
+			{
+				{ Direction.Down, Resources.player_down },
+				{ Direction.Left, Resources.player_left },
+				{ Direction.Right, Resources.player_right },
+				{ Direction.Up, Resources.player_up },
+			};
+
+			InitializeComponent();
+			this.ClientSize = size;
+			this.BackColor = Color.Black;
 
 			Enemies = new Dictionary<Direction, Bitmap>()
 			{
