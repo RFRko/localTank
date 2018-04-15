@@ -213,5 +213,10 @@ namespace Tanki
         {
             //nothing to do required yet
         }
+
+        public override void OnBeforNetProcStarted_EventHandler(object Sender, NetProcBeforStartedEvntData evntData)
+        {
+            //nothing to do required yet
+        }
     }
 }

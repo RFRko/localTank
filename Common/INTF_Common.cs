@@ -151,6 +151,7 @@ namespace Tanki
         void RegisterDependcy(IReciever regReciever);
         event EventHandler<RegRecieverData> OnRegisterReciever;
         event EventHandler<NetProcStartedEvntData> OnNetProcessorStarted;
+        event EventHandler<NetProcBeforStartedEvntData> OnNetProcessorBeforStarted;
     }
 
 
@@ -196,6 +197,7 @@ namespace Tanki
         void RegisterDependcy(IMessageQueue regMsqQueue);
         event EventHandler<RegMsgQueueData> OnRegisterMessageQueue;
         event EventHandler<NetProcStartedEvntData> OnNetProcessorStarted;
+        event EventHandler<NetProcBeforStartedEvntData> OnNetProcessorBeforStarted;
     }
 
     #endregion MessageQueue Interfaces
@@ -216,7 +218,7 @@ namespace Tanki
         ProcessMessagesHandler ProcessMessages { get; }
         void OnRegistered_EventHandler(Object Sender, RegEngineData evntData);
         void OnNetProcStarted_EventHandler(Object Sender, NetProcStartedEvntData evntData);
-
+        void OnBeforNetProcStarted_EventHandler(Object Sender, NetProcBeforStartedEvntData evntData);
     }
 
 
@@ -228,6 +230,8 @@ namespace Tanki
         void RegisterDependcy(IEngine regEngine);
         event EventHandler<RegEngineData> OnRegisterEngine;
         event EventHandler<NetProcStartedEvntData> OnNetProcessorStarted;
+        event EventHandler<NetProcBeforStartedEvntData> OnNetProcessorBeforStarted;
+
     }
 
     #endregion
