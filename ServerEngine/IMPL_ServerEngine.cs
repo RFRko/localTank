@@ -576,7 +576,7 @@ namespace Tanki
 				this.SendStartGame();
 			}
 			// // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
-			this.Send();
+			//this.Send();
 		}
 
 
