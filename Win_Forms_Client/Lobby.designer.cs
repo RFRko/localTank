@@ -98,10 +98,19 @@
 			// 
 			this.DGV_RoomList.AllowUserToAddRows = false;
 			this.DGV_RoomList.AllowUserToDeleteRows = false;
+			this.DGV_RoomList.AllowUserToResizeColumns = false;
+			this.DGV_RoomList.AllowUserToResizeRows = false;
+			this.DGV_RoomList.BackgroundColor = System.Drawing.SystemColors.ScrollBar;
 			this.DGV_RoomList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.DGV_RoomList.Location = new System.Drawing.Point(12, 32);
+			this.DGV_RoomList.MultiSelect = false;
 			this.DGV_RoomList.Name = "DGV_RoomList";
 			this.DGV_RoomList.ReadOnly = true;
+			this.DGV_RoomList.RowHeadersVisible = false;
+			this.DGV_RoomList.RowHeadersWidth = 40;
+			this.DGV_RoomList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+			this.DGV_RoomList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.DGV_RoomList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.DGV_RoomList.Size = new System.Drawing.Size(407, 152);
 			this.DGV_RoomList.TabIndex = 6;
 			// 

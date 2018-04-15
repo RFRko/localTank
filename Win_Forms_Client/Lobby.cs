@@ -41,10 +41,11 @@ namespace Tanki
         private Action<IEnumerable<IRoomStat>> onRoomListRecieved;
         private void onRoomListRecievedProc(IEnumerable<IRoomStat> RoomList)
         {
-                DGV_RoomList.DataSource = null;
-                DGV_RoomList.DataSource = RoomList;
-                DGV_RoomList.Refresh();
-        }
+			DGV_RoomList.DataSource = null;
+            DGV_RoomList.DataSource = RoomList;
+			DGV_RoomList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            DGV_RoomList.Refresh();
+		}
 
 		private void RoomConnect(object sender, RoomConnect data)
 		{
