@@ -70,7 +70,7 @@ namespace Tanki
             if (gameRoom == null) throw new Exception("Wrong room type");
 
             gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
-
+            gameRoom.OnNotifyJoinedPlayer += OnNotifyJoinedPlayer_Handler;
         }
 
 
@@ -543,7 +543,7 @@ namespace Tanki
 			var gamer = evntData.newAddresssee as IGamer;
 			//var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
 			this.NewGamer(gamer);
-			this.Send();
+			//this.Send();
         }
 		/// <summary>
 		/// Обработка события изменения игрового статуса
@@ -573,8 +573,14 @@ namespace Tanki
 			var room = Owner as IRoom;
 			if (evntData.isFull)
                 room.Status = GameStatus.Start;
+           
             // // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
 
+        }
+
+        public void OnNotifyJoinedPlayer_Handler(object Sender, NotifyJoinedPlayerData evntData)
+        {
+            this.Send();
         }
 
 

@@ -124,8 +124,11 @@ namespace Tanki
 						Data = roominfo,
 						MesseggeType = MesseggeType.RoomInfo
 					}, gamer.RemoteEndPoint);
-				}
-				else
+
+                    (room as IGameRoom).NotifyNewPlayerJoined(gamer);
+
+                }
+                else
 				{
 					Owner.Sender.SendMessage(new Package()
 					{
@@ -177,6 +180,7 @@ namespace Tanki
 
 
             newGameRoom.RUN();
+            (newGameRoom as IGameRoom).NotifyNewPlayerJoined(gamer);
 
         }
 
