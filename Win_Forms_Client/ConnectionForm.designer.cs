@@ -79,10 +79,10 @@
 			this.Cancel_btn.UseVisualStyleBackColor = true;
 			this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click);
 			// 
-			// Connect_btn
+			// button2
 			// 
 			this.button2.Location = new System.Drawing.Point(128, 112);
-			this.button2.Name = "Connect_btn";
+			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(75, 23);
 			this.button2.TabIndex = 6;
 			this.button2.Text = "Connect";
@@ -110,6 +110,9 @@
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.Port_tb);
 			this.Controls.Add(this.Ip_tb);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "ConnectionForm";
 			this.Text = "ConnectionForm";
 			this.ResumeLayout(false);

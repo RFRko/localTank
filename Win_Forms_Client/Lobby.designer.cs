@@ -136,9 +136,11 @@
 			this.Controls.Add(this.Refresh_btn);
 			this.Controls.Add(this.Conect_btn);
 			this.Controls.Add(this.Create_Room_btn);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "Lobby";
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Lobby";
 			((System.ComponentModel.ISupportInitialize)(this.DGV_RoomList)).EndInit();
