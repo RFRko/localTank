@@ -71,7 +71,7 @@ namespace Tanki
             if (gameRoom == null) throw new Exception("Wrong room type");
 
             gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
-
+            gameRoom.OnNotifyJoinedPlayer += OnNotifyJoinedPlayer_Handler;
         }
 
 
@@ -311,6 +311,7 @@ namespace Tanki
 				objects.Add(obj);
 				objectCount--;
 			}
+
 			this.mapgen = true;
 		}
 		/// <summary>
@@ -543,6 +544,7 @@ namespace Tanki
 			var gamer = evntData.newAddresssee as IGamer;
 			//var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
 			this.NewGamer(gamer);
+			//this.Send();
         }
 		/// <summary>
 		/// Обработка события изменения игрового статуса
@@ -579,6 +581,10 @@ namespace Tanki
 			this.Send();
 		}
 
+        public void OnNotifyJoinedPlayer_Handler(object Sender, NotifyJoinedPlayerData evntData)
+        {
+            this.Send();
+        }
 
     }
 }
