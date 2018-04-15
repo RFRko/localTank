@@ -251,6 +251,7 @@ namespace Tanki
             return new Tank();
         }
     }
+	[Serializable]
 	public class Map : IMap
 	{
 		public IEnumerable<IBlock> Blocks { get; set; }
