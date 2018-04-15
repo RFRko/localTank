@@ -124,7 +124,7 @@ namespace Tanki
                 MesseggeType = MesseggeType.Entity
             };
 
-            this.clientGameState = (IEntity)state;
+            //this.clientGameState = (IEntity)state;
             // отправка данных
             //this.package.Data = clientGameState;
             Sender.SendMessage(this.package, adresee_list["Room"]);
