@@ -310,6 +310,8 @@ namespace Tanki
 				objects.Add(obj);
 				objectCount--;
 			}
+
+            this.mapgen = true;
 		}
 		/// <summary>
 		/// Метод реализирующий движение сущности
