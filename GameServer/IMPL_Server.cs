@@ -88,9 +88,20 @@ namespace Tanki
 
         public IPEndPoint MooveGamerToRoom(IGamer gamer, Guid TargetRoomId)
         {
+            IRoom targetRoom;
+
             var selRoom = from r in Rooms where r.Passport == TargetRoomId select r;
-            selRoom.First().AddGamer(gamer);
-            return selRoom.First().Reciever.LockalEndPoint;
+            targetRoom = selRoom.First();
+
+            try
+            {
+                targetRoom.AddGamer(gamer);
+                return targetRoom.Reciever.LockalEndPoint;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public IRoomStat getRoomStat(String RoomID)

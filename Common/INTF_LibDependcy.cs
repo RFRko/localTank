@@ -28,6 +28,7 @@ namespace Tanki
     public interface IAddressseeHolderBase
     {
         event EventHandler<NewAddressseeData> OnNewAddresssee;
+        event EventHandler<AddressseeHolderFullData> OnAddressseeHolderFull;
     }
 
     public interface IAddressseeHolder<T, Tid>: IAddressseeHolderBase where T:IAddresssee
@@ -41,6 +42,7 @@ namespace Tanki
     {
 
         void OnNewAddresssee_Handler(Object Sender, NewAddressseeData evntData);
+        void OnAddressseeHolderFull_Handler(Object Sender, AddressseeHolderFullData evntData);
     }
 
     #endregion GamerInterfaces

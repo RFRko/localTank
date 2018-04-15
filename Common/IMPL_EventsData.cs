@@ -51,6 +51,10 @@ namespace Tanki
     {
         public Boolean Started { get; set; }
     }
-    
 
+    public class AddressseeHolderFullData : EventArgs
+    {
+        public Boolean isFull { get; set; }
+    }
+    
 }

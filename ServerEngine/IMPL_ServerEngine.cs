@@ -525,5 +525,13 @@ namespace Tanki
         {
             this.GenerateMap();
         }
+
+        public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
+        {            
+            if (evntData.isFull)
+                status = GameStatus.Start;
+            // // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
+
+        }
     }
 }

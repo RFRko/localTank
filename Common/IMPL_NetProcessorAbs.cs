@@ -44,7 +44,9 @@ namespace Tanki
             if (regEngine.Owner == this)
             {
                 Engine = regEngine;
-                OnNetProcessorStarted += Engine.OnNetProcStarted_EventHandler;
+
+                //Обработчики событий для событий OnNetProcessorStarted, OnAddressseeHolderFull,OnNewAddresssee - присваиваются
+                //в обработчике OnRegistered_EventHandler  EngineAbs;
             }
         }
 

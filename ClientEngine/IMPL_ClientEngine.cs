@@ -196,5 +196,10 @@ namespace Tanki
         {
             //nothing to do required yet
         }
+
+        public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
+        {
+            //nothing to do required yet
+        }
     }
 }

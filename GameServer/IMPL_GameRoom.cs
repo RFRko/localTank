@@ -39,8 +39,13 @@ namespace Tanki
 
         public virtual void AddGamer(IGamer newGamer)
         {
+            if (GameSetings != null && _gamers.Count == GameSetings.MaxPlayersCount) throw new RoomIsFullException();
+
             _gamers.Add(newGamer);
             OnNewAddresssee?.Invoke(this, new NewAddressseeData() { newAddresssee = newGamer });
+            if (GameSetings != null && _gamers.Count == GameSetings.MaxPlayersCount)
+                OnAddressseeHolderFull?.Invoke(this, new AddressseeHolderFullData() { isFull = true });
+            
         }
 
         public virtual new void RUN()
@@ -66,6 +71,7 @@ namespace Tanki
             } }
         public event EventHandler<NewAddressseeData> OnNewAddresssee;
         public event EventHandler<NetProcStartedEvntData> OnRoomNetProcessorStarted;
+        public event EventHandler<AddressseeHolderFullData> OnAddressseeHolderFull;
     }
 
 

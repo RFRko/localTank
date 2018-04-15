@@ -49,6 +49,7 @@
     <Compile Include="IMPL_Common.cs" />
     <Compile Include="IMPL_EngineAbs.cs" />
     <Compile Include="IMPL_EventsData.cs" />
+    <Compile Include="IMPL_Exceptions.cs" />
     <Compile Include="IMPL_GameSetings.cs" />
     <Compile Include="IMPL_GuidGen.cs" />
     <Compile Include="IMPL_IPprovider.cs" />
