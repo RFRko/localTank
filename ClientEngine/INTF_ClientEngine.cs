@@ -24,6 +24,7 @@ namespace Tanki
 		event EventHandler<RoomStatChangeData> OnRoomsStatChanged;
         event EventHandler<GameStateChangeData> OnMapChanged;
 		event EventHandler<ErrorData> OnError;
+		event EventHandler<RoomConnect> OnRoomConnect;
 		void OnEntityHandler(Object Sender, ITank evntData);
         void OnViewCommandHandler(Object Sender, Object evntData);
     }
