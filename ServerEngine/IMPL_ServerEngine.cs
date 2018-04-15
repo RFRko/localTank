@@ -37,10 +37,10 @@ namespace Tanki
 			this.ProcessMessages += MessagesHandler;
             this.ProcessMessage = null;
 
-            var gameRoom = room as IGameRoom;
-            if (gameRoom == null) throw new Exception("Wrong room type");
+            //var gameRoom = room as IGameRoom;
+            //if (gameRoom == null) throw new Exception("Wrong room type");
 
-            gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
+            //gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
 			this.status = GameStatus.WaitForStart;
 
             this.Width = room.GameSetings.MapSize.Width;
@@ -51,9 +51,27 @@ namespace Tanki
             // - GenerateMap - делаем в OnNetProcStarted_EventHandler, 
             //      подписка на OnNetProcStarted происходит в registerdependency рума
             //      OnNetProcStarted - вызывается  в RUN()  NetProcessorAbs
-            //room.OnNewAddresssee += OnNewAddresssee_Handler;
-            //this.GenerateMap();
+            if (room != null)
+            {
+                room.OnNewAddresssee += OnNewAddresssee_Handler;
+                this.GenerateMap();
+            }
         }
+
+
+
+        public override void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
+        {
+            base.OnRegistered_EventHandler(Sender, evntData);
+
+            var gameRoom = Owner as IGameRoom;
+            if (gameRoom == null) throw new Exception("Wrong room type");
+
+            gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
+
+        }
+
+
         /// <summary>
         /// Ширина игрового поля
         /// </summary>
@@ -528,6 +546,7 @@ namespace Tanki
         public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
         {
             this.GenerateMap();
+
         }
 
         public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)

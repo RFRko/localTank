@@ -20,7 +20,7 @@ namespace Tanki
         public abstract void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData);
 
 
-        public void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
+        public virtual void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
         {
             Owner = evntData.EngineOwner;
 
