@@ -12,6 +12,7 @@ namespace Tanki
 	/// </summary>
     public class ServerGameEngine : EngineAbs
     {
+		private bool mapgen = false;
 		/// <summary>
 		/// Делегат принимающий сообщение от MessageQueue
 		/// </summary>
@@ -309,7 +310,6 @@ namespace Tanki
 				objects.Add(obj);
 				objectCount--;
 			}
-			this.Send();
 		}
 		/// <summary>
 		/// Метод реализирующий движение сущности
@@ -535,8 +535,11 @@ namespace Tanki
 		/// <param name="evntData">Данные о подключении</param>
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {
+			if (this.mapgen == false)
+				this.GenerateMap();
 			var room = Owner as IRoom;
-			var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
+			var gamer = evntData.newAddresssee as IGamer;
+			//var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
 			this.NewGamer(gamer);
 			this.Send();
         }
