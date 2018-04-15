@@ -20,9 +20,6 @@ namespace Tanki
 
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
-			InitializeComponent();
-			this.ClientSize = size;
-			this.BackColor = Color.Black;
 			ClientEngine = clientEngine;
 			clientEngine.OnMapChanged += OnMapChangeHandler;
 			onMapChanged += onMapChangedProc;
@@ -43,6 +40,10 @@ namespace Tanki
 				{ Direction.Right, Resources.player_right },
 				{ Direction.Up, Resources.player_up },
 			};
+
+			InitializeComponent();
+			this.ClientSize = size;
+			this.BackColor = Color.Black;
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
