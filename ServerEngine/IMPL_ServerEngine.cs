@@ -431,7 +431,7 @@ namespace Tanki
 			var room = Owner as IRoom;
 			Rectangle rect = Rectangle.Empty;
 			//entity.Position = Rectangle.Empty;
-			while (rect != Rectangle.Empty)
+			while (rect == Rectangle.Empty)
 			{
 				Random colInd = new Random(DateTime.Now.Millisecond - 15);
 				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
