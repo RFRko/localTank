@@ -293,7 +293,7 @@ namespace Tanki
 			this.Width = room.GameSetings.MapSize.Width;
 			this.Height = room.GameSetings.MapSize.Height;
 			int tankCount = room.Gamers.Count();
-			int objectCount = (this.height * this.width) / (room.GameSetings.ObjectsSize * room.GameSetings.ObjectsSize * room.GameSetings.MaxPlayersCount);
+			int objectCount = (this.height * this.width) / (10*room.GameSetings.ObjectsSize * room.GameSetings.ObjectsSize);
    //         foreach (var t in room.Gamers)
    //         {
 			//	this.NewGamer(t);
@@ -310,6 +310,7 @@ namespace Tanki
 				objects.Add(obj);
 				objectCount--;
 			}
+			this.mapgen = true;
 		}
 		/// <summary>
 		/// Метод реализирующий движение сущности
