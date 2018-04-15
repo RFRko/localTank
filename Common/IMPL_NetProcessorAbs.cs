@@ -25,6 +25,7 @@ namespace Tanki
         public event EventHandler<RegMsgQueueData> OnRegisterMessageQueue;
         public event EventHandler<RegEngineData> OnRegisterEngine;
         public event EventHandler<RegRecieverData> OnRegisterReciever;
+        public event EventHandler<NetProcStartedEvntData> OnNetProcessorStarted;
 
         public void RegisterDependcy(IMessageQueue regMsqQueue)
         {
@@ -41,7 +42,10 @@ namespace Tanki
             OnRegisterEngine?.Invoke(this,  new RegEngineData { EngineOwner = this });
             OnRegisterEngine -= regEngine.OnRegistered_EventHandler;
             if (regEngine.Owner == this)
+            {
                 Engine = regEngine;
+                OnNetProcessorStarted += Engine.OnNetProcStarted_EventHandler;
+            }
         }
 
         public void RegisterDependcy(IReciever regReciever)
@@ -61,6 +65,7 @@ namespace Tanki
             this.MessageQueue.RUN();
             this.Reciever.Run();
 
+            OnNetProcessorStarted?.BeginInvoke(this, new NetProcStartedEvntData() { Started = true }, null, null);
         }
     }
 }

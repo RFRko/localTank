@@ -17,9 +17,11 @@ namespace Tanki
             RoomId = id;
             Owner = owner;
             Passport = Guid.NewGuid();
+
             //Reciever = new ReceiverUdpClientBased(localEP);
             //Sender = new SenderUdpClientBased(Reciever);
         }
+
 
         private List<IGamer> _gamers = new List<IGamer>();
 
@@ -63,7 +65,8 @@ namespace Tanki
                 return v.First();
             } }
         public event EventHandler<NewAddressseeData> OnNewAddresssee;
-	}
+        public event EventHandler<NetProcStartedEvntData> OnRoomNetProcessorStarted;
+    }
 
 
 
@@ -168,6 +171,7 @@ namespace Tanki
             MessageQueue = (new MessageQueueFabric()).CreateMessageQueue(MsgQueueType.mqByTimerProcc);
             base.RegisterDependcy(MessageQueue);
 
+            //OnRoomNetProcessorStarted += this.Engine.OnNetProcStarted_EventHandler;
         }
 
         public int MaxPlayerCount { get; protected set; }

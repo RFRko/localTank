@@ -46,4 +46,11 @@ namespace Tanki
 	{
 		  public GameStatus newStatus { get; set; }
 	}
+
+    public class NetProcStartedEvntData : EventArgs
+    {
+        public Boolean Started { get; set; }
+    }
+    
+
 }

@@ -16,9 +16,10 @@ namespace Tanki
         public IEngineClient Owner { get; protected set; }
 
         public abstract void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData);
+        public abstract void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData);
 
 
-		public void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
+        public void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
         {
             Owner = evntData.EngineOwner;
 
@@ -29,6 +30,7 @@ namespace Tanki
 				addrHolder.OnNewAddresssee += OnNewAddresssee_Handler;
 			}
 
+            
         }
     }
 

@@ -73,10 +73,10 @@ namespace Tanki
         RoomType Room_Type { get; }
 
         void RUN();
-	}
+    }
 
 
-	//все что нужно для Server Manage Engine 
+    //все что нужно для Server Manage Engine 
     public interface IManagerRoom
     {
         IRoomStat getRoomStat(String forRoomID);
