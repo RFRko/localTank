@@ -12,6 +12,7 @@ namespace Tanki
 	/// </summary>
     public class ServerGameEngine : EngineAbs
     {
+		private bool mapgen = false;
 		/// <summary>
 		/// Делегат принимающий сообщение от MessageQueue
 		/// </summary>
@@ -309,7 +310,6 @@ namespace Tanki
 				objects.Add(obj);
 				objectCount--;
 			}
-			this.Send();
 		}
 		/// <summary>
 		/// Метод реализирующий движение сущности
@@ -463,7 +463,7 @@ namespace Tanki
 				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
 				int columnIndex = colInd.Next(0, width);
 				int rowIndex = rowInd.Next(0, height);
-				if (columnIndex >= 0 && columnIndex <= width - room.GameSetings.ObjectsSize&& rowIndex>=0&&rowIndex<=height-room.GameSetings.ObjectsSize)
+				if (columnIndex >= 0 && columnIndex <= room.GameSetings.MapSize.Width - room.GameSetings.ObjectsSize&& rowIndex>=0&&rowIndex<= room.GameSetings.MapSize.Height - room.GameSetings.ObjectsSize)
 				{
 					Point p = new Point(rowIndex, columnIndex);
 					if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
@@ -535,8 +535,11 @@ namespace Tanki
 		/// <param name="evntData">Данные о подключении</param>
         public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData)
         {
+			if (this.mapgen == false)
+				this.GenerateMap();
 			var room = Owner as IRoom;
-			var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
+			var gamer = evntData.newAddresssee as IGamer;
+			//var gamer = room.Gamers.FirstOrDefault(t => t.RemoteEndPoint == evntData.newAddresssee.RemoteEndPoint);
 			this.NewGamer(gamer);
 			this.Send();
         }
