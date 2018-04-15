@@ -547,7 +547,8 @@ namespace Tanki
 		/// <param name="statusData"> Данные о новом игровом статуса</param>
 		public void OnNewGameStatus_Handler(object Sender, GameStatusChangedData statusData)
 		{
-			this.status = statusData.newStatus;
+			
+			//this.status = statusData.newStatus;
 			if (statusData.newStatus == GameStatus.Start)
 				this.SendStartGame();
 		}
@@ -559,9 +560,10 @@ namespace Tanki
         }
 
         public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
-        {            
-            if (evntData.isFull)
-                status = GameStatus.Start;
+        {
+			var room = Owner as IRoom;
+			if (evntData.isFull)
+                room.Status = GameStatus.Start;
             // // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
 
         }
