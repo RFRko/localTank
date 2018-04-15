@@ -555,7 +555,7 @@ namespace Tanki
 
         public override void OnBeforNetProcStarted_EventHandler(object Sender, NetProcBeforStartedEvntData evntData)
         {
-            this.GenerateMap();
+            //this.GenerateMap();
         }
 
         public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
