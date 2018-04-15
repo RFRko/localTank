@@ -44,22 +44,6 @@ namespace Tanki
 			InitializeComponent();
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
-
-			Enemies = new Dictionary<Direction, Bitmap>()
-			{
-				{ Direction.Down, Resources.enemy_down },
-				{ Direction.Left, Resources.enemy_left },
-				{ Direction.Right, Resources.enemy_right },
-				{ Direction.Up, Resources.enemy_up },
-			};
-
-			Player = new Dictionary<Direction, Bitmap>()
-			{
-				{ Direction.Down, Resources.player_down },
-				{ Direction.Left, Resources.player_left },
-				{ Direction.Right, Resources.player_right },
-				{ Direction.Up, Resources.player_up },
-			};
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
