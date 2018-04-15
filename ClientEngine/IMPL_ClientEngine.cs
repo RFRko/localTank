@@ -24,13 +24,9 @@ namespace Tanki
 		private IMap _Map = null;
 		private ITank _Entity = null;
 		private string _ErrorText = null;
+		private Size _MapSize;
 
 
-		public Size Map_size
-		{
-			get;
-			protected set;
-		}
 		public IEnumerable<IRoomStat> RoomsStat
 		{
 			get { return _RoomsStat;  }
@@ -85,6 +81,16 @@ namespace Tanki
 				OnError?.Invoke(this, new ErrorData() { errorText = value });
 			}
 		}
+		public Size Map_size
+		{
+			get { return _MapSize; }
+			protected set
+			{
+				_MapSize = value;
+				OnRoomConnect?.BeginInvoke(this, new RoomConnect() { MapSize = value }, null, null);
+			}
+		}
+
 
 		public void CreateGame(GameSetings gameSetings, string player_name)
 		{
@@ -187,6 +193,7 @@ namespace Tanki
 		public event EventHandler<RoomStatChangeData> OnRoomsStatChanged; //событие обновления IEnumerable<IRoomStat>
 		public event EventHandler<GameStateChangeData> OnMapChanged; //событие обновления IMap
 		public event EventHandler<ErrorData> OnError; //сообщение об ошибке
+		public event EventHandler<RoomConnect> OnRoomConnect; // подключение к комнате
 
 
 

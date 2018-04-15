@@ -23,8 +23,11 @@ namespace Tanki
 
             clientEngine.OnRoomsStatChanged += SetRoomList;
             clientEngine.OnError += ErrorHandler;
+			clientEngine.OnRoomConnect += RoomConnect;
 
-            onRoomListRecieved = onRoomListRecievedProc;
+
+			onRoomListRecieved = onRoomListRecievedProc;
+			onRoomConnect = onRoomConnectProc;
 
             InitializeComponent();
 			Name_tb.Text = "Vasya";
@@ -42,7 +45,20 @@ namespace Tanki
                 DGV_RoomList.DataSource = RoomList;
                 DGV_RoomList.Refresh();
         }
-		
+
+		private void RoomConnect(object sender, RoomConnect data)
+		{
+			this.Invoke(onRoomListRecieved, data.MapSize);
+		}
+
+		private Action<Size> onRoomConnect;
+		private void onRoomConnectProc(Size MapSize)
+		{
+			var gameForm = new GameForm(clientEngine, MapSize);
+			gameForm.Show();
+			Hide();
+		}
+
 		private void ErrorHandler(object sender, ErrorData e)
 		{
 			var caption = "Ошибка";
@@ -62,13 +78,7 @@ namespace Tanki
 				var gameOptionsForm = new GameOptionsForm();
 				gameOptionsForm.ShowDialog();
 				if (gameOptionsForm.ok)
-				{
 					clientEngine.CreateGame(gameOptionsForm.gameSetings, name);
-
-					var gameForm = new GameForm(clientEngine, gameOptionsForm.gameSetings.MapSize);
-					gameForm.Show();
-					Hide();
-				}
 				else return;
 			}
 			else label3.Text = "Укажите ваше имя";
@@ -84,11 +94,6 @@ namespace Tanki
 				var room_guid = clientEngine.RoomsStat.ElementAt(room_index).Pasport;
 
 				clientEngine.JOINGame(room_guid, name);
-
-				Thread.Sleep(500);
-				var gameForm = new GameForm(clientEngine, clientEngine.Map_size);
-				gameForm.Show();
-				Hide();
 			}
 			else label3.Text = "Укажите ваше имя";
 		}

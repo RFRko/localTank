@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,11 @@ namespace Tanki
     {
         public IAddresssee newAddresssee { get; set; }
     }
+
+	public class RoomConnect : EventArgs
+	{
+		public Size MapSize { get; set; }
+	}
 
     public class ErrorData : EventArgs
 	{
