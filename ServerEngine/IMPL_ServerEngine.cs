@@ -293,10 +293,10 @@ namespace Tanki
 			this.Height = room.GameSetings.MapSize.Height;
 			int tankCount = room.Gamers.Count();
 			int objectCount = (this.height * this.width) / (room.GameSetings.ObjectsSize * room.GameSetings.ObjectsSize * room.GameSetings.MaxPlayersCount);
-            foreach (var t in room.Gamers)
-            {
-				this.NewGamer(t);
-			}
+   //         foreach (var t in room.Gamers)
+   //         {
+			//	this.NewGamer(t);
+			//}
 			while(objectCount>0)
 			{
 				var obj = new GameObjectFactory().CreateBlock();
@@ -309,6 +309,7 @@ namespace Tanki
 				objects.Add(obj);
 				objectCount--;
 			}
+			this.Send();
 		}
 		/// <summary>
 		/// Метод реализирующий движение сущности
@@ -514,7 +515,8 @@ namespace Tanki
 			//var obj = new Tank();
 			var room = Owner as IRoom;
 			obj.Size = room.GameSetings.ObjectsSize;
-			obj.Tank_ID = gamer.Passport;  
+			obj.Tank_ID = gamer.Passport;
+			obj.Name = gamer.Name;
 			obj.Lives = 5;
 			obj.Is_Alive = true;
 			obj.Can_Shoot = true;
