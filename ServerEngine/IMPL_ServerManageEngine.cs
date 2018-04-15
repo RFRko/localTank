@@ -160,7 +160,7 @@ namespace Tanki
 
 			// добавить в нее игрока
 			var room_endpoint = ManagerRoom.MooveGamerToRoom(gamer, newGameRoom.Passport);
-      Addresssee addres = new Addresssee(room_endpoint );
+            Addresssee addres = new Addresssee(room_endpoint );
 
 
 			var roominfo = new RoomInfo()
@@ -175,6 +175,9 @@ namespace Tanki
               MesseggeType = MesseggeType.RoomInfo
 			}, gamer.RemoteEndPoint);
 
+
+            newGameRoom.RUN();
+
         }
 
         public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
@@ -183,6 +186,11 @@ namespace Tanki
         }
 
         public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
+        {
+            //nothing to do required yet
+        }
+
+        public override void OnBeforNetProcStarted_EventHandler(object Sender, NetProcBeforStartedEvntData evntData)
         {
             //nothing to do required yet
         }

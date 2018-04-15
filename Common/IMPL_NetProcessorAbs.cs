@@ -26,6 +26,7 @@ namespace Tanki
         public event EventHandler<RegEngineData> OnRegisterEngine;
         public event EventHandler<RegRecieverData> OnRegisterReciever;
         public event EventHandler<NetProcStartedEvntData> OnNetProcessorStarted;
+        public event EventHandler<NetProcBeforStartedEvntData> OnNetProcessorBeforStarted;
 
         public void RegisterDependcy(IMessageQueue regMsqQueue)
         {
@@ -63,6 +64,9 @@ namespace Tanki
         {
             if (MessageQueue == null || MessageQueue.Owner != this) throw new Exception("MessageQueue is NULL or not registered");
             if (Engine == null || Engine.Owner != this) throw new Exception("Engine is NULL or not registered");
+
+            //это событие вызывается синхронно для инициализуерующих действий в подписчиках
+            OnNetProcessorBeforStarted?.Invoke(this, new NetProcBeforStartedEvntData() { BeforStart = true });
 
             this.MessageQueue.RUN();
             this.Reciever.Run();

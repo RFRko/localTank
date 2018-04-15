@@ -553,10 +553,14 @@ namespace Tanki
 				this.SendStartGame();
 		}
 
-        public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
+        public override void OnBeforNetProcStarted_EventHandler(object Sender, NetProcBeforStartedEvntData evntData)
         {
             this.GenerateMap();
+        }
 
+        public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
+        {
+            // Nothing to do required yet
         }
 
         public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
@@ -567,5 +571,7 @@ namespace Tanki
             // // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
 
         }
+
+
     }
 }

@@ -19,6 +19,7 @@ namespace Tanki
         public abstract void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData);
 		public abstract void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData);
 		public abstract void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData);
+        public abstract void OnBeforNetProcStarted_EventHandler(object Sender, NetProcBeforStartedEvntData evntData);
 
 
         public virtual void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
@@ -32,9 +33,11 @@ namespace Tanki
 				addrHolder.OnNewAddresssee += OnNewAddresssee_Handler;
                 addrHolder.OnAddressseeHolderFull += OnAddressseeHolderFull_Handler;
             }
-            
+
+            Owner.OnNetProcessorBeforStarted += OnBeforNetProcStarted_EventHandler;
             Owner.OnNetProcessorStarted += OnNetProcStarted_EventHandler;
-            
+
+
         }
 
     }
