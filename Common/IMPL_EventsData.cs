@@ -52,4 +52,15 @@ namespace Tanki
 	{
 		  public GameStatus newStatus { get; set; }
 	}
+
+    public class NetProcStartedEvntData : EventArgs
+    {
+        public Boolean Started { get; set; }
+    }
+
+    public class AddressseeHolderFullData : EventArgs
+    {
+        public Boolean isFull { get; set; }
+    }
+    
 }

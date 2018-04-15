@@ -28,6 +28,7 @@ namespace Tanki
     public interface IAddressseeHolderBase
     {
         event EventHandler<NewAddressseeData> OnNewAddresssee;
+        event EventHandler<AddressseeHolderFullData> OnAddressseeHolderFull;
     }
 
     public interface IAddressseeHolder<T, Tid>: IAddressseeHolderBase where T:IAddresssee
@@ -41,6 +42,7 @@ namespace Tanki
     {
 
         void OnNewAddresssee_Handler(Object Sender, NewAddressseeData evntData);
+        void OnAddressseeHolderFull_Handler(Object Sender, AddressseeHolderFullData evntData);
     }
 
     #endregion GamerInterfaces
@@ -73,10 +75,10 @@ namespace Tanki
         RoomType Room_Type { get; }
 
         void RUN();
-	}
+    }
 
 
-	//все что нужно для Server Manage Engine 
+    //все что нужно для Server Manage Engine 
     public interface IManagerRoom
     {
         IRoomStat getRoomStat(String forRoomID);

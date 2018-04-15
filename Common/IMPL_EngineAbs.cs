@@ -16,9 +16,11 @@ namespace Tanki
         public IEngineClient Owner { get; protected set; }
 
         public abstract void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData);
+        public abstract void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData);
+        public abstract void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData);
 
 
-		public void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
+        public void OnRegistered_EventHandler(object Sender, RegEngineData evntData)
         {
             Owner = evntData.EngineOwner;
 
@@ -27,9 +29,13 @@ namespace Tanki
 			if (addrHolder != null)
 			{
 				addrHolder.OnNewAddresssee += OnNewAddresssee_Handler;
-			}
-
+                addrHolder.OnAddressseeHolderFull += OnAddressseeHolderFull_Handler;
+            }
+            
+            Owner.OnNetProcessorStarted += OnNetProcStarted_EventHandler;
+            
         }
+
     }
 
 }

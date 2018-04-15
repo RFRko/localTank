@@ -203,5 +203,15 @@ namespace Tanki
 		public override ProcessMessageHandler ProcessMessage { get; protected set; } // не нужен, требует EngineAbs 
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; } // не нужен, требует EngineAbs
 		public override void OnNewAddresssee_Handler(object Sender, NewAddressseeData evntData) { } // не нужен, требует EngineAbs
-	}
+
+        public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
+        {
+            //nothing to do required yet
+        }
+
+        public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
+        {
+            //nothing to do required yet
+        }
+    }
 }

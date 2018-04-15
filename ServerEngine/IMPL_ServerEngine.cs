@@ -46,14 +46,18 @@ namespace Tanki
             this.Width = room.GameSetings.MapSize.Width;
             this.Height = room.GameSetings.MapSize.Height;
 
-
-            room.OnNewAddresssee += OnNewAddresssee_Handler;
-			this.GenerateMap();
-		}
-		/// <summary>
-		/// Ширина игрового поля
-		/// </summary>
-		public int Width { get { return this.width;	} set {	this.width = value;	}}
+            //Это должно быть не тут:  
+            // - подписка на OnNewAddresssee происходит в  EngineAbs
+            // - GenerateMap - делаем в OnNetProcStarted_EventHandler, 
+            //      подписка на OnNetProcStarted происходит в registerdependency рума
+            //      OnNetProcStarted - вызывается  в RUN()  NetProcessorAbs
+            //room.OnNewAddresssee += OnNewAddresssee_Handler;
+            //this.GenerateMap();
+        }
+        /// <summary>
+        /// Ширина игрового поля
+        /// </summary>
+        public int Width { get { return this.width;	} set {	this.width = value;	}}
 		/// <summary>
 		/// Высота игрового поля
 		/// </summary>
@@ -520,5 +524,18 @@ namespace Tanki
 			if (statusData.newStatus == GameStatus.Start)
 				this.SendStartGame();
 		}
-	}
+
+        public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
+        {
+            this.GenerateMap();
+        }
+
+        public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
+        {            
+            if (evntData.isFull)
+                status = GameStatus.Start;
+            // // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
+
+        }
+    }
 }

@@ -176,5 +176,15 @@ namespace Tanki
 			}, gamer.RemoteEndPoint);
 
         }
-	}
+
+        public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
+        {
+            //nothing to do required yet
+        }
+
+        public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
+        {
+            //nothing to do required yet
+        }
+    }
 }
