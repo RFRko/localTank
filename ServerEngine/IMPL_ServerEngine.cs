@@ -232,6 +232,7 @@ namespace Tanki
 					room.Status = GameStatus.EndGame;
 					this.SendEndGame();
 				}
+				this.Send();
 			}
         }
 		/// <summary>
@@ -322,12 +323,16 @@ namespace Tanki
 		private void Move(IEntity entity)
 		{
 			var room = Owner as IRoom;
-			var tmp = objects.FirstOrDefault(t => t == entity);
-			if (tmp.Is_Alive)
+			//IEntity tmp;
+			//if (entity is ITank) tmp = objects.FirstOrDefault(t => (t as ITank).Tank_ID == (entity as ITank).Tank_ID);
+			
+			//var tmp = objects.FirstOrDefault(t => t == entity);
+			if (entity.Is_Alive)
 			{
-				if (tmp is ITank)
+				if (entity is ITank)
 				{
-					var tank = tmp as ITank;
+					ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+					//var tank = tmp as ITank;
 					if (this.canMove(tank))
 					{
 						switch (tank.Direction)
@@ -368,9 +373,9 @@ namespace Tanki
 					}
 					tank.Command = EntityAction.None;
 				}
-				else if (tmp is IBullet)
+				else if (entity is IBullet)
 				{
-					var bullet = tmp as IBullet;
+					IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet).Parent_Id == (entity as IBullet).Parent_Id);
 					switch (bullet.Direction)
 					{
 						case Direction.Left:
