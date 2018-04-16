@@ -15,11 +15,13 @@ namespace Tanki
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
 			_Entity = new Tank();
+			First_Map = true;
 		}
 
 		private IGameClient client;
-		private static object Map_locker = new object();
-		private static object Entity_locker = new object();
+		private object Map_locker = new object();
+		private object Entity_locker = new object();
+		private bool First_Map;
 
 		private IEnumerable<IRoomStat> _RoomsStat = null;
 		private IMap _Map = null;
@@ -50,11 +52,11 @@ namespace Tanki
 		}
 		public ITank Entity
 		{
-			get { lock (Entity_locker) { return _Entity; } }
+			get { return _Entity; } 
 
 			set
 			{
-				lock (Entity_locker) { _Entity = value; }
+				 _Entity = value; 
 
 				//мы решили отправлять Entity только по таймеру
 
@@ -149,6 +151,11 @@ namespace Tanki
 				case MesseggeType.Map:
 					{
 						Map = package.Data as IMap;
+						if(First_Map)
+						{
+							Entity = Map.Tanks.First(i => i.Tank_ID == client.Passport);
+							First_Map = false;
+						}
 						break;
 					}
 				case MesseggeType.RoomList:
