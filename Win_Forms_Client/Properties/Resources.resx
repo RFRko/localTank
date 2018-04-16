@@ -160,4 +160,46 @@
   <data name="wall3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\wall3.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="explosion1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion10.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion11.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion12.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion13" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion13.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion14" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion14.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion3.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion4.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion5.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion6.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion7.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion8.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="explosion9" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\explosion9.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
