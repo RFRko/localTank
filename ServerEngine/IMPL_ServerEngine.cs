@@ -571,7 +571,8 @@ namespace Tanki
 
         public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
         {
-		}
+
+		    }
 
         public void OnNotifyJoinedPlayer_Handler(object Sender, NotifyJoinedPlayerData evntData)
         {
