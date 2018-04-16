@@ -68,7 +68,7 @@ namespace Tanki
 			foreach (var i in Map.Bullets)
 				e.Graphics.DrawImage(Resources.Bullet, i.Position);
 
-			foreach(var i in Map.Blocks)
+			foreach (var i in Map.Blocks)
 				e.Graphics.DrawImage(Resources.wall, i.Position);
 			//for (var i = 0; i < Map.Blocks.Count() - 1; i++)
 			//	e.Graphics.DrawImage(Walls[rnd.Next(0, Walls.Count)], Map.Blocks.ElementAt(i).Position);

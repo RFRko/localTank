@@ -85,4 +85,10 @@
 		/// <summary> Игра завершена</summary>
 		EndGame
 	}
+	public enum BlockType
+	{
+		Brick,
+		Concrete,
+		Tree,
+	}
 }

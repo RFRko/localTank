@@ -103,8 +103,8 @@ namespace Tanki
     /// </summary>
     public interface IBlock : IEntity
     {
-
-    }
+		BlockType blockType { get; set; }
+	}
 
 
     public interface IAddresssee
@@ -295,6 +295,7 @@ namespace Tanki
 	{
 		int GameSpeed { get; set; }
 		int ObjectsSize { get; set; }
+		int Bullet_size { get; set; }
 		Size MapSize { get; set; }
 		int MaxPlayersCount { get; set; }
 		GameType GameType { get; set; }
