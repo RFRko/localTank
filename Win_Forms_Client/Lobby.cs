@@ -91,6 +91,11 @@ namespace Tanki
 			if (!string.IsNullOrEmpty(name))
 			{
 				label3.Text = "";
+				if(DGV_RoomList.SelectedRows.Count == 0)
+				{
+					label3.Text = "Некуда подключатся";
+					return;
+				}
 				var room_index = DGV_RoomList.SelectedRows[0].Index;
 				var room_guid = clientEngine.RoomsStat.ElementAt(room_index).Pasport;
 

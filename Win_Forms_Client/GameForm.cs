@@ -17,6 +17,8 @@ namespace Tanki
 		private IMap Map;
 		private Dictionary<Direction, Bitmap> Enemies;
 		private Dictionary<Direction, Bitmap> Player;
+		private List<Bitmap> Walls;
+		private static Random rnd;
 
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
@@ -24,6 +26,7 @@ namespace Tanki
 			clientEngine.OnMapChanged += OnMapChangeHandler;
 			onMapChanged += onMapChangedProc;
 			clientEngine.OnError += ErrorHandler;
+			rnd = new Random();
 
 			Enemies = new Dictionary<Direction, Bitmap>()
 			{
@@ -41,6 +44,15 @@ namespace Tanki
 				{ Direction.Up, Resources.player_up },
 			};
 
+			Walls = new List<Bitmap>()
+			{
+				Resources.wall,
+				Resources.wall1,
+				Resources.wall3,
+				Resources.tree
+			};
+
+
 			InitializeComponent();
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
@@ -53,6 +65,12 @@ namespace Tanki
 
 			var myPassport = ClientEngine.GetPassport();
 
+			foreach (var i in Map.Bullets)
+				e.Graphics.DrawImage(Resources.Bullet, i.Position);
+
+			for (var i = 0; i < Map.Blocks.Count() - 1; i++)
+				e.Graphics.DrawImage(Walls[rnd.Next(0, Walls.Count)], Map.Blocks.ElementAt(i).Position);
+
 			foreach (var i in Map.Tanks)
 			{
 				if (i.Tank_ID == myPassport)
@@ -63,24 +81,29 @@ namespace Tanki
 				{
 					e.Graphics.DrawImage(Enemies[i.Direction], i.Position);
 				}
+				string name;
+				if (i.Name.Length > 10)
+				{
+					name = i.Name.Substring(0, 10);
+					name += "..";
+				}
+				else name = i.Name;
+				StringFormat sf = new StringFormat();
+				sf.LineAlignment = StringAlignment.Center;
+				sf.Alignment = StringAlignment.Center;
 				e.Graphics.DrawString
 					(
-						i.Name,
-						new Font("Comic Sans", 15),
+						name,
+						new Font("Comic Sans", 7),
 						new SolidBrush(Color.Yellow),
 						new PointF
 						(
-							i.Position.Location.X + 10, 
-							i.Position.Location.Y - 10
-						)
+							i.Position.Location.X + i.Size / 2, 
+							i.Position.Location.Y - i.Size / 3
+						),
+						sf
 					);
 			}
-
-			foreach (var i in Map.Bullets)
-				e.Graphics.DrawImage(Resources.Bullet, i.Position);
-
-			foreach (var i in Map.Blocks)
-				e.Graphics.DrawImage(Resources.wall, i.Position);
 		}
 
 		private void OnMapChangeHandler(object Sender, GameStateChangeData data)
