@@ -75,4 +75,10 @@ namespace Tanki
     {
         public IAddresssee JoinedAddresssee { get; set; }
     }
+
+    public class NotifyStartGameData : EventArgs
+    {
+        public Boolean EnforceStartGame { get; set; }
+    }    
+
 }

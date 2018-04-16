@@ -571,19 +571,25 @@ namespace Tanki
 
         public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
         {
-			var room = Owner as IRoom;
-			if (evntData.isFull)
-			{
-				this.status = GameStatus.Start;
-				this.SendStartGame();
-			}
-			// // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
-			//this.Send();
-		}
+
+		    }
 
         public void OnNotifyJoinedPlayer_Handler(object Sender, NotifyJoinedPlayerData evntData)
         {
             this.Send();
+        }
+
+        public void NotifyStartGame_Handler(Object Sender, NotifyStartGameData evntData)
+        {
+            var room = Owner as IRoom;
+            if (evntData.EnforceStartGame)
+            {
+                this.status = GameStatus.Start;
+                this.SendStartGame();
+            }
+            // // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
+            this.Send();
+
         }
 
     }

@@ -107,9 +107,11 @@ namespace Tanki
     {
         Int32 MaxPlayerCount { get; }
         IGamer Creator { get; }
-        void NotifyNewPlayerJoined(IAddresssee newGamerJoined);
+        void NotifyGameRoomForEvent(EventArgs evntData);
         event EventHandler<GameStatusChangedData> OnNewGameStatus;
         event EventHandler<NotifyJoinedPlayerData> OnNotifyJoinedPlayer;
+        event EventHandler<NotifyStartGameData> OnNotifyStartGame;
+
     }
 
 
