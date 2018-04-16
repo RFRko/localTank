@@ -380,39 +380,27 @@ namespace Tanki
 				else if (entity is IBullet)
 				{
 					IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
+					var pos = new Point();
 					switch (bullet.Direction)
 					{
 						case Direction.Left:
-							if (bullet.Position.X > 0)
-							{
-								var pos = new Point(bullet.Position.X - 1, bullet.Position.Y);
+								pos = new Point(bullet.Position.X - 1, bullet.Position.Y);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 
 						case Direction.Right:
-							if (bullet.Position.X < width)
-							{
-								var pos = new Point(bullet.Position.X + 1, bullet.Position.Y);
+								 pos = new Point(bullet.Position.X + 1, bullet.Position.Y);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 
 						case Direction.Up:
-							if (bullet.Position.Y > 0)
-							{
-								var pos = new Point(bullet.Position.X, bullet.Position.Y - 1);
+								pos = new Point(bullet.Position.X, bullet.Position.Y - 1);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 
 						case Direction.Down:
-
-							if (bullet.Position.Y < height)
-							{
-								var pos = new Point(bullet.Position.X, bullet.Position.Y + 1);
+								pos = new Point(bullet.Position.X, bullet.Position.Y + 1);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 					}
 					this.HitTarget(bullet);
