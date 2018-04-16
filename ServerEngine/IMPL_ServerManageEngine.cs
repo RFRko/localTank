@@ -129,7 +129,16 @@ namespace Tanki
 
                     // инициировать начало игры
                     if (room.Gamers.Count() == room.GameSetings.MaxPlayersCount)
-                        (room as IGameRoom).NotifyGameRoomForEvent(new  NotifyStartGameData() { EnforceStartGame = true});
+                    {
+                        IPackage pack = new Package()
+                        {
+                            MesseggeType = MesseggeType.StartGame,
+                            Data = null,
+                        };               
+                        Owner.Sender.SendMessage(pack, room.Gamers);
+
+                        (room as IGameRoom).NotifyGameRoomForEvent(new NotifyStartGameData() { EnforceStartGame = true });
+                    }
 
 
 
