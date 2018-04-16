@@ -53,6 +53,12 @@ namespace Tanki
 
 			var myPassport = ClientEngine.GetPassport();
 
+			foreach (var i in Map.Bullets)
+				e.Graphics.DrawImage(Resources.Bullet, i.Position);
+
+			foreach (var i in Map.Blocks)
+				e.Graphics.DrawImage(Resources.wall, i.Position);
+
 			foreach (var i in Map.Tanks)
 			{
 				if (i.Tank_ID == myPassport)
@@ -63,24 +69,29 @@ namespace Tanki
 				{
 					e.Graphics.DrawImage(Enemies[i.Direction], i.Position);
 				}
+				string name;
+				if (i.Name.Length > 10)
+				{
+					name = i.Name.Substring(0, 10);
+					name += "..";
+				}
+				else name = i.Name;
+				StringFormat sf = new StringFormat();
+				sf.LineAlignment = StringAlignment.Center;
+				sf.Alignment = StringAlignment.Center;
 				e.Graphics.DrawString
 					(
-						i.Name,
-						new Font("Comic Sans", 15),
+						name,
+						new Font("Comic Sans", 7),
 						new SolidBrush(Color.Yellow),
 						new PointF
 						(
-							i.Position.Location.X + 10, 
-							i.Position.Location.Y - 10
-						)
+							i.Position.Location.X + i.Size / 2, 
+							i.Position.Location.Y - i.Size / 3
+						),
+						sf
 					);
 			}
-
-			foreach (var i in Map.Bullets)
-				e.Graphics.DrawImage(Resources.Bullet, i.Position);
-
-			foreach (var i in Map.Blocks)
-				e.Graphics.DrawImage(Resources.wall, i.Position);
 		}
 
 		private void OnMapChangeHandler(object Sender, GameStateChangeData data)
