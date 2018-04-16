@@ -120,8 +120,8 @@ namespace Tanki
         private Object _locker = new Object();
         private Object _locker_stopping = new Object();
         private AutoResetEvent _ifReady = new AutoResetEvent(false);
-        private AutoResetEvent _ifEnqueReady = new AutoResetEvent(false);
-        private AutoResetEvent _ifDequeReady = new AutoResetEvent(false);
+        private ManualResetEvent _ifEnqueReady = new ManualResetEvent(false);
+        private ManualResetEvent _ifDequeReady = new ManualResetEvent(false);
 
         //private AutoResetEvent _proceedMsg = new AutoResetEvent(false);
         private AutoResetEvent _finish_timer = new AutoResetEvent(false);
@@ -139,18 +139,18 @@ namespace Tanki
 
         public override void Enqueue(IPackage newMsg)
         {
-            lock (_locker)
-            {
+            //lock (_locker)
+            //{
                 _ifEnqueReady.WaitOne();
                 _ifDequeReady.Reset();
                 lock (_msg_queue)
                 {
                     _msg_queue.Enqueue(newMsg);
-                    //_ifReady.Set();
+                    _ifReady.Set();
                 }
                 _ifDequeReady.Set();
                 //var s = _proceedingThread.ThreadState;                
-            }
+            //}
         }
 
         public override void RUN()
@@ -161,7 +161,7 @@ namespace Tanki
             _ifEnqueReady.Set();
             _ifDequeReady.Set();
             //_timer = new Timer(ProceedQueue, _ifReady, 0, 1000);
-            _timer = new Timer(ProceedQueue, null, 0, 1000);
+            _timer = new Timer(ProceedQueue, null, 0, 500);
 
             //_finish_timer.WaitOne();
         }
@@ -171,15 +171,17 @@ namespace Tanki
             IPackage msg = null;
             List<IPackage> recieved_packages_batch = new List<IPackage>();
 
-            lock (_locker)
-            {
+            //lock (_locker)
+            //{
                 if (_enforceCancel)
                 {
                     _finish_timer.Set();
                     return;
                 }
 
-                //_ifReady.WaitOne();
+            //_ifReady.WaitOne();
+
+                if (_msg_queue.Count == 0) return;
 
                 _ifDequeReady.WaitOne();
                 _ifEnqueReady.Reset();
@@ -189,7 +191,7 @@ namespace Tanki
                     recieved_packages_batch.Add(msg);
                 }
                 _ifEnqueReady.Set();
-            }
+            //}
 
             if (recieved_packages_batch != null)
             {
