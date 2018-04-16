@@ -202,7 +202,8 @@ namespace Tanki
     [Serializable]
     public class Block : GameEntity, IBlock
     {
-        public Block()
+		public BlockType blockType { get; set; }
+		public Block()
         {
 
         }
