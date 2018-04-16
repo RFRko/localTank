@@ -33,7 +33,7 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.Cancel_btn = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.Connect_btn = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
@@ -79,15 +79,15 @@
 			this.Cancel_btn.UseVisualStyleBackColor = true;
 			this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click);
 			// 
-			// button2
+			// Connect_btn
 			// 
-			this.button2.Location = new System.Drawing.Point(128, 112);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 6;
-			this.button2.Text = "Connect";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.Connect_btn_Click);
+			this.Connect_btn.Location = new System.Drawing.Point(128, 112);
+			this.Connect_btn.Name = "Connect_btn";
+			this.Connect_btn.Size = new System.Drawing.Size(75, 23);
+			this.Connect_btn.TabIndex = 6;
+			this.Connect_btn.Text = "Connect";
+			this.Connect_btn.UseVisualStyleBackColor = true;
+			this.Connect_btn.Click += new System.EventHandler(this.Connect_btn_Click);
 			// 
 			// label3
 			// 
@@ -104,7 +104,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(237, 148);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this.button2);
+			this.Controls.Add(this.Connect_btn);
 			this.Controls.Add(this.Cancel_btn);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
@@ -127,7 +127,7 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button Cancel_btn;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button Connect_btn;
 		private System.Windows.Forms.Label label3;
 	}
 }

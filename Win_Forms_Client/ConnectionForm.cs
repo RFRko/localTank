@@ -23,6 +23,7 @@ namespace Tanki
 			InitializeComponent();
 			Ip_tb.Text = "127.0.0.1"; //176.8.250.156
 			Port_tb.Text = "11001";
+			Connect_btn.TabIndex = 0;
 		}
 
 		public bool Connect(IPEndPoint point)

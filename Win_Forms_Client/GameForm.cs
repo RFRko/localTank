@@ -143,7 +143,6 @@ namespace Tanki
 			Invalidate();
 		}
 
-
 		private void OnTankDeath(object Sender, DestroyableTank data)
 		{
 			this.Invoke(DeathAnimation, data.tankToDestroy);
@@ -153,12 +152,13 @@ namespace Tanki
 
 		private void onDeathAnimation(ITank tankToDestroy)
 		{
+			Graphics g = Graphics.FromImage(Resources.explosion1);
 			new Thread(() => {
 				foreach (var i in ExplImages)
 				{
-					Graphics g = Graphics.FromImage(Resources.explosion1);
 					g.DrawImage(i, tankToDestroy.Position);
-					Thread.Sleep(200);
+					Invalidate(tankToDestroy.Position);
+					Thread.Sleep(100);
 				}
 			}).Start();
 		}
