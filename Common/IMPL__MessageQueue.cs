@@ -181,8 +181,11 @@ namespace Tanki
 
             //_ifReady.WaitOne();
 
-                if (_msg_queue.Count == 0) return;
-
+                if (_msg_queue.Count == 0)
+                {
+                    Console.WriteLine("GameRoom:  0 in Queue..");
+                    return;
+                }
                 _ifDequeReady.WaitOne();
                 _ifEnqueReady.Reset();
                 while (_msg_queue.Count > 0)
@@ -195,6 +198,7 @@ namespace Tanki
 
             if (recieved_packages_batch != null)
             {
+                Console.WriteLine("GameRoom  get from queue" + recieved_packages_batch.Count + " packages..");
                 _serverEngine.ProcessMessages(recieved_packages_batch);
             }
             //else
