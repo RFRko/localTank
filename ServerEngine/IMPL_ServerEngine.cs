@@ -138,7 +138,37 @@ namespace Tanki
 		/// <param name="package"> Список сущностей, который подлежит проверке на "мертвых"</param>
 		private void CheckAlive(IEnumerable<IPackage> package)
 		{
-			Parallel.ForEach(package, item =>
+			//Parallel.ForEach(package, item =>
+			//{
+			//	var entity = item.Data as IEntity;
+			//	if (!entity.Is_Alive)
+			//	{
+			//		if (entity is ITank)
+			//		{
+			//			var tank = entity as ITank;
+			//			if (tank.Lives > 0)
+			//			{
+			//				tank.Position = this.Reload();
+			//			}
+			//			else
+			//			{
+			//				tanks.Remove(entity as ITank);
+			//				objects.Remove(entity);
+			//			}
+			//		}
+			//		if (entity is IBlock)
+			//		{
+			//			blocks.Remove(entity as IBlock);
+			//			objects.Remove(entity);
+			//		}
+			//		if (entity is IBullet)
+			//		{
+			//			bullets.Remove(entity as IBullet);
+			//			objects.Remove(entity);
+			//		}
+			//	}
+			//});
+			foreach (var item in package)
 			{
 				var entity = item.Data as IEntity;
 				if (!entity.Is_Alive)
@@ -167,7 +197,7 @@ namespace Tanki
 						objects.Remove(entity);
 					}
 				}
-			});
+			}
 
 
 			//foreach (var item in package)   РЕАЛИЗАЦИЯ НЕ ПАРАЛЕЛЬНО, НА ВСЯКИЙ СЛУЧАЙ
@@ -283,6 +313,7 @@ namespace Tanki
 				bullet.Size = room.GameSetings.Bullet_size;
 				bullet.Direction = tank.Direction;
 				bullet.Parent_Id = tank.Tank_ID;
+				bullet.Speed = room.GameSetings.GameSpeed;
 				tanks.FirstOrDefault(t => t.Tank_ID == tank.Tank_ID).Can_Shoot = false;
 				bullet.Is_Alive = true;
 				bullet.Can_Be_Destroyed = true;
@@ -302,7 +333,9 @@ namespace Tanki
 						bullet.Position = new Rectangle(new Point(tank.Position.Left + (tank.Size / 2) - (bullet.Size / 2), tank.Position.Bottom + 1), new Size(bullet.Size, bullet.Size));
 						break;
 				}
+				//if(bullets.FirstOrDefault(s=>s.Parent_Id==bullet.Parent_Id)==null)
 				bullets.Add(bullet);
+				//if(objects.FirstOrDefault(s=>(s as IBullet)?.Parent_Id==bullet.Parent_Id)==null)
 				objects.Add(bullet);
 			}
 			entity.Command = EntityAction.None;
@@ -364,10 +397,10 @@ namespace Tanki
 							{
 								var pos = new Point(tank.Position.X - room.GameSetings.GameSpeed, tank.Position.Y);
 								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								ITank tmp = new Tank();
-								tmp.Position = rect;
-								if(canMove(tmp))
-								tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+								var oldrect = tank.Position;
+								tank.Position = rect;
+								if (!canMove(tank))
+									tank.Position = oldrect;
 							}
 							break;
 
@@ -376,10 +409,10 @@ namespace Tanki
 							{
 								var pos = new Point(tank.Position.X + room.GameSetings.GameSpeed, tank.Position.Y);
 								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								ITank tmp = new Tank();
-								tmp.Position = rect;
-								if (canMove(tmp))
-									tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+								var oldrect = tank.Position;
+								tank.Position = rect;
+								if (!canMove(tank))
+									tank.Position = oldrect;
 							}
 							break;
 
@@ -388,10 +421,10 @@ namespace Tanki
 							{
 								var pos = new Point(tank.Position.X, tank.Position.Y - room.GameSetings.GameSpeed);
 								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								ITank tmp = new Tank();
-								tmp.Position = rect;
-								if (canMove(tmp))
-									tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+								var oldrect = tank.Position;
+								tank.Position = rect;
+								if (!canMove(tank))
+									tank.Position = oldrect;
 							}
 							break;
 
@@ -401,10 +434,10 @@ namespace Tanki
 							{
 								var pos = new Point(tank.Position.X, tank.Position.Y + room.GameSetings.GameSpeed);
 								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								ITank tmp = new Tank();
-								tmp.Position = rect;
-								if (canMove(tmp))
-									tank.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+								var oldrect = tank.Position;
+								tank.Position = rect;
+								if (!canMove(tank))
+									tank.Position = oldrect;
 							}
 							break;
 					}
@@ -449,7 +482,9 @@ namespace Tanki
 		/// <returns></returns>
 		private bool canMove(IEntity entity)
 		{
-			var list = objects.FindAll(obj => (obj as ITank)?.Tank_ID != (entity as ITank)?.Tank_ID);
+			var list = new List<IEntity>(objects);
+			var x = list.FirstOrDefault(s=>(s as ITank)?.Tank_ID==(entity as ITank)?.Tank_ID);
+			list.Remove(x);
 			var tmp = list.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position));
 
 			//if (entity is IBullet)
@@ -457,7 +492,7 @@ namespace Tanki
 			//	tmp = objects.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position) && (obj as IBullet)?.Parent_Id != (entity as IBullet)?.Parent_Id);
 			//}
 
-			return tmp != null ? true : false;
+			return tmp != null ? false : true;
 		}
 		/// <summary>
 		/// Предикат, проверяющий наличие пули в игровом поле
