@@ -145,7 +145,8 @@ namespace Tanki
                 _ifDequeReady.Reset();
                 lock (_msg_queue)
                 {
-                    _ifReady.Set();
+                    _msg_queue.Enqueue(newMsg);
+                    //_ifReady.Set();
                 }
                 _ifDequeReady.Set();
                 //var s = _proceedingThread.ThreadState;                
@@ -158,8 +159,10 @@ namespace Tanki
             //_proceedingThread.Name = "SERVER_MSG_PROCEEDING";
             //_proceedingThread.Start();
             _ifEnqueReady.Set();
-            _timer = new Timer(ProceedQueue, _ifReady, 0, 10000);
-            
+            _ifDequeReady.Set();
+            //_timer = new Timer(ProceedQueue, _ifReady, 0, 1000);
+            _timer = new Timer(ProceedQueue, null, 0, 1000);
+
             //_finish_timer.WaitOne();
         }
 
@@ -176,7 +179,7 @@ namespace Tanki
                     return;
                 }
 
-                _ifReady.WaitOne();
+                //_ifReady.WaitOne();
 
                 _ifDequeReady.WaitOne();
                 _ifEnqueReady.Reset();
@@ -192,8 +195,8 @@ namespace Tanki
             {
                 _serverEngine.ProcessMessages(recieved_packages_batch);
             }
-            else
-                _ifReady.WaitOne();
+            //else
+            //    _ifReady.WaitOne();
 
         }
 
