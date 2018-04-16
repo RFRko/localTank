@@ -17,6 +17,8 @@ namespace Tanki
 		private IMap Map;
 		private Dictionary<Direction, Bitmap> Enemies;
 		private Dictionary<Direction, Bitmap> Player;
+		private List<Bitmap> Walls;
+		private static Random rnd;
 
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
@@ -24,6 +26,7 @@ namespace Tanki
 			clientEngine.OnMapChanged += OnMapChangeHandler;
 			onMapChanged += onMapChangedProc;
 			clientEngine.OnError += ErrorHandler;
+			rnd = new Random();
 
 			Enemies = new Dictionary<Direction, Bitmap>()
 			{
@@ -41,6 +44,15 @@ namespace Tanki
 				{ Direction.Up, Resources.player_up },
 			};
 
+			Walls = new List<Bitmap>()
+			{
+				Resources.wall,
+				Resources.wall1,
+				Resources.wall3,
+				Resources.tree
+			};
+
+
 			InitializeComponent();
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
@@ -56,8 +68,8 @@ namespace Tanki
 			foreach (var i in Map.Bullets)
 				e.Graphics.DrawImage(Resources.Bullet, i.Position);
 
-			foreach (var i in Map.Blocks)
-				e.Graphics.DrawImage(Resources.wall, i.Position);
+			for (var i = 0; i < Map.Blocks.Count() - 1; i++)
+				e.Graphics.DrawImage(Walls[rnd.Next(0, Walls.Count)], Map.Blocks.ElementAt(i).Position);
 
 			foreach (var i in Map.Tanks)
 			{
