@@ -282,7 +282,7 @@ namespace Tanki
 				{
 					var room = Owner as IRoom;
 					var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
-					Owner.Sender.SendMessage(new Package() { Data = "Game Over!", MesseggeType = MesseggeType.Error }, adress);
+					Owner.Sender.SendMessage(new Package() { Data = tank, MesseggeType = MesseggeType.TankDeath }, adress);
 				}
 				tank.Is_Alive = false;
 			}
@@ -364,7 +364,7 @@ namespace Tanki
 				obj.Size = room.GameSetings.ObjectsSize;
 				obj.Position = this.Reload();
 				obj.Can_Be_Destroyed = true;
-				obj.blockType = (BlockType)new Random().Next(0, 3);
+				obj.blockType = (BlockType)new Random().Next(0, 4);
 				obj.Is_Alive = true;
 				blocks.Add(obj);
 				objects.Add(obj);

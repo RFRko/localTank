@@ -31,6 +31,7 @@ namespace Tanki
 
             InitializeComponent();
 			Name_tb.Text = "Vasya";
+			Create_Room_btn.TabIndex = 0;
 		}
 		
         private void SetRoomList(object sender, RoomStatChangeData data)

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tanki.Properties;
@@ -13,20 +14,23 @@ namespace Tanki
 {
 	public partial class GameForm : Form
 	{
+
 		private IClientEngine ClientEngine;
 		private IMap Map;
 		private Dictionary<Direction, Bitmap> Enemies;
 		private Dictionary<Direction, Bitmap> Player;
-		private List<Bitmap> Walls;
-		private static Random rnd;
+		private Dictionary<BlockType, Bitmap> Blocks;
+		private List<Bitmap> ExplImages;
 
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
 			ClientEngine = clientEngine;
 			clientEngine.OnMapChanged += OnMapChangeHandler;
-			onMapChanged += onMapChangedProc;
+			clientEngine.OnTankDeath += OnTankDeath;
 			clientEngine.OnError += ErrorHandler;
-			rnd = new Random();
+
+			onMapChanged += onMapChangedProc;
+			DeathAnimation += onDeathAnimation;
 
 			Enemies = new Dictionary<Direction, Bitmap>()
 			{
@@ -44,12 +48,30 @@ namespace Tanki
 				{ Direction.Up, Resources.player_up },
 			};
 
-			Walls = new List<Bitmap>()
+			Blocks = new Dictionary<BlockType, Bitmap>
 			{
-				Resources.wall,
-				Resources.wall1,
-				Resources.wall3,
-				Resources.tree
+				{ BlockType.Brick, Resources.wall },
+				{ BlockType.Brick2, Resources.wall1 },
+				{ BlockType.Concrete, Resources.wall3 },
+				{ BlockType.Tree, Resources.tree }
+			};
+
+			ExplImages = new List<Bitmap>()
+			{
+				Resources.explosion1,
+				Resources.explosion2,
+				Resources.explosion3,
+				Resources.explosion4,
+				Resources.explosion5,
+				Resources.explosion6,
+				Resources.explosion7,
+				Resources.explosion8,
+				Resources.explosion9,
+				Resources.explosion10,
+				Resources.explosion11,
+				Resources.explosion12,
+				Resources.explosion13,
+				Resources.explosion14
 			};
 
 
@@ -61,7 +83,7 @@ namespace Tanki
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-            if (Map == null) return;
+			if (Map == null) return;
 
 			var myPassport = ClientEngine.GetPassport();
 
@@ -69,9 +91,9 @@ namespace Tanki
 				e.Graphics.DrawImage(Resources.Bullet, i.Position);
 
 			foreach (var i in Map.Blocks)
-				e.Graphics.DrawImage(Resources.wall, i.Position);
-			//for (var i = 0; i < Map.Blocks.Count() - 1; i++)
-			//	e.Graphics.DrawImage(Walls[rnd.Next(0, Walls.Count)], Map.Blocks.ElementAt(i).Position);
+			{
+				e.Graphics.DrawImage(Blocks[i.blockType], i.Position);
+			}
 
 			foreach (var i in Map.Tanks)
 			{
@@ -79,7 +101,7 @@ namespace Tanki
 				{
 					e.Graphics.DrawImage(Player[i.Direction], i.Position);
 				}
-				else 
+				else
 				{
 					e.Graphics.DrawImage(Enemies[i.Direction], i.Position);
 				}
@@ -100,7 +122,7 @@ namespace Tanki
 						new SolidBrush(Color.Yellow),
 						new PointF
 						(
-							i.Position.Location.X + i.Size / 2, 
+							i.Position.Location.X + i.Size / 2,
 							i.Position.Location.Y - i.Size / 3
 						),
 						sf
@@ -119,6 +141,26 @@ namespace Tanki
 		{
 			Map = map;
 			Invalidate();
+		}
+
+		private void OnTankDeath(object Sender, DestroyableTank data)
+		{
+			this.Invoke(DeathAnimation, data.tankToDestroy);
+		}
+
+		private Action<ITank> DeathAnimation;
+
+		private void onDeathAnimation(ITank tankToDestroy)
+		{
+			Graphics g = Graphics.FromImage(Resources.explosion1);
+			new Thread(() => {
+				foreach (var i in ExplImages)
+				{
+					g.DrawImage(i, tankToDestroy.Position);
+					Invalidate(tankToDestroy.Position);
+					Thread.Sleep(100);
+				}
+			}).Start();
 		}
 
 		private void ErrorHandler(object sender, ErrorData e)

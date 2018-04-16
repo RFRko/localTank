@@ -71,7 +71,9 @@
 		/// <summary> Отправка клиентам сообщения о конце игры </summary>
 		EndGame,
 		/// <summary> Oбъект отправляемый клиентом на сервер</summary>
-		Entity
+		Entity,
+		/// <summary> Событие о уничтожении танка</summary>
+		TankDeath
 	}
 	/// <summary>
 	/// Состояние игры
@@ -88,6 +90,7 @@
 	public enum BlockType
 	{
 		Brick,
+		Brick2,
 		Concrete,
 		Tree,
 	}
