@@ -17,14 +17,14 @@ namespace Tanki
 			ProcessMessages = null;
 			_Entity = new Tank();
 			First_Map = true;
-			start = false;
+			_ifReadyToSendEntity = new ManualResetEvent(false);
+			_ifReadyToSetEntity = new ManualResetEvent(false);
 		}
 
 		private IGameClient client;
 		private object Map_locker = new object();
 		private object Entity_locker = new object();
 		private bool First_Map;
-		private bool start;
 
 		private IEnumerable<IRoomStat> _RoomsStat = null;
 		private IMap _Map = null;
@@ -35,26 +35,9 @@ namespace Tanki
 
         private Int32 timerSpeed = 50;
         private Timer _timer = null;
-        private ManualResetEvent _ifReadyToSendEntity = new ManualResetEvent(false);
-        private ManualResetEvent _ifReadyToSetEntity = new ManualResetEvent(false);
+		private ManualResetEvent _ifReadyToSendEntity;
+		private ManualResetEvent _ifReadyToSetEntity;
 
-
-        private void SendByTimerCallback(Object data)
-        {
-            _ifReadyToSendEntity.WaitOne();
-            _ifReadyToSetEntity.Reset();
-                var room_IpEndpoint = client["Room"];
-                var my_passport = client.Passport;
-
-                Owner.Sender.SendMessage(new Package()
-                {
-                    Sender_Passport = my_passport,
-                    Data = _Entity,
-                    MesseggeType = MesseggeType.Entity
-                }, room_IpEndpoint);
-
-            _ifReadyToSetEntity.Set();
-        }
 
         public IEnumerable<IRoomStat> RoomsStat
 		{
@@ -167,9 +150,21 @@ namespace Tanki
 		}
 
 
-		public void OnEntityHandler(object Sender, ITank evntData)
+		private void SendByTimerCallback(Object data)
 		{
-			Entity = evntData;
+			_ifReadyToSendEntity.WaitOne();
+			_ifReadyToSetEntity.Reset();
+			var room_IpEndpoint = client["Room"];
+			var my_passport = client.Passport;
+
+			Owner.Sender.SendMessage(new Package()
+			{
+				Sender_Passport = my_passport,
+				Data = _Entity,
+				MesseggeType = MesseggeType.Entity
+			}, room_IpEndpoint);
+
+			_ifReadyToSetEntity.Set();
 		}
 		private void ProcessMessageHandler(IPackage package)
 		{
@@ -206,6 +201,13 @@ namespace Tanki
 						Map_size = roomInfo.mapSize;
 						break;
 					}
+				case MesseggeType.TankDeath:
+					{
+						var tank = package.Data as ITank;
+						OnTankDeath?.BeginInvoke(this, new DestroyableTank()
+						{ tankToDestroy = tank }, null, null);
+						break;
+					}
 				case MesseggeType.StartGame:
 					{
                         //start = true;
@@ -233,10 +235,11 @@ namespace Tanki
 		public event EventHandler<GameStateChangeData> OnMapChanged; //событие обновления IMap
 		public event EventHandler<ErrorData> OnError; //сообщение об ошибке
 		public event EventHandler<RoomConnect> OnRoomConnect; // подключение к комнате
+		public event EventHandler<DestroyableTank> OnTankDeath; // событие уничтожения танка
 
 
 
-
+		public void OnEntityHandler(object Sender, ITank evntData) { Entity = evntData; } //не используется
 		public void OnViewCommandHandler(object Sender, object evntData) { } //на всякий случай
 		public override ProcessMessageHandler ProcessMessage { get; protected set; } // не нужен, требует EngineAbs 
 		public override ProcessMessagesHandler ProcessMessages { get; protected set; } // не нужен, требует EngineAbs
@@ -244,17 +247,15 @@ namespace Tanki
 
         public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
         {
-            //nothing to do required yet
-        }
-
-        public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
+			//nothing to do required yet
+		} // не нужен, требует EngineAbs
+		public override void OnAddressseeHolderFull_Handler(object Sender, AddressseeHolderFullData evntData)
         {
-            //nothing to do required yet
-        }
-
-        public override void OnBeforNetProcStarted_EventHandler(object Sender, NetProcBeforStartedEvntData evntData)
+			//nothing to do required yet
+		} // не нужен, требует EngineAbs
+		public override void OnBeforNetProcStarted_EventHandler(object Sender, NetProcBeforStartedEvntData evntData)
         {
-            //nothing to do required yet
-        }
-    }
+			//nothing to do required yet
+		} // не нужен, требует EngineAbs
+	}
 }

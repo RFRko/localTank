@@ -25,6 +25,7 @@ namespace Tanki
         event EventHandler<GameStateChangeData> OnMapChanged;
 		event EventHandler<ErrorData> OnError;
 		event EventHandler<RoomConnect> OnRoomConnect;
+		event EventHandler<DestroyableTank> OnTankDeath;
 		void OnEntityHandler(Object Sender, ITank evntData);
         void OnViewCommandHandler(Object Sender, Object evntData);
     }

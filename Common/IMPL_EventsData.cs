@@ -28,8 +28,12 @@ namespace Tanki
 	{
 		public Size MapSize { get; set; }
 	}
+	public class DestroyableTank : EventArgs
+	{
+		public ITank tankToDestroy { get; set; }
+	}
 
-    public class ErrorData : EventArgs
+	public class ErrorData : EventArgs
 	{
 		public string errorText { get; set; }
 	}
