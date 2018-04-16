@@ -209,11 +209,11 @@ namespace Tanki
 			if (this.status == GameStatus.Start)
 			{
 				this.CheckAlive(list);
-				Parallel.ForEach(bullets, x => this.Move(x));
-				//foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
-				//{
-				//	this.Move(x);
-				//}
+				//Parallel.ForEach(bullets, x => this.Move(x));
+				foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
+				{
+					this.Move(x);
+				}
 				foreach (var t in list)
 				{
 					var tmp = t.Data as IEntity;
@@ -241,27 +241,29 @@ namespace Tanki
 		/// <param name="entity">"Убитая" сущность</param>
 		private void Death(IEntity entity) 
         {
-			var tmp = objects.FirstOrDefault(t => t==entity);
-			if (tmp is ITank)
+			if (entity is ITank)
 			{
-				var tank = tmp as ITank;
-				if (tank.Lives > 0)
-				{
-					tank.Lives--;
-				}
+				ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+				if (tank.Lives > 0) tank.Lives--;
 				else
 				{
 					var room = Owner as IRoom;
 					var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
-					Owner.Sender.SendMessage(new Package() {Data="Game Over!",MesseggeType=MesseggeType.Error }, adress);	
+					Owner.Sender.SendMessage(new Package() { Data = "Game Over!", MesseggeType = MesseggeType.Error }, adress);
 				}
-			}
-			else if(tmp is IBullet)
+				tank.Is_Alive = false;
+			}			
+			else if(entity is IBullet)
 			{
-				var bullet = tmp as IBullet;
+				IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
 				tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
+				bullet.Is_Alive = false;
 			}
-			tmp.Is_Alive = false;
+			else
+			{
+				IBlock block = (IBlock)objects.FirstOrDefault(bl => bl ?.Position == entity?.Position);
+				block.Is_Alive = false;
+			}
         }
 		/// <summary>
 		/// Метод реализирующий выстрел
@@ -269,7 +271,7 @@ namespace Tanki
 		/// <param name="entity">Сущность осуществившая выстрел</param>
 		private void Fire(IEntity entity)
 		{
-			var tmp = objects.FirstOrDefault(t => t == entity) as ITank;
+			ITank tmp = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 			if (tmp.Can_Shoot)
 			{
 				var bullet = new GameObjectFactory().CreateBullet();
@@ -284,6 +286,7 @@ namespace Tanki
 				bullet.Position = tmp.Position;
 				bullet.Command = EntityAction.Move;
 				bullets.Add(bullet);
+				objects.Add(bullet);
 			}
 			entity.Command = EntityAction.None;
 		}
@@ -332,10 +335,11 @@ namespace Tanki
 				if (entity is ITank)
 				{
 					ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+					tank.Direction = entity.Direction;
 					//var tank = tmp as ITank;
 					if (this.canMove(tank))
 					{
-						switch (tank.Direction)
+						switch (entity.Direction)
 						{
 							case Direction.Left:
 								if (tank.Position.X > 0)
@@ -375,40 +379,28 @@ namespace Tanki
 				}
 				else if (entity is IBullet)
 				{
-					IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet).Parent_Id == (entity as IBullet).Parent_Id);
+					IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
+					var pos = new Point();
 					switch (bullet.Direction)
 					{
 						case Direction.Left:
-							if (bullet.Position.X > 0)
-							{
-								var pos = new Point(bullet.Position.X - 1, bullet.Position.Y);
+								pos = new Point(bullet.Position.X - 1, bullet.Position.Y);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 
 						case Direction.Right:
-							if (bullet.Position.X < width)
-							{
-								var pos = new Point(bullet.Position.X + 1, bullet.Position.Y);
+								 pos = new Point(bullet.Position.X + 1, bullet.Position.Y);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 
 						case Direction.Up:
-							if (bullet.Position.Y > 0)
-							{
-								var pos = new Point(bullet.Position.X, bullet.Position.Y - 1);
+								pos = new Point(bullet.Position.X, bullet.Position.Y - 1);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 
 						case Direction.Down:
-
-							if (bullet.Position.Y < height)
-							{
-								var pos = new Point(bullet.Position.X, bullet.Position.Y + 1);
+								pos = new Point(bullet.Position.X, bullet.Position.Y + 1);
 								bullet.Position = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-							}
 							break;
 					}
 					this.HitTarget(bullet);
@@ -423,10 +415,17 @@ namespace Tanki
 		/// <returns></returns>
 		private bool canMove(IEntity entity)
 		{
-			var tmp = objects.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position));
-			if (tmp != null)
-				return false;
-			return true;
+			IEntity tmp = null;
+			if (entity is ITank)
+			{
+				tmp = objects.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position) &&(obj as ITank)?.Tank_ID!=(entity as ITank)?.Tank_ID);
+			}
+			if(entity is IBullet)
+			{
+				tmp = objects.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position) && (obj as IBullet)?.Parent_Id != (entity as IBullet)?.Parent_Id);
+			}
+
+			return tmp != null ? false : true;
 		}
 		/// <summary>
 		/// Предикат, проверяющий наличие пули в игровом поле
@@ -450,7 +449,16 @@ namespace Tanki
 		private void HitTarget(IBullet bullet)
 		{
 			var tmp = objects.FirstOrDefault(tank => tank.Position.IntersectsWith(bullet.Position));
-			if(tmp!=null)
+			if(tmp is ITank)
+			{
+				var tank = tmp as ITank;
+				if (tank.Tank_ID != bullet.Parent_Id)
+				{
+					this.Death(tmp);
+					this.Death(bullet);
+				}
+			}
+			else if(tmp!=null)
 			{
 				this.Death(tmp);
 				this.Death(bullet);
@@ -531,6 +539,7 @@ namespace Tanki
 			obj.Name = gamer.Name;
 			obj.Lives = 5;
 			obj.Is_Alive = true;
+			obj.Can_Be_Destroyed = true;
 			obj.Can_Shoot = true;
 			obj.Direction = Direction.Up;
 			obj.Position=this.Reload();
