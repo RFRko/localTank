@@ -16,12 +16,14 @@ namespace Tanki
 			ProcessMessages = null;
 			_Entity = new Tank();
 			First_Map = true;
+			start = false;
 		}
 
 		private IGameClient client;
 		private object Map_locker = new object();
 		private object Entity_locker = new object();
 		private bool First_Map;
+		private bool start;
 
 		private IEnumerable<IRoomStat> _RoomsStat = null;
 		private IMap _Map = null;
@@ -52,27 +54,23 @@ namespace Tanki
 		}
 		public ITank Entity
 		{
-			get { return _Entity; } 
+			get { lock(Entity_locker) return _Entity; } 
 
 			set
 			{
-				 _Entity = value; 
+				if (start)
+				{
+					lock (Entity_locker) _Entity = value;
+					var room_IpEndpoint = client["Room"];
+					var my_passport = client.Passport;
 
-				//мы решили отправлять Entity только по таймеру
-
-
-
-
-
-				//var room_IpEndpoint = (IPEndPoint)client["Room"];
-				//var my_passport = client.Passport;
-
-				//Owner.Sender.SendMessage(new Package()
-				//{
-				//	Sender_Passport = my_passport,
-				//	Data = value,
-				//	MesseggeType = MesseggeType.Entity
-				//}, room_IpEndpoint);
+					Owner.Sender.SendMessage(new Package()
+					{
+						Sender_Passport = my_passport,
+						Data = value,
+						MesseggeType = MesseggeType.Entity
+					}, room_IpEndpoint);
+				}
 			}
 		}
 		public string ErrorText 
@@ -153,7 +151,7 @@ namespace Tanki
 						Map = package.Data as IMap;
 						if(First_Map)
 						{
-							Entity = Map.Tanks.First(i => i.Tank_ID == client.Passport);
+							_Entity = Map.Tanks.First(i => i.Tank_ID == client.Passport);
 							First_Map = false;
 						}
 						break;
@@ -180,7 +178,8 @@ namespace Tanki
 					}
 				case MesseggeType.StartGame:
 					{
-						client.RUN_GAME();
+						start = true;
+						//client.RUN_GAME();
 						break;
 					}
 				case MesseggeType.EndGame:

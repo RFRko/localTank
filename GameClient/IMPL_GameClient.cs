@@ -106,21 +106,18 @@ namespace Tanki
 
         public void RUN_GAME()                                     // запускает таймер переодической отправки клиентского состоянения игры на сервер
         {
-            int num = 0;
             this.tm = new TimerCallback(ProceedQueue);
-            Timer timer = new Timer(tm, num, 0, this.MiliSeconds);
+            Timer timer = new Timer(tm, (Engine as IClientEngine).Entity, 0, this.MiliSeconds);
             
         }
 
         private void ProceedQueue(object state)          //должен будет быть приватный метод  'void ProceedQueue(Object state)' который будет передаваться time-ру как callback 
         {                                                           // этот метод должен с периодиностью таймера отправлять клиентское состояние игры на сервер    
-            
-            var e = Engine as IClientEngine;
-
+			var tosend = state as IEntity;
             var packagee = new Package()
             {
                 Sender_Passport = this.Passport,
-                Data = e.Entity,
+                Data = tosend,
                 MesseggeType = MesseggeType.Entity
             };
 
