@@ -195,10 +195,17 @@ namespace Tanki
             };
         }
 
-        public void NotifyNewPlayerJoined(IAddresssee newGamerJoined)
+        public void NotifyGameRoomForEvent(EventArgs evntData)
         {
-            OnNotifyJoinedPlayer?.BeginInvoke(this, new NotifyJoinedPlayerData() { JoinedAddresssee = newGamerJoined },null,null);
+            if ( evntData is NotifyJoinedPlayerData)
+                OnNotifyJoinedPlayer?.BeginInvoke(this, evntData as NotifyJoinedPlayerData , null,null);
+
+            if (evntData is NotifyStartGameData)
+                OnNotifyStartGame?.BeginInvoke(this, evntData as NotifyStartGameData, null, null);
+
         }
+
+
 
         public IGamer Creator
         {
@@ -216,6 +223,8 @@ namespace Tanki
 
         public event EventHandler<GameStatusChangedData> OnNewGameStatus;
         public event EventHandler<NotifyJoinedPlayerData> OnNotifyJoinedPlayer;
+        public event EventHandler<NotifyStartGameData> OnNotifyStartGame;
+
     }
 
 
