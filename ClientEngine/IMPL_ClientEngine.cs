@@ -33,7 +33,7 @@ namespace Tanki
 		private Size _MapSize;
 
 
-        private Int32 timerSpeed = 100;
+        private Int32 timerSpeed = 50;
         private Timer _timer = null;
         private ManualResetEvent _ifReadyToSendEntity = new ManualResetEvent(false);
         private ManualResetEvent _ifReadyToSetEntity = new ManualResetEvent(false);

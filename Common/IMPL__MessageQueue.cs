@@ -135,7 +135,7 @@ namespace Tanki
         //public Thread ProceedingThread { get { return _proceedingThread; } }
         public Boolean EnforceCancel { get { return _enforceCancel; } set { _enforceCancel = value; } }
 
-        private Int32 _timerSpeed = 100;
+        private Int32 _timerSpeed = 50;
         private Timer _timer;
 
         public override void Enqueue(IPackage newMsg)
