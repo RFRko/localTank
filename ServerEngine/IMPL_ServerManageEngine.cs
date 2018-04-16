@@ -125,7 +125,13 @@ namespace Tanki
 						MesseggeType = MesseggeType.RoomInfo
 					}, gamer.RemoteEndPoint);
 
-                    (room as IGameRoom).NotifyNewPlayerJoined(gamer);
+                    (room as IGameRoom).NotifyGameRoomForEvent(new NotifyJoinedPlayerData() { JoinedAddresssee = gamer });
+
+                    // инициировать начало игры
+                    if (room.Gamers.Count() == room.GameSetings.MaxPlayersCount)
+                        (room as IGameRoom).NotifyGameRoomForEvent(new  NotifyStartGameData() { EnforceStartGame = true});
+
+
 
                 }
                 else
@@ -179,8 +185,8 @@ namespace Tanki
 			}, gamer.RemoteEndPoint);
 
 
-            newGameRoom.RUN();
-            (newGameRoom as IGameRoom).NotifyNewPlayerJoined(gamer);
+            newGameRoom.RUN();            
+            (newGameRoom as IGameRoom).NotifyGameRoomForEvent(new NotifyJoinedPlayerData() { JoinedAddresssee = gamer });
 
         }
 
