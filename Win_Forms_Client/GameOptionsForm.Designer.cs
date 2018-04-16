@@ -131,7 +131,7 @@
 			this.GameSpeed_nud.Size = new System.Drawing.Size(120, 20);
 			this.GameSpeed_nud.TabIndex = 9;
 			this.GameSpeed_nud.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
             0});

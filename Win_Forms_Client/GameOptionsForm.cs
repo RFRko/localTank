@@ -18,6 +18,7 @@ namespace Tanki
 		public GameOptionsForm()
 		{
 			InitializeComponent();
+			CreateRoom_btn.TabIndex = 0;
 		}
 
 		private void GameOptionsForm_Load(object sender, EventArgs e)
