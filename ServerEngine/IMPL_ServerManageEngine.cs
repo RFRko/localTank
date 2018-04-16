@@ -129,7 +129,17 @@ namespace Tanki
 
                     // инициировать начало игры
                     if (room.Gamers.Count() == room.GameSetings.MaxPlayersCount)
-                        (room as IGameRoom).NotifyGameRoomForEvent(new  NotifyStartGameData() { EnforceStartGame = true});
+                    {
+                        IPackage pack = new Package()
+                        {
+                            MesseggeType = MesseggeType.StartGame,
+                            Data = null,
+                        };               
+                        Owner.Sender.SendMessage(pack, room.Gamers); //Управляющая комната отсылает участникам игровой комнаты
+                        
+                        //уведомляем игровую комнату о начале:
+                        (room as IGameRoom).NotifyGameRoomForEvent(new NotifyStartGameData() { EnforceStartGame = true });
+                    }
 
 
 
@@ -187,6 +197,22 @@ namespace Tanki
 
             newGameRoom.RUN();            
             (newGameRoom as IGameRoom).NotifyGameRoomForEvent(new NotifyJoinedPlayerData() { JoinedAddresssee = gamer });
+
+            // инициировать начало игры (по крайней мере для теста - если создатель указывает колич.игроков =1 при создании)
+            if (newGameRoom.Gamers.Count() == newGameRoom.GameSetings.MaxPlayersCount)
+            {
+                IPackage pack = new Package()
+                {
+                    MesseggeType = MesseggeType.StartGame,
+                    Data = null,
+                };
+                Owner.Sender.SendMessage(pack, newGameRoom.Gamers); //Управляющая комната отсылает участникам игровой комнаты
+
+                //уведомляем игровую комнату о начале:
+                (newGameRoom as IGameRoom).NotifyGameRoomForEvent(new NotifyStartGameData() { EnforceStartGame = true });
+            }
+
+
 
         }
 

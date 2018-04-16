@@ -72,6 +72,7 @@ namespace Tanki
 
             gameRoom.OnNewGameStatus += OnNewGameStatus_Handler;
             gameRoom.OnNotifyJoinedPlayer += OnNotifyJoinedPlayer_Handler;
+            gameRoom.OnNotifyStartGame += NotifyStartGame_Handler;
         }
 
 
@@ -588,7 +589,7 @@ namespace Tanki
                 this.SendStartGame();
             }
             // // РЕАЛИЗОВАТЬ рассылку сообщения о старте игры всем клиентам
-            this.Send();
+            //this.Send();
 
         }
 

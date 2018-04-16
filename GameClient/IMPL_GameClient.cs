@@ -15,7 +15,7 @@ namespace Tanki
         private TcpClient tcp;                                      // должен быть приватный TCPClient  для коннекта к хосту
         private IEntity clientGameState;
         private int miliseconds;
-        private Guid Passport;
+        public Guid Passport { get; set; }
         private TimerCallback tm;                                   //должен быть приватный Timer - на callBack которого будет вызываться метод переодической отправки клинтского состояния игры на сервер.
         private IPackage package;
         private IPEndPoint endpoint;
@@ -26,7 +26,7 @@ namespace Tanki
         //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
         public GameClient(IPEndPoint localEP, IRoomOwner owner = null) 
         {
-			this.miliseconds = 200;
+			this.miliseconds = 1000;
             this.adresee_list = new Dictionary<string, IAddresssee>();
             this.tcp = new TcpClient(localEP);
             this.package = new Package();
@@ -95,7 +95,7 @@ namespace Tanki
 
 
 
-        Guid IGameClient.Passport { get; set ; }
+       // Guid IGameClient.Passport { get; set ; }
 
         public void RUN(IPEndPoint ServerEndPoint)                  // запускает базовый NetProcessorAbs.RUN (очередь\reciver), коннектится к cерверу
         {
@@ -117,9 +117,9 @@ namespace Tanki
             
             var e = Engine as IClientEngine;
 
-            package = new Package()
+            var packagee = new Package()
             {
-                Sender_Passport = Passport,
+                Sender_Passport = this.Passport,
                 Data = e.Entity,
                 MesseggeType = MesseggeType.Entity
             };
@@ -127,7 +127,7 @@ namespace Tanki
             //this.clientGameState = (IEntity)state;
             // отправка данных
             //this.package.Data = clientGameState;
-            Sender.SendMessage(this.package, adresee_list["Room"]);
+            Sender.SendMessage(packagee, adresee_list["Room"]);
             
         }
 

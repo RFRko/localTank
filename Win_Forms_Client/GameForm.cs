@@ -107,35 +107,41 @@ namespace Tanki
 
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
+			var newEntity = ClientEngine.Entity;
 			switch (e.KeyCode)
 			{
 				case Keys.Left:
 					{
-						ClientEngine.Entity.Direction = Direction.Left;
-						ClientEngine.Entity.Command = EntityAction.Move;
+						newEntity.Direction = Direction.Left;
+						newEntity.Command = EntityAction.Move;
+						ClientEngine.Entity = newEntity;
 						break;
 					}
 				case Keys.Right:
 					{
-						ClientEngine.Entity.Direction = Direction.Right;
-						ClientEngine.Entity.Command = EntityAction.Move;
+						newEntity.Direction = Direction.Right;
+						newEntity.Command = EntityAction.Move;
+						ClientEngine.Entity = newEntity;
 						break;
 					}
 				case Keys.Up:
 					{
-						ClientEngine.Entity.Direction = Direction.Up;
-						ClientEngine.Entity.Command = EntityAction.Move;
+						newEntity.Direction = Direction.Up;
+						newEntity.Command = EntityAction.Move;
+						ClientEngine.Entity = newEntity;
 						break;
 					}
 				case Keys.Down:
 					{
-						ClientEngine.Entity.Direction = Direction.Down;
-						ClientEngine.Entity.Command = EntityAction.Move;
+						newEntity.Direction = Direction.Down;
+						newEntity.Command = EntityAction.Move;
+						ClientEngine.Entity = newEntity;
 						break;
 					}
 				case Keys.Space:
 					{
-						ClientEngine.Entity.Command = EntityAction.Fire;
+						newEntity.Command = EntityAction.Fire;
+						ClientEngine.Entity = newEntity;
 						break;
 					}
 				default: return;
@@ -144,7 +150,9 @@ namespace Tanki
 
 		private void GameForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			ClientEngine.Entity.Command = EntityAction.None;
+			var newEntity = ClientEngine.Entity;
+			newEntity.Command = EntityAction.None;
+			ClientEngine.Entity = newEntity;
 		}
 	}
 }
