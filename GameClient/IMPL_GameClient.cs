@@ -26,7 +26,7 @@ namespace Tanki
         //взять этот за основу НУЖЕН НОВЫЙ КОНСТРУКТОР!!!!
         public GameClient(IPEndPoint localEP, IRoomOwner owner = null) 
         {
-			this.miliseconds = 1000;
+			this.miliseconds = 500;
             this.adresee_list = new Dictionary<string, IAddresssee>();
             this.tcp = new TcpClient(localEP);
             this.package = new Package();
