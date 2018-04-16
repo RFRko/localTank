@@ -258,6 +258,8 @@ namespace Tanki
 				IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
 				tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
 				bullet.Is_Alive = false;
+				//this.objects.Remove(entity);
+				//this.bullets.Remove((IBullet)entity);
 			}
 			else
 			{
@@ -277,14 +279,28 @@ namespace Tanki
 				var bullet = new GameObjectFactory().CreateBullet();
 				//var bullet = new Bullet();
 				var room = Owner as IRoom;
-				bullet.Size = room.GameSetings.ObjectsSize / 4; //???
+				bullet.Size = room.GameSetings.Bullet_size;
 				bullet.Direction = tmp.Direction;				
 				bullet.Parent_Id = tmp.Tank_ID;
 				tanks.FirstOrDefault(t=>t==tmp).Can_Shoot = false;
 				bullet.Is_Alive = true;
 				bullet.Can_Be_Destroyed = false;
-				bullet.Position = tmp.Position;
 				bullet.Command = EntityAction.Move;
+				switch (bullet.Direction)
+				{
+					case Direction.Left:
+						bullet.Position = new Rectangle(new Point(entity.Position.Left-bullet.Size-1, entity.Position.Top + (entity.Size / 2) - (bullet.Size / 2)), new Size(bullet.Size, bullet.Size));
+						break;
+					case Direction.Right:
+						bullet.Position = new Rectangle(new Point(entity.Position.Right + 1, entity.Position.Top + (entity.Size / 2) - (bullet.Size / 2)), new Size(bullet.Size, bullet.Size));
+						break;
+					case Direction.Up:
+						bullet.Position = new Rectangle(new Point(entity.Position.Left+(entity.Size/2)-(bullet.Size/2), entity.Position.Top - bullet.Size-1), new Size(bullet.Size, bullet.Size));
+						break;
+					case Direction.Down:
+						bullet.Position = new Rectangle(new Point(entity.Position.Left + (entity.Size / 2) - (bullet.Size / 2), entity.Position.Bottom +1), new Size(bullet.Size, bullet.Size));
+						break;
+				}
 				bullets.Add(bullet);
 				objects.Add(bullet);
 			}
@@ -295,6 +311,7 @@ namespace Tanki
 		/// </summary>
         private void GenerateMap()
 		{
+			var rnd = new Random();
             var room = Owner as IRoom;
 			this.Width = room.GameSetings.MapSize.Width;
 			this.Height = room.GameSetings.MapSize.Height;
@@ -311,6 +328,7 @@ namespace Tanki
 				obj.Size = room.GameSetings.ObjectsSize;
 				obj.Position=this.Reload();
 				obj.Can_Be_Destroyed = true;
+				obj.blockType = (BlockType)new Random().Next(0, 3);
 				obj.Is_Alive = true;
 				blocks.Add(obj);
 				objects.Add(obj);
@@ -404,7 +422,8 @@ namespace Tanki
 							break;
 					}
 					this.HitTarget(bullet);
-					this.bulletOnBoard(bullet);
+					if (!this.bulletOnBoard(bullet))
+						this.Death(bullet);
 				}
 			}
         }
@@ -439,7 +458,7 @@ namespace Tanki
 			{
 				return true;
 			}
-			this.Death(bullet);
+			else 
 			return false;
 		}
 		/// <summary>
