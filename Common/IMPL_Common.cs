@@ -89,6 +89,14 @@ namespace Tanki
 			get { return this._size; }
 			set { this._size = value; }
 		}
+		//public override bool Equals(object obj)
+		//{
+		//	return base.Equals(obj);
+		//}
+		//public override int GetHashCode()
+		//{
+		//	return base.GetHashCode();
+		//}
 	}
 
     /// <summary>
