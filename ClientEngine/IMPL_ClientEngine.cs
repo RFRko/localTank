@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Tanki 
@@ -27,12 +28,35 @@ namespace Tanki
 
 		private IEnumerable<IRoomStat> _RoomsStat = null;
 		private IMap _Map = null;
-		private ITank _Entity = null;
+		private volatile ITank _Entity = null;
 		private string _ErrorText = null;
 		private Size _MapSize;
 
 
-		public IEnumerable<IRoomStat> RoomsStat
+        private Int32 timerSpeed = 100;
+        private Timer _timer = null;
+        private ManualResetEvent _ifReadyToSendEntity = new ManualResetEvent(false);
+        private ManualResetEvent _ifReadyToSetEntity = new ManualResetEvent(false);
+
+
+        private void SendByTimerCallback(Object data)
+        {
+            _ifReadyToSendEntity.WaitOne();
+            _ifReadyToSetEntity.Reset();
+                var room_IpEndpoint = client["Room"];
+                var my_passport = client.Passport;
+
+                Owner.Sender.SendMessage(new Package()
+                {
+                    Sender_Passport = my_passport,
+                    Data = _Entity,
+                    MesseggeType = MesseggeType.Entity
+                }, room_IpEndpoint);
+
+            _ifReadyToSetEntity.Set();
+        }
+
+        public IEnumerable<IRoomStat> RoomsStat
 		{
 			get { return _RoomsStat;  }
 
@@ -58,19 +82,25 @@ namespace Tanki
 
 			set
 			{
-				if (start)
-				{
-					lock (Entity_locker) _Entity = value;
-					var room_IpEndpoint = client["Room"];
-					var my_passport = client.Passport;
+				//if (start)
+				//{
 
-					Owner.Sender.SendMessage(new Package()
-					{
-						Sender_Passport = my_passport,
-						Data = value,
-						MesseggeType = MesseggeType.Entity
-					}, room_IpEndpoint);
-				}
+                    _ifReadyToSetEntity.WaitOne();
+                    _ifReadyToSendEntity.Reset();
+                        _Entity = value;
+                    _ifReadyToSendEntity.Set();
+
+                    //lock (Entity_locker) _Entity = value;
+                    //var room_IpEndpoint = client["Room"];
+                    //var my_passport = client.Passport;
+
+                    //Owner.Sender.SendMessage(new Package()
+                    //{
+                    //	Sender_Passport = my_passport,
+                    //	Data = value,
+                    //	MesseggeType = MesseggeType.Entity
+                    //}, room_IpEndpoint);
+                //}
 			}
 		}
 		public string ErrorText 
@@ -178,8 +208,10 @@ namespace Tanki
 					}
 				case MesseggeType.StartGame:
 					{
-						start = true;
-						//client.RUN_GAME();
+                        //start = true;
+                        //client.RUN_GAME();
+                        _ifReadyToSendEntity.Set();
+                        _timer = new Timer(SendByTimerCallback, null, 0, timerSpeed);
 						break;
 					}
 				case MesseggeType.EndGame:
