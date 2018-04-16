@@ -237,8 +237,10 @@ namespace Tanki
 		/// <param name="list">Список пакетов переданый движку на обработку</param>
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
+			object locker = new object();
 			if (this.status == GameStatus.Start)
 			{
+				lock(locker)
 				this.CheckAlive(list);
 				//Parallel.ForEach(bullets, x => this.Move(x));
 				foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
