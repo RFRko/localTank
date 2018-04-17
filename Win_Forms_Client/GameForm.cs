@@ -127,6 +127,17 @@ namespace Tanki
 						),
 						sf
 					);
+
+				var hpRect = new Rectangle( 
+					new Point(i.Position.Location.X, i.Position.Location.Y - (i.Size + i.Size / 3)), 
+					new Size(i.Size, i.Size / 3));
+
+
+				SolidBrush Brush;
+				if(i.Lives == 1) Brush = new SolidBrush(Color.Red);
+				else if(i.Lives == 2) Brush = new SolidBrush(Color.Orange);
+				else Brush = new SolidBrush(Color.Green);
+				e.Graphics.FillRectangle(Brush, hpRect);
 			}
 		}
 
@@ -217,9 +228,9 @@ namespace Tanki
 
 		private void GameForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			var newEntity = ClientEngine.Entity;
-			newEntity.Command = EntityAction.None;
-			ClientEngine.Entity = newEntity;
+			//var newEntity = ClientEngine.Entity;
+			//newEntity.Command = EntityAction.None;
+			//ClientEngine.Entity = newEntity;
 		}
 	}
 }
