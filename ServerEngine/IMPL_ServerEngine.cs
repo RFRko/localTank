@@ -248,13 +248,13 @@ namespace Tanki
 							this.Fire(tmp);
 						}
 					}
-					if (this.CheckWin())
-					{
-						var room = Owner as IRoom;
-						room.Status = GameStatus.EndGame;
-						this.SendEndGame();
-					}
-					this.Send();
+				if (this.CheckWin())
+				{
+					var room = Owner as IRoom;
+					room.Status = GameStatus.EndGame;
+					this.SendEndGame();
+				}
+				this.Send();
 			}
 		}
 		/// <summary>
@@ -263,37 +263,40 @@ namespace Tanki
 		/// <param name="entity">"Убитая" сущность</param>
 		private void Death(IEntity entity)
 		{
-			if (entity is ITank)
+			if (entity.Is_Alive == true)
 			{
-				ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
-				ITank tnk = tanks.FirstOrDefault(t => t.Tank_ID == (entity as ITank)?.Tank_ID);
-				if (tank.Lives > 0) { tank.Lives--;tnk.Lives--; }
+				if (entity is ITank)
+				{
+					ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+					ITank tnk = tanks.FirstOrDefault(t => t.Tank_ID == (entity as ITank)?.Tank_ID);
+					if (tnk.Lives > 0) { tnk.Lives--; tnk.Position = this.Reload(); tank.Position = tnk.Position; }
+					else
+					{
+						this.Destroy(tank);
+					}
+					tank.Is_Alive = false;
+					tnk.Is_Alive = false;
+				}
+				else if (entity is IBullet)
+				{
+					IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
+					IBullet blt = bullets.FirstOrDefault(b => b.Parent_Id == (entity as IBullet)?.Parent_Id);
+					tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
+					bullet.Is_Alive = false;
+					blt.Is_Alive = false;
+					bullet.Command = EntityAction.None;
+					//this.objects.Remove(bullet);
+					//this.bullets.Remove(blt);
+				}
 				else
 				{
-					this.Destroy(tank);
+					IBlock block = (IBlock)objects.FirstOrDefault(bl => bl?.Position == entity?.Position);
+					IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
+					block.Is_Alive = false;
+					blck.Is_Alive = false;
+					this.objects.Remove(block);
+					this.blocks.Remove(blck);
 				}
-				tank.Is_Alive = false;
-				tnk.Is_Alive = false;
-			}
-			else if (entity is IBullet)
-			{
-				IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
-				IBullet blt = bullets.FirstOrDefault(b => b.Parent_Id == (entity as IBullet)?.Parent_Id);
-				tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
-				bullet.Is_Alive = false;
-				blt.Is_Alive = false;
-				bullet.Command = EntityAction.None;
-				//this.objects.Remove(bullet);
-				//this.bullets.Remove(blt);
-			}
-			else
-			{
-				IBlock block = (IBlock)objects.FirstOrDefault(bl => bl?.Position == entity?.Position);
-				IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
-				block.Is_Alive = false;
-				blck.Is_Alive = false;
-				this.objects.Remove(block);
-				this.blocks.Remove(blck);
 			}
 		}
 		/// <summary>
