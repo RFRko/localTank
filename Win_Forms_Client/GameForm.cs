@@ -228,9 +228,9 @@ namespace Tanki
 
 		private void GameForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			//var newEntity = ClientEngine.Entity;
-			//newEntity.Command = EntityAction.None;
-			//ClientEngine.Entity = newEntity;
+			var newEntity = ClientEngine.Entity;
+			newEntity.Command = EntityAction.None;
+			ClientEngine.Entity = newEntity;
 		}
 	}
 }
