@@ -39,7 +39,7 @@
 		/// <summary> Игра до последнего оставшегося в живых игрока </summary>
 		LastAlive,
 		/// <summary> Игра на время </summary>
-		Time,
+		FragPerTime,
 		/// <summary> Защита флага </summary>
 		FlagDefence,
 		/// <summary>Игра до определенного количества убийств </summary>

@@ -104,6 +104,7 @@ namespace Tanki
 				OnRoomConnect?.BeginInvoke(this, new RoomConnect() { MapSize = value }, null, null);
 			}
 		}
+		public int maxLives;
 
 
 		public void CreateGame(GameSetings gameSetings, string player_name)
@@ -178,6 +179,7 @@ namespace Tanki
 						{
 							_Entity = Map.Tanks.First(i => i.Tank_ID == client.Passport);
 							First_Map = false;
+							maxLives = _Map.Tanks.ElementAt(0).Lives;
 						}
 						break;
 					}

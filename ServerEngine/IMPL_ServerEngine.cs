@@ -127,7 +127,7 @@ namespace Tanki
 					}
 					if (cnt == 1) return true;
 					break;
-				case GameType.Time:
+				case GameType.FragPerTime:
 					break;
 				case GameType.FlagDefence:
 					break;
@@ -319,7 +319,6 @@ namespace Tanki
 				bullet.Size = room.GameSetings.Bullet_size;
 				bullet.Direction = tank.Direction;
 				bullet.Parent_Id = tank.Tank_ID;
-				bullet.Speed = room.GameSetings.GameSpeed;
 				tanks.FirstOrDefault(t => t.Tank_ID == tank.Tank_ID).Can_Shoot = false;
 				bullet.Is_Alive = true;
 				bullet.Can_Be_Destroyed = true;

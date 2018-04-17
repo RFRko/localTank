@@ -24,6 +24,7 @@ namespace Tanki
         private Direction _direction;
         private Rectangle _position;
         private EntityAction _command;
+		
 
         public GameEntity()
         {
@@ -110,10 +111,11 @@ namespace Tanki
     {
         private int _lives;
         private Team _team;
-		    private Guid _tank_ID;
+		private Guid _tank_ID;
         private bool _can_shoot;
-        private int _speed;
-        public Tank()
+		public int HelthPoints { get; set; }
+
+		public Tank()
         {
 
         }
@@ -122,7 +124,6 @@ namespace Tanki
         {
             this._lives = Lives;
             this._team = Team;
-            this._speed = Speed;
             this._can_shoot = CanShoot;
         }
 
@@ -145,11 +146,7 @@ namespace Tanki
             set { this._team = value; }
         }
 
-        public int Speed
-        {
-            get { return this._speed; }
-            set { this._speed = value; }
-        }
+       
 
         public bool Can_Shoot
         {
@@ -207,8 +204,9 @@ namespace Tanki
         {
 
         }
+		public int HelthPoints { get; set; }
 
-        public Block(bool CanDestroy, bool IsAlive, Rectangle Position, Direction Direction,int Size, EntityAction Command) :base(CanDestroy,IsAlive,Position,Direction,Size,Command)
+		public Block(bool CanDestroy, bool IsAlive, Rectangle Position, Direction Direction,int Size, EntityAction Command) :base(CanDestroy,IsAlive,Position,Direction,Size,Command)
         {
                 
         }
