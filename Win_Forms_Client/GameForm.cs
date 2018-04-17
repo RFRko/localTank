@@ -22,6 +22,8 @@ namespace Tanki
 		private Dictionary<BlockType, Bitmap> Blocks;
 		private List<Bitmap> ExplImages;
 		private int maxLives;
+		private Int32 timerSpeed = 100;
+		private System.Threading.Timer timer = null;
 
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
@@ -79,6 +81,7 @@ namespace Tanki
 
 			onMapChanged += onMapChangedProc;
 			DeathAnimation += onDeathAnimation;
+			//timer = new System.Threading.Timer((o) => { Invalidate(); }, null, 0, timerSpeed);
 		}
 
 		private void Draw_Bullets(PaintEventArgs e)

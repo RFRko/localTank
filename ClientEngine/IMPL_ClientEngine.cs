@@ -155,16 +155,20 @@ namespace Tanki
 		{
 			_ifReadyToSendEntity.WaitOne();
 			_ifReadyToSetEntity.Reset();
-			var room_IpEndpoint = client["Room"];
-			var my_passport = client.Passport;
 
-			Owner.Sender.SendMessage(new Package()
+			if (_Entity == null) return;
+			else
 			{
-				Sender_Passport = my_passport,
-				Data = _Entity,
-				MesseggeType = MesseggeType.Entity
-			}, room_IpEndpoint);
+				var room_IpEndpoint = client["Room"];
+				var my_passport = client.Passport;
+				Owner.Sender.SendMessage(new Package()
+				{
+					Sender_Passport = my_passport,
+					Data = _Entity,
+					MesseggeType = MesseggeType.Entity
+				}, room_IpEndpoint);
 
+			}
 			_ifReadyToSetEntity.Set();
 		}
 		private void ProcessMessageHandler(IPackage package)
