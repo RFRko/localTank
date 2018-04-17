@@ -81,31 +81,28 @@ namespace Tanki
 			DeathAnimation += onDeathAnimation;
 		}
 
-		protected override void OnPaint(PaintEventArgs e)
+		private void Draw_Bullets(PaintEventArgs e)
 		{
-			base.OnPaint(e);
-			if (Map == null) return;
-
-			var myPassport = ClientEngine.GetPassport();
-
 			foreach (var i in Map.Bullets)
 				e.Graphics.DrawImage(Resources.Bullet, i.Position);
-
+		}
+		private void Draw_Blocks(PaintEventArgs e)
+		{
 			foreach (var i in Map.Blocks)
-			{
 				e.Graphics.DrawImage(Blocks[i.blockType], i.Position);
-			}
+		}
+		private void Draw_Tanks(PaintEventArgs e)
+		{
+			StringFormat sf = new StringFormat();
+			var myPassport = ClientEngine.GetPassport();
 
 			foreach (var i in Map.Tanks)
 			{
+
 				if (i.Tank_ID == myPassport)
-				{
 					e.Graphics.DrawImage(Player[i.Direction], i.Position);
-				}
 				else
-				{
 					e.Graphics.DrawImage(Enemies[i.Direction], i.Position);
-				}
 				string name;
 				if (i.Name.Length > 10)
 				{
@@ -113,9 +110,10 @@ namespace Tanki
 					name += "..";
 				}
 				else name = i.Name;
-				StringFormat sf = new StringFormat();
+
 				sf.LineAlignment = StringAlignment.Center;
 				sf.Alignment = StringAlignment.Center;
+
 				e.Graphics.DrawString
 					(
 						name,
@@ -129,28 +127,38 @@ namespace Tanki
 						sf
 					);
 
-				var hpRect = new Rectangle(
-					new Point(i.Position.Location.X, i.Position.Location.Y + (i.Size + i.Size / 5)), new Size());
-
-
 				SolidBrush Brush;
-				if (i.Lives <= maxLives / 3)
-				{
+				int step = i.Size / maxLives;
+				var size = new Size(step * i.Lives, i.Size / 5);
+				var pnt = new Point(i.Position.Location.X, i.Position.Location.Y + i.Size + (i.Size / 5));
+				var hpRect = new Rectangle(pnt, size);
+
+				if (i.Lives > maxLives)
+					Brush = new SolidBrush(Color.Purple);
+				else if (i.Lives <= maxLives / 4)
+					Brush = new SolidBrush(Color.DarkRed);
+				else if (i.Lives <= maxLives / 3)
 					Brush = new SolidBrush(Color.Red);
-					hpRect.Size = new Size(i.Size / 3, i.Size / 5);
-				}
 				else if (i.Lives <= maxLives / 2)
-				{
+					Brush = new SolidBrush(Color.OrangeRed);
+				else if (i.Lives <= maxLives / 1.5)
 					Brush = new SolidBrush(Color.Orange);
-					hpRect.Size = new Size(i.Size / 2, i.Size / 5);
-				}
-				else
-				{
-					Brush = new SolidBrush(Color.Green);
-					hpRect.Size = new Size(i.Size, i.Size / 5);
-				}
+				else Brush = new SolidBrush(Color.Green);
+
 				e.Graphics.FillRectangle(Brush, hpRect);
+				ControlPaint.DrawBorder(e.Graphics, hpRect, Color.Gray, ButtonBorderStyle.Solid);
 			}
+		}
+
+
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			base.OnPaint(e);
+			if (Map == null) return;
+
+			Draw_Blocks(e);
+			Draw_Bullets(e);
+			Draw_Tanks(e);
 		}
 
 		private void OnMapChangeHandler(object Sender, GameStateChangeData data)

@@ -54,7 +54,7 @@ namespace Tanki
         Rectangle Position { get; set; }
         Direction Direction { get; set; }
         EntityAction Command { get; set; }
-        bool Is_Alive { get; set; }
+        bool Is_Alive { get; set; }// --
         bool Can_Be_Destroyed { get; set; }
         int Size { get; set; }
     }
@@ -73,9 +73,9 @@ namespace Tanki
 		string Name { get; set; }
         Guid Tank_ID { get; set; }
         int Lives { get; set; }
+		int HelthPoints { get; set; }
         Team Team { get; set; }
         bool Can_Shoot { get; set; }
-        int Speed { get; set; }
     }
 
 
@@ -89,8 +89,6 @@ namespace Tanki
     public interface IBullet : IEntity
     {
         Guid Parent_Id { get; set; }
-        int Speed { get; set; }
-
     }
 
 
@@ -104,6 +102,7 @@ namespace Tanki
     public interface IBlock : IEntity
     {
 		BlockType blockType { get; set; }
+		int HelthPoints { get; set; }
 	}
 
 
