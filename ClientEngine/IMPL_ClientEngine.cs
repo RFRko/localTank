@@ -162,12 +162,13 @@ namespace Tanki
                 Console.WriteLine("сцуко попался");
             }
 
-
             if (_Entity == null)
             {
                 _ifReadyToSetEntity.Set();
                 return;
             }
+
+
             var room_IpEndpoint = client["Room"];
 			var my_passport = client.Passport;
 
