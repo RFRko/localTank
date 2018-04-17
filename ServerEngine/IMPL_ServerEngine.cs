@@ -90,6 +90,8 @@ namespace Tanki
 		private List<IEntity> objects = new List<IEntity>();
 		private int width;
 		private int height;
+		Random colInd = new Random(DateTime.Now.Millisecond - 15);
+		Random rowInd = new Random(DateTime.Now.Millisecond + 20);
 		/// <summary>
 		/// Список всех танков на игровом поле
 		/// </summary>
@@ -151,6 +153,8 @@ namespace Tanki
 						{
 							tank.Position = this.Reload();
 							tnk.Position = tank.Position;
+							tank.Is_Alive = true;
+							tnk.Is_Alive = true;
 						}
 						else
 						{
@@ -545,8 +549,8 @@ namespace Tanki
 			//entity.Position = Rectangle.Empty;
 			while (rect == Rectangle.Empty)
 			{
-				Random colInd = new Random(DateTime.Now.Millisecond - 15);
-				Random rowInd = new Random(DateTime.Now.Millisecond + 20);
+				//Random colInd = new Random(DateTime.Now.Millisecond - 15);
+				//Random rowInd = new Random(DateTime.Now.Millisecond + 20);
 				int columnIndex = colInd.Next(0, width);
 				int rowIndex = rowInd.Next(0, height);
 				if (columnIndex >= 0 && columnIndex <= room.GameSetings.MapSize.Width - room.GameSetings.ObjectsSize && rowIndex >= 0 && rowIndex <= room.GameSetings.MapSize.Height - room.GameSetings.ObjectsSize)
