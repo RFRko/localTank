@@ -21,17 +21,10 @@ namespace Tanki
 		private Dictionary<Direction, Bitmap> Player;
 		private Dictionary<BlockType, Bitmap> Blocks;
 		private List<Bitmap> ExplImages;
+		private int maxLives;
 
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
-			ClientEngine = clientEngine;
-			clientEngine.OnMapChanged += OnMapChangeHandler;
-			clientEngine.OnTankDeath += OnTankDeath;
-			clientEngine.OnError += ErrorHandler;
-
-			onMapChanged += onMapChangedProc;
-			DeathAnimation += onDeathAnimation;
-
 			Enemies = new Dictionary<Direction, Bitmap>()
 			{
 				{ Direction.Down, Resources.enemy_down },
@@ -77,7 +70,15 @@ namespace Tanki
 
 			InitializeComponent();
 			this.ClientSize = size;
+			this.maxLives = 5;
 			this.BackColor = Color.Black;
+			ClientEngine = clientEngine;
+			clientEngine.OnMapChanged += OnMapChangeHandler;
+			clientEngine.OnTankDeath += OnTankDeath;
+			clientEngine.OnError += ErrorHandler;
+
+			onMapChanged += onMapChangedProc;
+			DeathAnimation += onDeathAnimation;
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -128,15 +129,26 @@ namespace Tanki
 						sf
 					);
 
-				var hpRect = new Rectangle( 
-					new Point(i.Position.Location.X, i.Position.Location.Y - (i.Size + i.Size / 3)), 
-					new Size(i.Size, i.Size / 3));
+				var hpRect = new Rectangle(
+					new Point(i.Position.Location.X, i.Position.Location.Y + (i.Size + i.Size / 5)), new Size());
 
 
 				SolidBrush Brush;
-				if(i.Lives == 1) Brush = new SolidBrush(Color.Red);
-				else if(i.Lives == 2) Brush = new SolidBrush(Color.Orange);
-				else Brush = new SolidBrush(Color.Green);
+				if (i.Lives <= maxLives / 3)
+				{
+					Brush = new SolidBrush(Color.Red);
+					hpRect.Size = new Size(i.Size / 3, i.Size / 5);
+				}
+				else if (i.Lives <= maxLives / 2)
+				{
+					Brush = new SolidBrush(Color.Orange);
+					hpRect.Size = new Size(i.Size / 2, i.Size / 5);
+				}
+				else
+				{
+					Brush = new SolidBrush(Color.Green);
+					hpRect.Size = new Size(i.Size, i.Size / 5);
+				}
 				e.Graphics.FillRectangle(Brush, hpRect);
 			}
 		}
