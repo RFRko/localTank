@@ -68,18 +68,19 @@ namespace Tanki
 			};
 
 
-			InitializeComponent();
+            InitializeComponent();
 			this.ClientSize = size;
 			this.maxLives = 5;
 			this.BackColor = Color.Black;
-			ClientEngine = clientEngine;
-			clientEngine.OnMapChanged += OnMapChangeHandler;
-			clientEngine.OnTankDeath += OnTankDeath;
-			clientEngine.OnError += ErrorHandler;
 
-			onMapChanged += onMapChangedProc;
-			DeathAnimation += onDeathAnimation;
-		}
+            ClientEngine = clientEngine;
+            clientEngine.OnMapChanged += OnMapChangeHandler;
+            clientEngine.OnTankDeath += OnTankDeath;
+            clientEngine.OnError += ErrorHandler;
+
+            onMapChanged += onMapChangedProc;
+            DeathAnimation += onDeathAnimation;
+        }
 
 		private void Draw_Bullets(PaintEventArgs e)
 		{
@@ -162,7 +163,7 @@ namespace Tanki
 		}
 
 		private void OnMapChangeHandler(object Sender, GameStateChangeData data)
-		{
+		{            
 			this.Invoke(onMapChanged, data.newMap);
 		}
 
@@ -205,7 +206,9 @@ namespace Tanki
 
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			var newEntity = ClientEngine.Entity;
+            if (ClientEngine.Entity == null) return;
+
+            var newEntity = ClientEngine.Entity;
 			switch (e.KeyCode)
 			{
 				case Keys.Left:
@@ -248,6 +251,8 @@ namespace Tanki
 
 		private void GameForm_KeyUp(object sender, KeyEventArgs e)
 		{
+            if (ClientEngine.Entity == null) return;
+
 			var newEntity = ClientEngine.Entity;
 			newEntity.Command = EntityAction.None;
 			ClientEngine.Entity = newEntity;

@@ -15,7 +15,7 @@ namespace Tanki
 		{
 			ProcessMessage += ProcessMessageHandler;
 			ProcessMessages = null;
-			_Entity = new Tank();
+			//_Entity = new Tank();
 			First_Map = true;
 			_ifReadyToSendEntity = new ManualResetEvent(false);
 			_ifReadyToSetEntity = new ManualResetEvent(false);
@@ -66,7 +66,7 @@ namespace Tanki
 			set
 			{
 				//if (start)
-				//{
+				//{                
 
                     _ifReadyToSetEntity.WaitOne();
                     _ifReadyToSendEntity.Reset();
@@ -152,10 +152,23 @@ namespace Tanki
 
 
 		private void SendByTimerCallback(Object data)
-		{
+		{         
+
 			_ifReadyToSendEntity.WaitOne();
 			_ifReadyToSetEntity.Reset();
-			var room_IpEndpoint = client["Room"];
+
+            if (_Entity.Position == Rectangle.Empty)
+            {
+                Console.WriteLine("сцуко попался");
+            }
+
+
+            if (_Entity == null)
+            {
+                _ifReadyToSetEntity.Set();
+                return;
+            }
+            var room_IpEndpoint = client["Room"];
 			var my_passport = client.Passport;
 
 			Owner.Sender.SendMessage(new Package()

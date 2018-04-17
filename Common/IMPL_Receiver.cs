@@ -65,7 +65,7 @@ namespace Tanki
                 }
                 //return null;
             }
-            catch (ObjectDisposedException)
+            catch (Exception ex)
             {
                 //допишу позже
             }

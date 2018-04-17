@@ -143,11 +143,17 @@ namespace Tanki
 			foreach (var item in package)
 			{
 				var entity = item.Data as IEntity;
+
+                if (entity.Position == Rectangle.Empty)
+                {
+                    Console.WriteLine("сцуко я тебя поймал");
+                }
+
 				if (!entity.Is_Alive)
 				{
 					if (entity is ITank)
 					{
-						var tank = tanks.FirstOrDefault(t=>t.Tank_ID==(entity as ITank).Tank_ID);
+						var tank = tanks.FirstOrDefault(t=>t.Tank_ID==(entity as ITank)?.Tank_ID);
 						var tnk = objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 						if (tank.Lives > 0)
 						{
