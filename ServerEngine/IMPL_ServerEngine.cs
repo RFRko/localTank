@@ -138,36 +138,6 @@ namespace Tanki
 		/// <param name="package"> Список сущностей, который подлежит проверке на "мертвых"</param>
 		private void CheckAlive(IEnumerable<IPackage> package)
 		{
-			//Parallel.ForEach(package, item =>
-			//{
-			//	var entity = item.Data as IEntity;
-			//	if (!entity.Is_Alive)
-			//	{
-			//		if (entity is ITank)
-			//		{
-			//			var tank = entity as ITank;
-			//			if (tank.Lives > 0)
-			//			{
-			//				tank.Position = this.Reload();
-			//			}
-			//			else
-			//			{
-			//				tanks.Remove(entity as ITank);
-			//				objects.Remove(entity);
-			//			}
-			//		}
-			//		if (entity is IBlock)
-			//		{
-			//			blocks.Remove(entity as IBlock);
-			//			objects.Remove(entity);
-			//		}
-			//		if (entity is IBullet)
-			//		{
-			//			bullets.Remove(entity as IBullet);
-			//			objects.Remove(entity);
-			//		}
-			//	}
-			//});
 			foreach (var item in package)
 			{
 				var entity = item.Data as IEntity;
@@ -175,30 +145,21 @@ namespace Tanki
 				{
 					if (entity is ITank)
 					{
-						var tank = entity as ITank;
+						var tank = tanks.FirstOrDefault(t=>t.Tank_ID==(entity as ITank).Tank_ID);
+						var tnk = objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 						if (tank.Lives > 0)
 						{
 							tank.Position = this.Reload();
+							tnk.Position = tank.Position;
 						}
 						else
 						{
-							tanks.Remove(entity as ITank);
-							objects.Remove(entity);
+							tanks.Remove(tank);
+							objects.Remove(tnk);
 						}
-					}
-					if (entity is IBlock)
-					{
-						blocks.Remove(entity as IBlock);
-						objects.Remove(entity);
-					}
-					if (entity is IBullet)
-					{
-						bullets.Remove(entity as IBullet);
-						objects.Remove(entity);
 					}
 				}
 			}
-
 
 			//foreach (var item in package)   РЕАЛИЗАЦИЯ НЕ ПАРАЛЕЛЬНО, НА ВСЯКИЙ СЛУЧАЙ
 			//{
@@ -231,41 +192,69 @@ namespace Tanki
 			//	}
 			//}
 		}
+		private void CheckBulletAlive()
+		{
+			for(int i=0;i<this.bullets.Count;i++)
+			{
+				if (!bullets[i].Is_Alive)
+				{
+					var blt = objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (bullets[i] as IBullet)?.Parent_Id);
+					this.bullets.Remove(bullets[i]);
+					this.objects.Remove(blt);
+				}
+			}
+		}
+		private void MoveAll()
+		{
+			for(int i=0;i<this.objects.Count;i++)
+			{
+				if (objects[i].Command == EntityAction.Move)
+					this.Move(objects[i]);
+			}
+			//foreach(var item in this.objects)
+			//{
+			//	if (item.Command == EntityAction.Move)
+			//		this.Move(item);
+			//}
+		}
 		/// <summary>
 		/// Реализация делегата ProcessMessagesHandler
 		/// </summary>
 		/// <param name="list">Список пакетов переданый движку на обработку</param>
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
-			object locker = new object();
 			if (this.status == GameStatus.Start)
 			{
-				lock(locker)
+				this.CheckBulletAlive();
 				this.CheckAlive(list);
+				this.MoveAll();
 				//Parallel.ForEach(bullets, x => this.Move(x));
-				foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
-				{
-					this.Move(x);
-				}
-				foreach (var t in list)
-				{
-					var tmp = t.Data as IEntity;
-					if (tmp.Command == EntityAction.Move)
+				//if (bullets.Count > 0)
+				//{
+				//	foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
+				//	{
+				//		this.Move(x);
+				//	}
+				//}
+					foreach (var t in list)
 					{
-						this.Move(tmp);
+						var tmp = t.Data as IEntity;
+						if (tmp.Command == EntityAction.Move)
+						{
+							this.Move(tmp);
+						}
+						if (tmp.Command == EntityAction.Fire)
+						{
+							this.Fire(tmp);
+						}
 					}
-					if (tmp.Command == EntityAction.Fire)
+					if (this.CheckWin())
 					{
-						this.Fire(tmp);
+						var room = Owner as IRoom;
+						room.Status = GameStatus.EndGame;
+						this.SendEndGame();
 					}
-				}
-				if (this.CheckWin())
-				{
-					var room = Owner as IRoom;
-					room.Status = GameStatus.EndGame;
-					this.SendEndGame();
-				}
-				this.Send();
+					this.Send();
 			}
 		}
 		/// <summary>
@@ -277,27 +266,34 @@ namespace Tanki
 			if (entity is ITank)
 			{
 				ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
-				if (tank.Lives > 0) tank.Lives--;
+				ITank tnk = tanks.FirstOrDefault(t => t.Tank_ID == (entity as ITank)?.Tank_ID);
+				if (tank.Lives > 0) { tank.Lives--;tnk.Lives--; }
 				else
 				{
-					var room = Owner as IRoom;
-					var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
-					Owner.Sender.SendMessage(new Package() { Data = tank, MesseggeType = MesseggeType.TankDeath }, adress);
+					this.Destroy(tank);
 				}
 				tank.Is_Alive = false;
+				tnk.Is_Alive = false;
 			}
 			else if (entity is IBullet)
 			{
 				IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
+				IBullet blt = bullets.FirstOrDefault(b => b.Parent_Id == (entity as IBullet)?.Parent_Id);
 				tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
 				bullet.Is_Alive = false;
-				//this.objects.Remove(entity);
-				//this.bullets.Remove((IBullet)entity);
+				blt.Is_Alive = false;
+				bullet.Command = EntityAction.None;
+				//this.objects.Remove(bullet);
+				//this.bullets.Remove(blt);
 			}
 			else
 			{
 				IBlock block = (IBlock)objects.FirstOrDefault(bl => bl?.Position == entity?.Position);
+				IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
 				block.Is_Alive = false;
+				blck.Is_Alive = false;
+				this.objects.Remove(block);
+				this.blocks.Remove(blck);
 			}
 		}
 		/// <summary>
@@ -306,6 +302,7 @@ namespace Tanki
 		/// <param name="entity">Сущность осуществившая выстрел</param>
 		private void Fire(IEntity entity)
 		{
+
 			ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 			if (tank.Can_Shoot)
 			{
@@ -485,7 +482,7 @@ namespace Tanki
 		private bool canMove(IEntity entity)
 		{
 			var list = new List<IEntity>(objects);
-			var x = list.FirstOrDefault(s=>(s as ITank)?.Tank_ID==(entity as ITank)?.Tank_ID);
+			var x = list.FirstOrDefault(s => (s as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 			list.Remove(x);
 			var tmp = list.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position));
 
@@ -527,7 +524,7 @@ namespace Tanki
 					this.Death(bullet);
 				}
 			}
-			else if (tmp != null)
+			else if (tmp is IBlock)
 			{
 				this.Death(tmp);
 				this.Death(bullet);
@@ -591,6 +588,13 @@ namespace Tanki
 			pack.MesseggeType = MesseggeType.StartGame;
 			var adress = Owner as IRoom;
 			Owner.Sender.SendMessage(pack, adress.Gamers);
+		}
+		private void Destroy(ITank tank)
+		{
+			var room = Owner as IRoom;
+			var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
+			IPackage pack = new Package() {Data=tank,MesseggeType=MesseggeType.TankDeath};
+			Owner.Sender.SendMessage(pack, adress);
 		}
 
 		// Нужно вызывать эту чепуху при новом игроке в комнате, метод ниже мне не подходит, по причине - мне не нужен ендпоинт, мне нужен гуид
