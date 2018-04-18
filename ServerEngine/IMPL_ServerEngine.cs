@@ -202,19 +202,19 @@ namespace Tanki
 		//	//	}
 		//	//}
 		//}
-		private void CheckBulletAlive()
-		{
-			for (int i = 0; i < this.bullets.Count; i++)
-			{
-				if (!bullets[i].Is_Alive)
-				{
-					var bullet = bullets.FirstOrDefault(b => b?.Parent_Id == bullets[i]?.Parent_Id);
-					//var blt = objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (bullets[i] as IBullet)?.Parent_Id);
-					this.bullets.Remove(bullets[i]);
-					//this.objects.Remove(blt);
-				}
-			}
-		}
+		//private void CheckBulletAlive()
+		//{
+		//	for (int i = 0; i < this.bullets.Count; i++)
+		//	{
+		//		if (!bullets[i].Is_Alive)
+		//		{
+		//			var bullet = bullets.FirstOrDefault(b => b?.Parent_Id == bullets[i]?.Parent_Id);
+		//			//var blt = objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (bullets[i] as IBullet)?.Parent_Id);
+		//			this.bullets.Remove(bullets[i]);
+		//			//this.objects.Remove(blt);
+		//		}
+		//	}
+		//}
 		private void MoveAll()
 		{
 			//for(int i=0;i<this.objects.Count;i++)
@@ -249,7 +249,7 @@ namespace Tanki
 			{
 				lock (locker)
 				{
-					this.CheckBulletAlive();
+					//this.CheckBulletAlive();
 					//this.CheckAlive(list);
 					this.MoveAll();
 					//Parallel.ForEach(bullets, x => this.Move(x));
@@ -308,18 +308,20 @@ namespace Tanki
 				IBullet blt = bullets.FirstOrDefault(b => b.Parent_Id == (entity as IBullet)?.Parent_Id);
 				tanks.FirstOrDefault(t => t.Tank_ID == blt.Parent_Id).Can_Shoot = true;
 				//bullet.Is_Alive = false;
-				blt.Is_Alive = false;
+				//blt.Is_Alive = false;
 				blt.Command = EntityAction.None;
+				this.bullets.Remove(blt);
 				//bullet.Command = EntityAction.None;
 			}
 			else
 			{
 				//IBlock block = (IBlock)objects.FirstOrDefault(bl => bl?.Position == entity?.Position);
 				IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
-				//block.Is_Alive = false;
-				//blck.Is_Alive = false;
-				//this.objects.Remove(block);
-				this.blocks.Remove(blck);
+				if(blck.Can_Be_Destroyed)
+				{
+					if (blck.HelthPoints > 0) blck.HelthPoints--;
+					else this.blocks.Remove(blck);
+				}
 			}
 
 		}
@@ -388,8 +390,21 @@ namespace Tanki
 				obj.Size = room.GameSetings.ObjectsSize;
 				obj.Position = this.Reload();
 				obj.Can_Be_Destroyed = true;
-				obj.blockType = (BlockType)new Random().Next(0, 4);
-				//obj.Is_Alive = true;
+				obj.blockType = (BlockType)colInd.Next(0, 4);
+				switch (obj.blockType)
+				{
+					case BlockType.Brick:obj.HelthPoints = 2;
+						break;
+					case BlockType.Brick2:obj.HelthPoints = 2;
+						break;
+					case BlockType.Concrete:obj.Can_Be_Destroyed = false;
+						break;
+					case BlockType.Tree:obj.HelthPoints = 1;
+						break;
+					default:
+						break;
+				}
+				 //obj.Is_Alive = true;
 				blocks.Add(obj);
 				//objects.Add(obj);
 				objectCount--;
