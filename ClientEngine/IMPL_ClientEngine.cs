@@ -171,6 +171,7 @@ namespace Tanki
             var room_IpEndpoint = client["Room"];
 			var my_passport = client.Passport;
 
+
 			Owner.Sender.SendMessage(new Package()
 			{
 				Sender_Passport = my_passport,
@@ -178,7 +179,7 @@ namespace Tanki
 				MesseggeType = MesseggeType.Entity
 			}, room_IpEndpoint);
 
-			_ifReadyToSetEntity.Set();
+		_ifReadyToSetEntity.Set();
 		}
 		private void ProcessMessageHandler(IPackage package)
 		{
