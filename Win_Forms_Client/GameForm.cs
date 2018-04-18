@@ -260,19 +260,7 @@ namespace Tanki
 
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
-			//onMapChanged -= onMapChangedProc;
-			//ClientEngine.OnMapChanged -= OnMapChangeHandler;
-			//ClientEngine.StopGame();
-			//Thread.Sleep(1000);
-			//base.OnFormClosing(e);
-		}
-
-		private void GameForm_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			//onMapChanged -= onMapChangedProc;
-			//ClientEngine.OnMapChanged -= OnMapChangeHandler;
-			//ClientEngine.StopGame();
-			//Thread.Sleep(1000);
+			ClientEngine.StopGame();
 		}
 	}
 }

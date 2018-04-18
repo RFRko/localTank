@@ -31,8 +31,7 @@ namespace Tanki
 		private volatile ITank _Entity = null;
 		private string _ErrorText = null;
 		private Size _MapSize;
-
-		private bool ProcGameMassage = false;
+		
         private Int32 timerSpeed = 50;
         private Timer _timer = null;
 		private ManualResetEvent _ifReadyToSendEntity;
@@ -138,12 +137,6 @@ namespace Tanki
 				Data = connectionData,
 				MesseggeType = MesseggeType.RoomID
 			}, client["Host"]);
-		}
-		public void StopGame()
-		{
-			ProcGameMassage = false;
-			_CancelationSource.Cancel();
-			_timer.Dispose();
 		}
 
 		public Guid GetPassport()
