@@ -87,7 +87,7 @@ namespace Tanki
 		/// <summary>
 		/// Список всех сущностей на игровом поле
 		/// </summary>
-		private List<IEntity> objects = new List<IEntity>();
+		//private List<IEntity> objects = new List<IEntity>();
 		private int width;
 		private int height;
 		Random colInd = new Random(DateTime.Now.Millisecond - 15);
@@ -138,88 +138,99 @@ namespace Tanki
 		/// Метод реализирующий проверку списка сущностей на наличие убитых
 		/// </summary>
 		/// <param name="package"> Список сущностей, который подлежит проверке на "мертвых"</param>
-		private void CheckAlive(IEnumerable<IPackage> package)
-		{
-			foreach (var item in package)
-			{
-				var entity = item.Data as IEntity;
+		//private void CheckAlive(IEnumerable<IPackage> package)
+		//{
+		//	foreach (var item in package)
+		//	{
+		//		var entity = item.Data as IEntity;
 
-                if (entity.Position == Rectangle.Empty)
-                {
-                    Console.WriteLine("сцуко я тебя поймал");
-                }
+		//              if (entity.Position == Rectangle.Empty)
+		//              {
+		//                  Console.WriteLine("сцуко я тебя поймал");
+		//              }
 
-				if (!entity.Is_Alive)
-				{
-					if (entity is ITank)
-					{
-						var tank = tanks.FirstOrDefault(t=>t.Tank_ID==(entity as ITank)?.Tank_ID);
-						var tnk = objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
-						if (tank.Lives > 0)
-						{
-							tank.Position = this.Reload();
-							tnk.Position = tank.Position;
-							tank.Is_Alive = true;
-							tnk.Is_Alive = true;
-						}
-						else
-						{
-							tanks.Remove(tank);
-							objects.Remove(tnk);
-						}
-					}
-				}
-			}
+		//		if (!entity.Is_Alive)
+		//		{
+		//			if (entity is ITank)
+		//			{
+		//				var tank = tanks.FirstOrDefault(t=>t.Tank_ID==(entity as ITank)?.Tank_ID);
+		//				//var tnk = objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+		//				if (tank.Lives > 0)
+		//				{
+		//					tank.Position = this.Reload();
+		//					//tnk.Position = tank.Position;
+		//					tank.Is_Alive = true;
+		//					//tnk.Is_Alive = true;
+		//				}
+		//				else
+		//				{
+		//					tanks.Remove(tank);
+		//					//objects.Remove(tnk);
+		//				}
+		//			}
+		//		}
+		//	}
 
-			//foreach (var item in package)   РЕАЛИЗАЦИЯ НЕ ПАРАЛЕЛЬНО, НА ВСЯКИЙ СЛУЧАЙ
-			//{
-			//	var entity = item.Data as IEntity;
-			//	if (!entity.Is_Alive)
-			//	{
-			//		if (entity is ITank)
-			//		{
-			//			var tank = entity as ITank;
-			//			if (tank.Lives > 0)
-			//			{
-			//				this.Reload(entity);
-			//			}
-			//			else
-			//			{
-			//				tanks.Remove(entity as ITank);
-			//				objects.Remove(entity);
-			//			}
-			//		}
-			//		if (entity is IBlock)
-			//		{
-			//			blocks.Remove(entity as IBlock);
-			//			objects.Remove(entity);
-			//		}
-			//		if (entity is IBullet)
-			//		{
-			//			bullets.Remove(entity as IBullet);
-			//			objects.Remove(entity);
-			//		}
-			//	}
-			//}
-		}
+		//	//foreach (var item in package)   РЕАЛИЗАЦИЯ НЕ ПАРАЛЕЛЬНО, НА ВСЯКИЙ СЛУЧАЙ
+		//	//{
+		//	//	var entity = item.Data as IEntity;
+		//	//	if (!entity.Is_Alive)
+		//	//	{
+		//	//		if (entity is ITank)
+		//	//		{
+		//	//			var tank = entity as ITank;
+		//	//			if (tank.Lives > 0)
+		//	//			{
+		//	//				this.Reload(entity);
+		//	//			}
+		//	//			else
+		//	//			{
+		//	//				tanks.Remove(entity as ITank);
+		//	//				objects.Remove(entity);
+		//	//			}
+		//	//		}
+		//	//		if (entity is IBlock)
+		//	//		{
+		//	//			blocks.Remove(entity as IBlock);
+		//	//			objects.Remove(entity);
+		//	//		}
+		//	//		if (entity is IBullet)
+		//	//		{
+		//	//			bullets.Remove(entity as IBullet);
+		//	//			objects.Remove(entity);
+		//	//		}
+		//	//	}
+		//	//}
+		//}
 		private void CheckBulletAlive()
 		{
-			for(int i=0;i<this.bullets.Count;i++)
+			for (int i = 0; i < this.bullets.Count; i++)
 			{
 				if (!bullets[i].Is_Alive)
 				{
-					var blt = objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (bullets[i] as IBullet)?.Parent_Id);
+					var bullet = bullets.FirstOrDefault(b => b?.Parent_Id == bullets[i]?.Parent_Id);
+					//var blt = objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (bullets[i] as IBullet)?.Parent_Id);
 					this.bullets.Remove(bullets[i]);
-					this.objects.Remove(blt);
+					//this.objects.Remove(blt);
 				}
 			}
 		}
 		private void MoveAll()
 		{
-			for(int i=0;i<this.objects.Count;i++)
+			//for(int i=0;i<this.objects.Count;i++)
+			//{
+			//	if (objects[i].Command == EntityAction.Move)
+			//		this.Move(objects[i]);
+			//}
+			for (int i = 0; i < this.bullets.Count; i++)
 			{
-				if (objects[i].Command == EntityAction.Move)
-					this.Move(objects[i]);
+				if (bullets[i].Command == EntityAction.Move)
+					this.Move(bullets[i]);
+			}
+			for (int i = 0; i < tanks.Count; i++)
+			{
+				if (tanks[i].Command == EntityAction.Move)
+					this.Move(tanks[i]);
 			}
 			//foreach(var item in this.objects)
 			//{
@@ -233,19 +244,22 @@ namespace Tanki
 		/// <param name="list">Список пакетов переданый движку на обработку</param>
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
+			object locker = new object();
 			if (this.status == GameStatus.Start)
 			{
-				this.CheckBulletAlive();
-				this.CheckAlive(list);
-				this.MoveAll();
-				//Parallel.ForEach(bullets, x => this.Move(x));
-				//if (bullets.Count > 0)
-				//{
-				//	foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
-				//	{
-				//		this.Move(x);
-				//	}
-				//}
+				lock (locker)
+				{
+					this.CheckBulletAlive();
+					//this.CheckAlive(list);
+					this.MoveAll();
+					//Parallel.ForEach(bullets, x => this.Move(x));
+					//if (bullets.Count > 0)
+					//{
+					//	foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
+					//	{
+					//		this.Move(x);
+					//	}
+					//}
 					foreach (var t in list)
 					{
 						var tmp = t.Data as IEntity;
@@ -258,13 +272,14 @@ namespace Tanki
 							this.Fire(tmp);
 						}
 					}
-				if (this.CheckWin())
-				{
-					var room = Owner as IRoom;
-					room.Status = GameStatus.EndGame;
-					this.SendEndGame();
+					if (this.CheckWin())
+					{
+						var room = Owner as IRoom;
+						room.Status = GameStatus.EndGame;
+						this.SendEndGame();
+					}
+					this.Send();
 				}
-				this.Send();
 			}
 		}
 		/// <summary>
@@ -273,41 +288,40 @@ namespace Tanki
 		/// <param name="entity">"Убитая" сущность</param>
 		private void Death(IEntity entity)
 		{
-			if (entity.Is_Alive == true)
+
+			if (entity is ITank)
 			{
-				if (entity is ITank)
-				{
-					ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
-					ITank tnk = tanks.FirstOrDefault(t => t.Tank_ID == (entity as ITank)?.Tank_ID);
-					if (tnk.Lives > 0) { tnk.Lives--; tnk.Position = this.Reload(); tank.Position = tnk.Position; }
-					else
-					{
-						this.Destroy(tank);
-					}
-					tank.Is_Alive = false;
-					tnk.Is_Alive = false;
-				}
-				else if (entity is IBullet)
-				{
-					IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
-					IBullet blt = bullets.FirstOrDefault(b => b.Parent_Id == (entity as IBullet)?.Parent_Id);
-					tanks.FirstOrDefault(t => t.Tank_ID == bullet.Parent_Id).Can_Shoot = true;
-					bullet.Is_Alive = false;
-					blt.Is_Alive = false;
-					bullet.Command = EntityAction.None;
-					//this.objects.Remove(bullet);
-					//this.bullets.Remove(blt);
-				}
+				//ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+				ITank tnk = tanks.FirstOrDefault(t => t.Tank_ID == (entity as ITank)?.Tank_ID);
+				if (tnk.HelthPoints > 0) tnk.HelthPoints--;
+				else if (tnk.Lives > 0) { tnk.Lives--; tnk.HelthPoints = 5; tnk.Position = this.Reload(); /*tank.Position = tnk.Position;*/ }
 				else
 				{
-					IBlock block = (IBlock)objects.FirstOrDefault(bl => bl?.Position == entity?.Position);
-					IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
-					block.Is_Alive = false;
-					blck.Is_Alive = false;
-					this.objects.Remove(block);
-					this.blocks.Remove(blck);
+					this.Destroy(tnk);
 				}
+				//tank.Is_Alive = false;
+				//tnk.Is_Alive = false;
 			}
+			else if (entity is IBullet)
+			{
+				//IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
+				IBullet blt = bullets.FirstOrDefault(b => b.Parent_Id == (entity as IBullet)?.Parent_Id);
+				tanks.FirstOrDefault(t => t.Tank_ID == blt.Parent_Id).Can_Shoot = true;
+				//bullet.Is_Alive = false;
+				blt.Is_Alive = false;
+				blt.Command = EntityAction.None;
+				//bullet.Command = EntityAction.None;
+			}
+			else
+			{
+				//IBlock block = (IBlock)objects.FirstOrDefault(bl => bl?.Position == entity?.Position);
+				IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
+				//block.Is_Alive = false;
+				//blck.Is_Alive = false;
+				//this.objects.Remove(block);
+				this.blocks.Remove(blck);
+			}
+
 		}
 		/// <summary>
 		/// Метод реализирующий выстрел
@@ -316,7 +330,8 @@ namespace Tanki
 		private void Fire(IEntity entity)
 		{
 
-			ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+			//ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+			ITank tank = tanks.FirstOrDefault(t => t?.Tank_ID == (entity as ITank)?.Tank_ID);
 			if (tank.Can_Shoot)
 			{
 				var bullet = new GameObjectFactory().CreateBullet();
@@ -347,7 +362,7 @@ namespace Tanki
 				//if(bullets.FirstOrDefault(s=>s.Parent_Id==bullet.Parent_Id)==null)
 				bullets.Add(bullet);
 				//if(objects.FirstOrDefault(s=>(s as IBullet)?.Parent_Id==bullet.Parent_Id)==null)
-				objects.Add(bullet);
+				//objects.Add(bullet);
 			}
 			entity.Command = EntityAction.None;
 		}
@@ -360,7 +375,7 @@ namespace Tanki
 			var room = Owner as IRoom;
 			this.Width = room.GameSetings.MapSize.Width;
 			this.Height = room.GameSetings.MapSize.Height;
-			int tankCount = room.Gamers.Count();
+			//int tankCount = room.Gamers.Count();
 			int objectCount = (this.height * this.width) / (10 * room.GameSetings.ObjectsSize * room.GameSetings.ObjectsSize);
 			//         foreach (var t in room.Gamers)
 			//         {
@@ -374,9 +389,9 @@ namespace Tanki
 				obj.Position = this.Reload();
 				obj.Can_Be_Destroyed = true;
 				obj.blockType = (BlockType)new Random().Next(0, 4);
-				obj.Is_Alive = true;
+				//obj.Is_Alive = true;
 				blocks.Add(obj);
-				objects.Add(obj);
+				//objects.Add(obj);
 				objectCount--;
 			}
 
@@ -393,98 +408,98 @@ namespace Tanki
 			//if (entity is ITank) tmp = objects.FirstOrDefault(t => (t as ITank).Tank_ID == (entity as ITank).Tank_ID);
 
 			//var tmp = objects.FirstOrDefault(t => t == entity);
-			if (entity.Is_Alive)
+
+			if (entity is ITank)
 			{
-				if (entity is ITank)
+				//ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
+				ITank tank = tanks.FirstOrDefault(t => t?.Tank_ID == (entity as ITank)?.Tank_ID);
+				tank.Direction = entity.Direction;
+				//var tank = tmp as ITank;
+
+				switch (entity.Direction)
 				{
-					ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
-					tank.Direction = entity.Direction;
-					//var tank = tmp as ITank;
+					case Direction.Left:
+						if (tank.Position.X > 0)
+						{
+							var pos = new Point(tank.Position.X - room.GameSetings.GameSpeed, tank.Position.Y);
+							var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+							var oldrect = tank.Position;
+							tank.Position = rect;
+							if (!canMove(tank))
+								tank.Position = oldrect;
+						}
+						break;
 
-					switch (entity.Direction)
-					{
-						case Direction.Left:
-							if (tank.Position.X > 0)
-							{
-								var pos = new Point(tank.Position.X - room.GameSetings.GameSpeed, tank.Position.Y);
-								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								var oldrect = tank.Position;
-								tank.Position = rect;
-								if (!canMove(tank))
-									tank.Position = oldrect;
-							}
-							break;
+					case Direction.Right:
+						if (tank.Position.X < width - tank.Position.Width)
+						{
+							var pos = new Point(tank.Position.X + room.GameSetings.GameSpeed, tank.Position.Y);
+							var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+							var oldrect = tank.Position;
+							tank.Position = rect;
+							if (!canMove(tank))
+								tank.Position = oldrect;
+						}
+						break;
 
-						case Direction.Right:
-							if (tank.Position.X < width)
-							{
-								var pos = new Point(tank.Position.X + room.GameSetings.GameSpeed, tank.Position.Y);
-								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								var oldrect = tank.Position;
-								tank.Position = rect;
-								if (!canMove(tank))
-									tank.Position = oldrect;
-							}
-							break;
+					case Direction.Up:
+						if (tank.Position.Y > 0)
+						{
+							var pos = new Point(tank.Position.X, tank.Position.Y - room.GameSetings.GameSpeed);
+							var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+							var oldrect = tank.Position;
+							tank.Position = rect;
+							if (!canMove(tank))
+								tank.Position = oldrect;
+						}
+						break;
 
-						case Direction.Up:
-							if (tank.Position.Y > 0)
-							{
-								var pos = new Point(tank.Position.X, tank.Position.Y - room.GameSetings.GameSpeed);
-								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								var oldrect = tank.Position;
-								tank.Position = rect;
-								if (!canMove(tank))
-									tank.Position = oldrect;
-							}
-							break;
+					case Direction.Down:
 
-						case Direction.Down:
-
-							if (tank.Position.Y < height)
-							{
-								var pos = new Point(tank.Position.X, tank.Position.Y + room.GameSetings.GameSpeed);
-								var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
-								var oldrect = tank.Position;
-								tank.Position = rect;
-								if (!canMove(tank))
-									tank.Position = oldrect;
-							}
-							break;
-					}
-					tank.Command = EntityAction.None;
+						if (tank.Position.Y < height - tank.Position.Height)
+						{
+							var pos = new Point(tank.Position.X, tank.Position.Y + room.GameSetings.GameSpeed);
+							var rect = new Rectangle(pos, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+							var oldrect = tank.Position;
+							tank.Position = rect;
+							if (!canMove(tank))
+								tank.Position = oldrect;
+						}
+						break;
 				}
-				else if (entity is IBullet)
-				{
-					IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
-					var pos = new Point();
-					switch (bullet.Direction)
-					{
-						case Direction.Left:
-							pos = new Point(bullet.Position.X - room.GameSetings.GameSpeed, bullet.Position.Y);
-							bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
-							break;
-
-						case Direction.Right:
-							pos = new Point(bullet.Position.X + room.GameSetings.GameSpeed, bullet.Position.Y);
-							bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
-							break;
-
-						case Direction.Up:
-							pos = new Point(bullet.Position.X, bullet.Position.Y - room.GameSetings.GameSpeed);
-							bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
-							break;
-
-						case Direction.Down:
-							pos = new Point(bullet.Position.X, bullet.Position.Y + room.GameSetings.GameSpeed);
-							bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
-							break;
-					}
-					this.HitTarget(bullet);
-					if (!this.bulletOnBoard(bullet))
-						this.Death(bullet);
-				}
+				tank.Command = EntityAction.None;
 			}
+			else if (entity is IBullet)
+			{
+				IBullet bullet = bullets.FirstOrDefault(b => b?.Parent_Id == (entity as IBullet)?.Parent_Id);
+				var pos = new Point();
+				switch (bullet.Direction)
+				{
+					case Direction.Left:
+						pos = new Point(bullet.Position.X - room.GameSetings.GameSpeed, bullet.Position.Y);
+						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
+						break;
+
+					case Direction.Right:
+						pos = new Point(bullet.Position.X + room.GameSetings.GameSpeed, bullet.Position.Y);
+						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
+						break;
+
+					case Direction.Up:
+						pos = new Point(bullet.Position.X, bullet.Position.Y - room.GameSetings.GameSpeed);
+						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
+						break;
+
+					case Direction.Down:
+						pos = new Point(bullet.Position.X, bullet.Position.Y + room.GameSetings.GameSpeed);
+						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
+						break;
+				}
+				this.HitTarget(bullet);
+				if (!this.bulletOnBoard(bullet))
+					this.Death(bullet);
+			}
+
 		}
 		/// <summary>
 		/// Предикат определяющий, может ли объект произвести движение
@@ -493,7 +508,9 @@ namespace Tanki
 		/// <returns></returns>
 		private bool canMove(IEntity entity)
 		{
-			var list = new List<IEntity>(objects);
+			var list = new List<IEntity>();
+			list.AddRange(blocks);
+			list.AddRange(tanks);
 			var x = list.FirstOrDefault(s => (s as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 			list.Remove(x);
 			var tmp = list.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position));
@@ -526,19 +543,19 @@ namespace Tanki
 		/// <param name="bullet">Пуля попавшая в "цель"</param>
 		private void HitTarget(IBullet bullet)
 		{
-			var tmp = objects.FirstOrDefault(tank => tank.Position.IntersectsWith(bullet.Position));
-			if (tmp is ITank)
+			var tmp = tanks.FirstOrDefault(tank => tank.Position.IntersectsWith(bullet.Position));
+			if (tmp != null)
 			{
-				var tank = tmp as ITank;
-				if (tank.Tank_ID != bullet.Parent_Id)
+				if (tmp.Tank_ID != bullet.Parent_Id)
 				{
 					this.Death(tmp);
 					this.Death(bullet);
 				}
 			}
-			else if (tmp is IBlock)
+			var tmp2 = blocks.FirstOrDefault(bl => bl.Position.IntersectsWith(bullet.Position));
+			if (tmp2 != null)
 			{
-				this.Death(tmp);
+				this.Death(tmp2);
 				this.Death(bullet);
 			}
 
@@ -561,9 +578,11 @@ namespace Tanki
 				if (columnIndex >= 0 && columnIndex <= room.GameSetings.MapSize.Width - room.GameSetings.ObjectsSize && rowIndex >= 0 && rowIndex <= room.GameSetings.MapSize.Height - room.GameSetings.ObjectsSize)
 				{
 					Point p = new Point(rowIndex, columnIndex);
-					if (objects.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
+					if (tanks.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
 					{
-						rect = new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
+						if (blocks.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
+							if (bullets.FirstOrDefault(tank => tank.Position.IntersectsWith(new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize))) == true) == null)
+								rect = new Rectangle(p, new Size(room.GameSetings.ObjectsSize, room.GameSetings.ObjectsSize));
 					}
 				}
 			}
@@ -605,7 +624,7 @@ namespace Tanki
 		{
 			var room = Owner as IRoom;
 			var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
-			IPackage pack = new Package() {Data=tank,MesseggeType=MesseggeType.TankDeath};
+			IPackage pack = new Package() { Data = tank, MesseggeType = MesseggeType.TankDeath };
 			Owner.Sender.SendMessage(pack, adress);
 		}
 
@@ -622,14 +641,15 @@ namespace Tanki
 			obj.Size = room.GameSetings.ObjectsSize;
 			obj.Tank_ID = gamer.Passport;
 			obj.Name = gamer.Name;
-			obj.Lives = 5;
-			obj.Is_Alive = true;
+			obj.Lives = 3;
+			obj.HelthPoints = 5;
+			//obj.Is_Alive = true;
 			obj.Can_Be_Destroyed = true;
 			obj.Can_Shoot = true;
 			obj.Direction = Direction.Up;
 			obj.Position = this.Reload();
 			tanks.Add(obj);
-			objects.Add(obj);
+			//objects.Add(obj);
 		}
 		/// <summary>
 		/// Обработка события добавления нового игрока
