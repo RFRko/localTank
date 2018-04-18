@@ -141,7 +141,7 @@ namespace Tanki
         public void END_GAME()
         {
             Reciever.Alive = false;
-        }
+		}
 
         public void OnClientGameStateChangedHandler(object Sender, GameStateChangeData evntData)
         {

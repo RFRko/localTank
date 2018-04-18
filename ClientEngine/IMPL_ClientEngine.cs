@@ -138,6 +138,11 @@ namespace Tanki
 				MesseggeType = MesseggeType.RoomID
 			}, client["Host"]);
 		}
+		public void StopGame()
+		{
+			_CancelationSource.Cancel();
+			_timer.Dispose();
+		}
 
 		public Guid GetPassport()
 		{
@@ -199,7 +204,6 @@ namespace Tanki
 			{
 				case MesseggeType.Map:
 					{
-						if (!ProcGameMassage) return;
 						Map = package.Data as IMap;
 						if(First_Map)
 						{
@@ -232,7 +236,6 @@ namespace Tanki
 					}
 				case MesseggeType.TankDeath:
 					{
-						if (!ProcGameMassage) return;
 						var tank = package.Data as ITank;
 						if (tank.Tank_ID == client.Passport)
 						{
@@ -245,9 +248,6 @@ namespace Tanki
 					}
 				case MesseggeType.StartGame:
 					{
-						ProcGameMassage = true;
-                        //start = true;
-                        //client.RUN_GAME();
                         _ifReadyToSendEntity.Set();
 						_timerCancelator = _CancelationSource.Token;
 						_timer = new Timer(SendByTimerCallback, _timerCancelator, 0, timerSpeed);
@@ -255,10 +255,6 @@ namespace Tanki
 					}
 				case MesseggeType.EndGame:
 					{
-						ProcGameMassage = false;
-						//_timer.Change(Timeout.Infinite, Timeout.Infinite);
-						//_timer.Dispose();
-						//client.END_GAME();
 						break;
 					}
 				case MesseggeType.Error:

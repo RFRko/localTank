@@ -71,8 +71,10 @@ namespace Tanki
 				Lobby lobby = new Lobby(gameClient.Engine as IClientEngine);
 				if (Connect(point))
 				{
-					lobby.Show();
 					Hide();
+					lobby.ShowDialog();
+					gameClient.END_GAME();
+					Close();
 				}
 				else { Close(); }
 			}

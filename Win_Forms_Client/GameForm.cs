@@ -16,6 +16,14 @@ namespace Tanki
 	{
 		public GameForm(IClientEngine clientEngine, Size size)
 		{
+			ClientEngine = clientEngine;
+			clientEngine.OnMapChanged += OnMapChangeHandler;
+			clientEngine.OnTankDeath += OnTankDeath;
+			clientEngine.OnError += ErrorHandler;
+
+			onMapChanged += onMapChangedProc;
+			DeathAnimation += onDeathAnimation;
+
 			Enemies = new Dictionary<Direction, Bitmap>()
 			{
 				{ Direction.Down, Resources.enemy_down },
@@ -60,16 +68,8 @@ namespace Tanki
 
 
 			InitializeComponent();
-			ClientEngine = clientEngine;
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
-
-			clientEngine.OnMapChanged += OnMapChangeHandler;
-			clientEngine.OnTankDeath += OnTankDeath;
-			clientEngine.OnError += ErrorHandler;
-
-			onMapChanged += onMapChangedProc;
-			DeathAnimation += onDeathAnimation;
 		}
 
 		private IClientEngine ClientEngine;
@@ -130,7 +130,7 @@ namespace Tanki
 				e.Graphics.DrawString
 					(
 						name,
-						new Font("Comic Sans", Size / 3),
+						new Font("Comic Sans", Size / 4),
 						new SolidBrush(Color.Yellow),
 						new PointF
 						(
@@ -258,7 +258,7 @@ namespace Tanki
 			ClientEngine.Entity = newEntity;
 		}
 
-		protected override void OnFormClosing(FormClosingEventArgs e)
+		private void GameForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			ClientEngine.StopGame();
 		}
