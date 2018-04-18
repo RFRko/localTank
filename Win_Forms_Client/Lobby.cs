@@ -57,8 +57,9 @@ namespace Tanki
 		private void onRoomConnectProc(Size MapSize)
 		{
 			var gameForm = new GameForm(clientEngine, MapSize);
-			gameForm.Show();
 			Hide();
+			gameForm.ShowDialog();
+			Show();
 		}
 
 		private void ErrorHandler(object sender, ErrorData e)

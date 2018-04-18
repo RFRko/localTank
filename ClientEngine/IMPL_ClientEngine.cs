@@ -32,13 +32,15 @@ namespace Tanki
 		private string _ErrorText = null;
 		private Size _MapSize;
 
-
+		private bool ProcGameMassage = false;
         private Int32 timerSpeed = 50;
         private Timer _timer = null;
 		private ManualResetEvent _ifReadyToSendEntity;
 		private ManualResetEvent _ifReadyToSetEntity;
 		private CancellationToken _timerCancelator = new CancellationToken();
 		private CancellationTokenSource _CancelationSource = new CancellationTokenSource();
+
+
         public IEnumerable<IRoomStat> RoomsStat
 		{
 			get { return _RoomsStat;  }
@@ -137,6 +139,13 @@ namespace Tanki
 				MesseggeType = MesseggeType.RoomID
 			}, client["Host"]);
 		}
+		public void StopGame()
+		{
+			ProcGameMassage = false;
+			_CancelationSource.Cancel();
+			_timer.Dispose();
+		}
+
 		public Guid GetPassport()
 		{
 			return client.Passport;
@@ -197,6 +206,7 @@ namespace Tanki
 			{
 				case MesseggeType.Map:
 					{
+						if (!ProcGameMassage) return;
 						Map = package.Data as IMap;
 						if(First_Map)
 						{
@@ -229,6 +239,7 @@ namespace Tanki
 					}
 				case MesseggeType.TankDeath:
 					{
+						if (!ProcGameMassage) return;
 						var tank = package.Data as ITank;
 						if (tank.Tank_ID == client.Passport)
 						{
@@ -241,6 +252,7 @@ namespace Tanki
 					}
 				case MesseggeType.StartGame:
 					{
+						ProcGameMassage = true;
                         //start = true;
                         //client.RUN_GAME();
                         _ifReadyToSendEntity.Set();
@@ -250,7 +262,7 @@ namespace Tanki
 					}
 				case MesseggeType.EndGame:
 					{
-
+						ProcGameMassage = false;
 						//_timer.Change(Timeout.Infinite, Timeout.Infinite);
 						//_timer.Dispose();
 						//client.END_GAME();
