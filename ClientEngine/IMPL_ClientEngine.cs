@@ -157,17 +157,17 @@ namespace Tanki
 			_ifReadyToSendEntity.WaitOne();
 			_ifReadyToSetEntity.Reset();
 
-            if (_Entity.Position == Rectangle.Empty)
-            {
-                Console.WriteLine("сцуко попался");
-            }
-
-
             if (_Entity == null)
             {
                 _ifReadyToSetEntity.Set();
                 return;
             }
+
+            if (_Entity.Position == Rectangle.Empty)
+            {
+                Console.WriteLine("сцуко попался");
+            }
+
             var room_IpEndpoint = client["Room"];
 			var my_passport = client.Passport;
 

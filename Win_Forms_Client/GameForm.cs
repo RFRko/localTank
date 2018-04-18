@@ -187,15 +187,15 @@ namespace Tanki
 
 		private void onDeathAnimation(ITank tankToDestroy)
 		{
-			Graphics g = Graphics.FromImage(Resources.explosion1);
-			new Thread(() => {
-				foreach (var i in ExplImages)
-				{
-					g.DrawImage(i, tankToDestroy.Position);
-					Invalidate(tankToDestroy.Position);
-					Thread.Sleep(100);
-				}
-			}).Start();
+			//Graphics g = Graphics.FromImage(Resources.explosion1);
+			//new Thread(() => {
+			//	foreach (var i in ExplImages)
+			//	{
+			//		g.DrawImage(i, tankToDestroy.Position);
+			//		Invalidate(tankToDestroy.Position);
+			//		Thread.Sleep(100);
+			//	}
+			//}).Start();
 		}
 
 		private void ErrorHandler(object sender, ErrorData e)
