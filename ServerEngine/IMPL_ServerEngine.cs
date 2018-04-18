@@ -109,6 +109,8 @@ namespace Tanki
 		/// </summary>
 		private List<IBullet> bullets = new List<IBullet>();
 
+		private List<ITank> DeadCache = new List<ITank>();
+
 		/// <summary>
 		/// Метод реализирующий проверку, выполнено ли условие победы в игре
 		/// </summary>
@@ -249,8 +251,12 @@ namespace Tanki
 			{
 				lock (locker)
 				{
+					list = from t in list
+						   where !(from dead in DeadCache select dead.Tank_ID).Contains((t.Data as ITank).Tank_ID) 
+						   select t;
 					//this.CheckBulletAlive();
 					//this.CheckAlive(list);
+
 					this.MoveAll();
 					//Parallel.ForEach(bullets, x => this.Move(x));
 					//if (bullets.Count > 0)
@@ -303,6 +309,7 @@ namespace Tanki
 						tnk.Position = this.Reload(); /*tank.Position = tnk.Position;*/
 						if (tnk.Lives <= 0)
 						{
+							this.DeadCache.Add(tnk);
 							this.Destroy(tnk);
 							this.tanks.Remove(tnk);
 						}
@@ -665,7 +672,7 @@ namespace Tanki
 			obj.Size = room.GameSetings.ObjectsSize;
 			obj.Tank_ID = gamer.Passport;
 			obj.Name = gamer.Name;
-			obj.Lives = 3;
+			obj.Lives = 1;
 			obj.HelthPoints = 5;
 			//obj.Is_Alive = true;
 			obj.Can_Be_Destroyed = true;

@@ -37,8 +37,8 @@ namespace Tanki
         private Timer _timer = null;
 		private ManualResetEvent _ifReadyToSendEntity;
 		private ManualResetEvent _ifReadyToSetEntity;
-
-
+		private CancellationToken _timerCancelator = new CancellationToken();
+		private CancellationTokenSource _CancelationSource = new CancellationTokenSource();
         public IEnumerable<IRoomStat> RoomsStat
 		{
 			get { return _RoomsStat;  }
@@ -157,7 +157,15 @@ namespace Tanki
 			_ifReadyToSendEntity.WaitOne();
 			_ifReadyToSetEntity.Reset();
 
-            if (_Entity == null)
+			var ct = (CancellationToken)data ;
+			if (ct.IsCancellationRequested)
+			{
+				_timer.Change(Timeout.Infinite, Timeout.Infinite);
+				return;
+			}
+
+
+			if (_Entity == null)
             {
                 _ifReadyToSetEntity.Set();
                 return;
@@ -196,7 +204,6 @@ namespace Tanki
 							First_Map = false;
 							if (_Map.Tanks.ElementAt(0).Lives != 0)
 								MaxLives = _Map.Tanks.ElementAt(0).Lives;
-							else MaxLives = 3;
 						}
 						break;
 					}
@@ -223,6 +230,11 @@ namespace Tanki
 				case MesseggeType.TankDeath:
 					{
 						var tank = package.Data as ITank;
+						if (tank.Tank_ID == client.Passport)
+						{
+							_CancelationSource.Cancel();
+							_timer.Dispose();
+						}
 						OnTankDeath?.BeginInvoke(this, new DestroyableTank()
 						{ tankToDestroy = tank }, null, null);
 						break;
@@ -232,11 +244,13 @@ namespace Tanki
                         //start = true;
                         //client.RUN_GAME();
                         _ifReadyToSendEntity.Set();
-                        _timer = new Timer(SendByTimerCallback, null, 0, timerSpeed);
+						_timerCancelator = _CancelationSource.Token;
+						_timer = new Timer(SendByTimerCallback, _timerCancelator, 0, timerSpeed);
 						break;
 					}
 				case MesseggeType.EndGame:
 					{
+
 						//_timer.Change(Timeout.Infinite, Timeout.Infinite);
 						//_timer.Dispose();
 						//client.END_GAME();
