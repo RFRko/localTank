@@ -104,7 +104,7 @@ namespace Tanki
 				OnRoomConnect?.BeginInvoke(this, new RoomConnect() { MapSize = value }, null, null);
 			}
 		}
-		public int maxLives;
+		public int MaxLives { get; private set; }
 
 
 		public void CreateGame(GameSetings gameSetings, string player_name)
@@ -165,8 +165,9 @@ namespace Tanki
 
             if (_Entity.Position == Rectangle.Empty)
             {
-                Console.WriteLine("сцуко попался");
-            }
+				_ifReadyToSetEntity.Set();
+				return;
+			}
 
             var room_IpEndpoint = client["Room"];
 			var my_passport = client.Passport;
@@ -193,7 +194,9 @@ namespace Tanki
 						{
 							_Entity = Map.Tanks.First(i => i.Tank_ID == client.Passport);
 							First_Map = false;
-							maxLives = _Map.Tanks.ElementAt(0).Lives;
+							if (_Map.Tanks.ElementAt(0).Lives != 0)
+								MaxLives = _Map.Tanks.ElementAt(0).Lives;
+							else MaxLives = 3;
 						}
 						break;
 					}
@@ -234,7 +237,9 @@ namespace Tanki
 					}
 				case MesseggeType.EndGame:
 					{
-						client.END_GAME();
+						//_timer.Change(Timeout.Infinite, Timeout.Infinite);
+						//_timer.Dispose();
+						//client.END_GAME();
 						break;
 					}
 				case MesseggeType.Error:
