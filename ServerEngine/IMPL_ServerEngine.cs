@@ -294,13 +294,22 @@ namespace Tanki
 				//ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 				ITank tnk = tanks.FirstOrDefault(t => t.Tank_ID == (entity as ITank)?.Tank_ID);
 				if (tnk.HelthPoints > 0) tnk.HelthPoints--;
-				else if (tnk.Lives > 0) { tnk.Lives--; tnk.HelthPoints = 5; tnk.Position = this.Reload(); /*tank.Position = tnk.Position;*/ }
 				else
 				{
-					this.Destroy(tnk);
+					if (tnk.Lives > 0)
+					{
+						tnk.Lives--;
+						tnk.HelthPoints = 5;
+						tnk.Position = this.Reload(); /*tank.Position = tnk.Position;*/
+						if (tnk.Lives <= 0)
+						{
+							this.Destroy(tnk);
+							this.tanks.Remove(tnk);
+						}
+					}
+					//tank.Is_Alive = false;
+					//tnk.Is_Alive = false;
 				}
-				//tank.Is_Alive = false;
-				//tnk.Is_Alive = false;
 			}
 			else if (entity is IBullet)
 			{
@@ -317,7 +326,7 @@ namespace Tanki
 			{
 				//IBlock block = (IBlock)objects.FirstOrDefault(bl => bl?.Position == entity?.Position);
 				IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
-				if(blck.Can_Be_Destroyed)
+				if (blck.Can_Be_Destroyed)
 				{
 					if (blck.HelthPoints > 0) blck.HelthPoints--;
 					else this.blocks.Remove(blck);
@@ -563,15 +572,15 @@ namespace Tanki
 			{
 				if (tmp.Tank_ID != bullet.Parent_Id)
 				{
-					this.Death(tmp);
 					this.Death(bullet);
+					this.Death(tmp);
 				}
 			}
 			var tmp2 = blocks.FirstOrDefault(bl => bl.Position.IntersectsWith(bullet.Position));
 			if (tmp2 != null)
 			{
-				this.Death(tmp2);
 				this.Death(bullet);
+				this.Death(tmp2);
 			}
 
 		}
