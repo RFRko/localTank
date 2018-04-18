@@ -20,6 +20,7 @@ namespace Tanki
 		void JOINGame(Guid room_guid, string player_name);
 		Guid GetPassport();
 		void GetRoomList();
+		void StopGame();
 
 
 		event EventHandler<RoomStatChangeData> OnRoomsStatChanged;

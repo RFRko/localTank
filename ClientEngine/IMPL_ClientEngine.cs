@@ -31,12 +31,13 @@ namespace Tanki
 		private volatile ITank _Entity = null;
 		private string _ErrorText = null;
 		private Size _MapSize;
-
-
+		
         private Int32 timerSpeed = 50;
         private Timer _timer = null;
 		private ManualResetEvent _ifReadyToSendEntity;
 		private ManualResetEvent _ifReadyToSetEntity;
+		private CancellationToken _timerCancelator = new CancellationToken();
+		private CancellationTokenSource _CancelationSource = new CancellationTokenSource();
 
 
         public IEnumerable<IRoomStat> RoomsStat
@@ -137,6 +138,7 @@ namespace Tanki
 				MesseggeType = MesseggeType.RoomID
 			}, client["Host"]);
 		}
+
 		public Guid GetPassport()
 		{
 			return client.Passport;
@@ -157,7 +159,15 @@ namespace Tanki
 			_ifReadyToSendEntity.WaitOne();
 			_ifReadyToSetEntity.Reset();
 
-            if (_Entity == null)
+			var ct = (CancellationToken)data ;
+			if (ct.IsCancellationRequested)
+			{
+				_timer.Change(Timeout.Infinite, Timeout.Infinite);
+				return;
+			}
+
+
+			if (_Entity == null)
             {
                 _ifReadyToSetEntity.Set();
                 return;
@@ -189,6 +199,7 @@ namespace Tanki
 			{
 				case MesseggeType.Map:
 					{
+						if (!ProcGameMassage) return;
 						Map = package.Data as IMap;
 						if(First_Map)
 						{
@@ -196,7 +207,6 @@ namespace Tanki
 							First_Map = false;
 							if (_Map.Tanks.ElementAt(0).Lives != 0)
 								MaxLives = _Map.Tanks.ElementAt(0).Lives;
-							else MaxLives = 3;
 						}
 						break;
 					}
@@ -222,21 +232,30 @@ namespace Tanki
 					}
 				case MesseggeType.TankDeath:
 					{
+						if (!ProcGameMassage) return;
 						var tank = package.Data as ITank;
+						if (tank.Tank_ID == client.Passport)
+						{
+							_CancelationSource.Cancel();
+							_timer.Dispose();
+						}
 						OnTankDeath?.BeginInvoke(this, new DestroyableTank()
 						{ tankToDestroy = tank }, null, null);
 						break;
 					}
 				case MesseggeType.StartGame:
 					{
+						ProcGameMassage = true;
                         //start = true;
                         //client.RUN_GAME();
                         _ifReadyToSendEntity.Set();
-                        _timer = new Timer(SendByTimerCallback, null, 0, timerSpeed);
+						_timerCancelator = _CancelationSource.Token;
+						_timer = new Timer(SendByTimerCallback, _timerCancelator, 0, timerSpeed);
 						break;
 					}
 				case MesseggeType.EndGame:
 					{
+						ProcGameMassage = false;
 						//_timer.Change(Timeout.Infinite, Timeout.Infinite);
 						//_timer.Dispose();
 						//client.END_GAME();

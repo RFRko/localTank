@@ -166,8 +166,15 @@ namespace Tanki
 
 
 		private void OnMapChangeHandler(object Sender, GameStateChangeData data)
-		{            
-			this.Invoke(onMapChanged, data.newMap);
+		{
+			try
+			{
+				this.Invoke(onMapChanged, data.newMap);
+			}
+			catch (Exception e)
+			{
+				
+			}
 		}
 		private void onMapChangedProc(IMap map)
 		{
@@ -249,6 +256,11 @@ namespace Tanki
 			var newEntity = ClientEngine.Entity;
 			newEntity.Command = EntityAction.None;
 			ClientEngine.Entity = newEntity;
+		}
+
+		protected override void OnFormClosing(FormClosingEventArgs e)
+		{
+			ClientEngine.StopGame();
 		}
 	}
 }
