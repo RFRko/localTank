@@ -54,7 +54,7 @@ namespace Tanki
         Rectangle Position { get; set; }
         Direction Direction { get; set; }
         EntityAction Command { get; set; }
-        bool Is_Alive { get; set; }// --
+     //   bool Is_Alive { get; set; }// --
         bool Can_Be_Destroyed { get; set; }
         int Size { get; set; }
     }
@@ -88,6 +88,7 @@ namespace Tanki
     /// </summary>
     public interface IBullet : IEntity
     {
+		bool Is_Alive { get; set; }
         Guid Parent_Id { get; set; }
     }
 
