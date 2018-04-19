@@ -19,23 +19,17 @@ namespace Tanki
     public abstract class GameEntity : IEntity
     {
         private bool _can_destroy;
-       // private bool _is_alive;
 		private int _size;
         private Direction _direction;
         private Rectangle _position;
         private EntityAction _command;
 		
 
-        public GameEntity()
-        {
-
-        }
-
-        public GameEntity(bool CanDestroy, Rectangle Position,Direction Direction,int size,EntityAction Command)
+        public GameEntity(){}
+        public GameEntity(bool CanDestroy, Rectangle Position, Direction Direction, int size, EntityAction Command)
         {
             this._command = Command;
             this._can_destroy = CanDestroy;
-         //   this._is_alive = IsAlive;
             this._position = Position;
             this._direction = Direction;
 			this._size = size;
@@ -120,7 +114,16 @@ namespace Tanki
 
         }
 
-        public Tank(int Lives,Team Team,bool CanShoot, bool CanDestroy,  int Speed, Rectangle Position, Direction Direction,int Size, Guid TankID, EntityAction Command) : base(CanDestroy,Position,Direction,Size,Command)
+        public Tank(
+			int Lives,Team Team,
+			bool CanShoot, 
+			bool CanDestroy,  
+			int Speed, 
+			Rectangle Position, 
+			Direction Direction,
+			int Size, Guid TankID, 
+			EntityAction Command) :
+			base(CanDestroy,Position,Direction,Size,Command)
         {
             this._lives = Lives;
             this._team = Team;
@@ -172,7 +175,16 @@ namespace Tanki
             
         }
 
-        public Bullet(Guid Parent_Id,bool CanShoot, bool CanDestroy, int Speed, Rectangle Position, Direction Direction,int Size,EntityAction Command) : base(CanDestroy,Position,Direction,Size,Command)
+        public Bullet(
+			Guid Parent_Id,
+			bool CanShoot, 
+			bool CanDestroy, 
+			int Speed, 
+			Rectangle Position, 
+			Direction Direction,
+			int Size,
+			EntityAction Command) :
+			base(CanDestroy,Position,Direction,Size,Command)
         {
             this._parent_id = Parent_Id;
 			this.Is_Alive = true;
