@@ -119,6 +119,7 @@ namespace Tanki
 
 				Draw_HP_Lines(e);
 				Draw_Lifes(e);
+				Draw_Names(e);
 			}
 		}
 		private void Draw_HP_Lines(PaintEventArgs e)
