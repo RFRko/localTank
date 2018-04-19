@@ -70,6 +70,7 @@ namespace Tanki
 			InitializeComponent();
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
+			timerSpeed = 100;
 		}
 
 		private IClientEngine ClientEngine;
@@ -78,7 +79,7 @@ namespace Tanki
 		private Dictionary<Direction, Bitmap> Player;
 		private Dictionary<BlockType, Bitmap> Blocks;
 		private List<Bitmap> ExplImages;
-		private Int32 timerSpeed = 100;
+		private Int32 timerSpeed;
 
 		private Action<IMap> onMapChanged;
 		private Action<ITank> DeathAnimation;
@@ -107,7 +108,6 @@ namespace Tanki
 		{
 			StringFormat sf = new StringFormat();
 			var myPassport = ClientEngine.GetPassport();
-			var Size = Map.Tanks.ElementAt(0).Size;
 
 			foreach (var i in Map.Tanks)
 			{
@@ -116,7 +116,48 @@ namespace Tanki
 					e.Graphics.DrawImage(Player[i.Direction], i.Position);
 				else
 					e.Graphics.DrawImage(Enemies[i.Direction], i.Position);
-				string name;
+
+				Draw_HP_Lines(e);
+				Draw_Lifes(e);
+			}
+		}
+		private void Draw_HP_Lines(PaintEventArgs e)
+		{
+			SolidBrush Brush;
+
+			foreach (var i in Map.Tanks)
+			{
+				var step = i.Size / ClientEngine.MaxHealthPoints;
+				var size = new Size(step * i.HelthPoints, i.Size / 5);
+				var pnt = new Point(i.Position.Location.X, i.Position.Location.Y + i.Size + (i.Size / 5));
+				var hpRect = new Rectangle(pnt, size);
+				var border = new Rectangle(pnt, new Size(step * ClientEngine.MaxHealthPoints, i.Size / 5));
+
+				if (i.HelthPoints > ClientEngine.MaxHealthPoints)
+					Brush = new SolidBrush(Color.Purple);
+				else if (i.HelthPoints <= ClientEngine.MaxHealthPoints / 4)
+					Brush = new SolidBrush(Color.DarkRed);
+				else if (i.HelthPoints <= ClientEngine.MaxHealthPoints / 3)
+					Brush = new SolidBrush(Color.Red);
+				else if (i.HelthPoints <= ClientEngine.MaxHealthPoints / 2)
+					Brush = new SolidBrush(Color.OrangeRed);
+				else if (i.HelthPoints <= ClientEngine.MaxHealthPoints / 1.5)
+					Brush = new SolidBrush(Color.Orange);
+				else Brush = new SolidBrush(Color.Green);
+
+				e.Graphics.FillRectangle(Brush, hpRect);
+				e.Graphics.DrawRectangle(new Pen(Color.White), border);
+			}
+		}
+		private void Draw_Names(PaintEventArgs e)
+		{
+			var sf = new StringFormat();
+			sf.LineAlignment = StringAlignment.Center;
+			sf.Alignment = StringAlignment.Center;
+			string name;
+
+			foreach (var i in Map.Tanks)
+			{
 				if (i.Name.Length > 10)
 				{
 					name = i.Name.Substring(0, 10);
@@ -124,43 +165,35 @@ namespace Tanki
 				}
 				else name = i.Name;
 
-				sf.LineAlignment = StringAlignment.Center;
-				sf.Alignment = StringAlignment.Center;
-
 				e.Graphics.DrawString
+				(
+					name,
+					new Font("Comic Sans", i.Size / 4),
+					new SolidBrush(Color.Yellow),
+					new Point
 					(
-						name,
-						new Font("Comic Sans", Size / 4),
-						new SolidBrush(Color.Yellow),
-						new PointF
-						(
-							i.Position.Location.X + Size / 2,
-							i.Position.Location.Y - Size / 3
-						),
-						sf
-					);
-
-				SolidBrush Brush;
-				int step = Size / ClientEngine.MaxLives;
-				var size = new Size(step * i.Lives, Size / 5);
-				var pnt = new Point(i.Position.Location.X, i.Position.Location.Y + Size + (Size / 5));
-				var hpRect = new Rectangle(pnt, size);
-				var border = new Rectangle(pnt, new Size(step * ClientEngine.MaxLives, Size / 5));
-
-				if (i.Lives > ClientEngine.MaxLives)
-					Brush = new SolidBrush(Color.Purple);
-				else if (i.Lives <= ClientEngine.MaxLives / 4)
-					Brush = new SolidBrush(Color.DarkRed);
-				else if (i.Lives <= ClientEngine.MaxLives / 3)
-					Brush = new SolidBrush(Color.Red);
-				else if (i.Lives <= ClientEngine.MaxLives / 2)
-					Brush = new SolidBrush(Color.OrangeRed);
-				else if (i.Lives <= ClientEngine.MaxLives / 1.5)
-					Brush = new SolidBrush(Color.Orange);
-				else Brush = new SolidBrush(Color.Green);
-
-				e.Graphics.FillRectangle(Brush, hpRect);
-				e.Graphics.DrawRectangle(new Pen(Color.White), border);
+						i.Position.Location.X + i.Size / 2,
+						i.Position.Location.Y - i.Size / 3
+					),
+					sf
+				);
+			}
+		}
+		private void Draw_Lifes(PaintEventArgs e)
+		{
+			foreach (var i in Map.Tanks)
+			{
+				e.Graphics.DrawString
+				(
+					i.Lives.ToString(),
+					new Font("Comic Sans", i.Size / 5),
+					new SolidBrush(Color.Yellow),
+					new Point
+					(
+						i.Position.Location.X - i.Size / 4,
+						i.Position.Location.Y + i.Size + (i.Size / 5)
+					)
+				);
 			}
 		}
 
