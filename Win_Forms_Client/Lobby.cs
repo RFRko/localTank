@@ -110,5 +110,10 @@ namespace Tanki
 		{
 			clientEngine.GetRoomList();
 		}
+
+		private void Lobby_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			clientEngine.exit();
+		}
 	}
 }

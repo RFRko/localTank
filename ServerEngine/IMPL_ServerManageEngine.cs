@@ -46,6 +46,11 @@ namespace Tanki
 						CreatRoom(msg);
 						break;
 					}
+				case MesseggeType.RequestLogOff:
+					{
+						Disconect();
+						break;
+					}
 				default: return;
 			}
 		}
@@ -215,8 +220,13 @@ namespace Tanki
 
 
         }
+		private void Disconect()
+		{
 
-        public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
+		}
+
+
+		public override void OnNetProcStarted_EventHandler(object Sender, NetProcStartedEvntData evntData)
         {
             //nothing to do required yet
         }

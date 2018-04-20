@@ -143,6 +143,7 @@
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Lobby";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Lobby_FormClosing);
 			((System.ComponentModel.ISupportInitialize)(this.DGV_RoomList)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
