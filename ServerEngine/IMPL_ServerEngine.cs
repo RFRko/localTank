@@ -136,110 +136,15 @@ namespace Tanki
 			}
 			return false;
 		}
-		/// <summary>
-		/// Метод реализирующий проверку списка сущностей на наличие убитых
-		/// </summary>
-		/// <param name="package"> Список сущностей, который подлежит проверке на "мертвых"</param>
-		//private void CheckAlive(IEnumerable<IPackage> package)
-		//{
-		//	foreach (var item in package)
-		//	{
-		//		var entity = item.Data as IEntity;
-
-		//              if (entity.Position == Rectangle.Empty)
-		//              {
-		//                  Console.WriteLine("сцуко я тебя поймал");
-		//              }
-
-		//		if (!entity.Is_Alive)
-		//		{
-		//			if (entity is ITank)
-		//			{
-		//				var tank = tanks.FirstOrDefault(t=>t.Tank_ID==(entity as ITank)?.Tank_ID);
-		//				//var tnk = objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
-		//				if (tank.Lives > 0)
-		//				{
-		//					tank.Position = this.Reload();
-		//					//tnk.Position = tank.Position;
-		//					tank.Is_Alive = true;
-		//					//tnk.Is_Alive = true;
-		//				}
-		//				else
-		//				{
-		//					tanks.Remove(tank);
-		//					//objects.Remove(tnk);
-		//				}
-		//			}
-		//		}
-		//	}
-
-		//	//foreach (var item in package)   РЕАЛИЗАЦИЯ НЕ ПАРАЛЕЛЬНО, НА ВСЯКИЙ СЛУЧАЙ
-		//	//{
-		//	//	var entity = item.Data as IEntity;
-		//	//	if (!entity.Is_Alive)
-		//	//	{
-		//	//		if (entity is ITank)
-		//	//		{
-		//	//			var tank = entity as ITank;
-		//	//			if (tank.Lives > 0)
-		//	//			{
-		//	//				this.Reload(entity);
-		//	//			}
-		//	//			else
-		//	//			{
-		//	//				tanks.Remove(entity as ITank);
-		//	//				objects.Remove(entity);
-		//	//			}
-		//	//		}
-		//	//		if (entity is IBlock)
-		//	//		{
-		//	//			blocks.Remove(entity as IBlock);
-		//	//			objects.Remove(entity);
-		//	//		}
-		//	//		if (entity is IBullet)
-		//	//		{
-		//	//			bullets.Remove(entity as IBullet);
-		//	//			objects.Remove(entity);
-		//	//		}
-		//	//	}
-		//	//}
-		//}
-		//private void CheckBulletAlive()
-		//{
-		//	for (int i = 0; i < this.bullets.Count; i++)
-		//	{
-		//		if (!bullets[i].Is_Alive)
-		//		{
-		//			var bullet = bullets.FirstOrDefault(b => b?.Parent_Id == bullets[i]?.Parent_Id);
-		//			//var blt = objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (bullets[i] as IBullet)?.Parent_Id);
-		//			this.bullets.Remove(bullets[i]);
-		//			//this.objects.Remove(blt);
-		//		}
-		//	}
-		//}
 		private void MoveAll()
 		{
-			//for(int i=0;i<this.objects.Count;i++)
-			//{
-			//	if (objects[i].Command == EntityAction.Move)
-			//		this.Move(objects[i]);
-			//}
-			for (int i = 0; i < this.bullets.Count; i++)
-			{
-				if (bullets[i].Command == EntityAction.Move)
-					this.Move(bullets[i]);
-			}
-			for (int i = 0; i < tanks.Count; i++)
-			{
-				if (tanks[i].Command == EntityAction.Move)
-					this.Move(tanks[i]);
-			}
-			//foreach(var item in this.objects)
-			//{
-			//	if (item.Command == EntityAction.Move)
-			//		this.Move(item);
-			//}
-		}
+            Parallel.ForEach(bullets, x => this.Move(x));
+            //         for (int i = 0; i < this.bullets.Count; i++)
+            //{
+            //	if (bullets[i].Command == EntityAction.Move)
+            //		this.Move(bullets[i]);
+            //}
+        }
 		/// <summary>
 		/// Реализация делегата ProcessMessagesHandler
 		/// </summary>
@@ -254,19 +159,10 @@ namespace Tanki
 					list = from t in list
 						   where !(from dead in DeadCache select dead.Tank_ID).Contains((t.Data as ITank).Tank_ID) 
 						   select t;
-					//this.CheckBulletAlive();
-					//this.CheckAlive(list);
 
-					this.MoveAll();
-					//Parallel.ForEach(bullets, x => this.Move(x));
-					//if (bullets.Count > 0)
-					//{
-					//	foreach (var x in bullets) // могу и Эту чепуху сделать паралельной, она на работу не повлияет
-					//	{
-					//		this.Move(x);
-					//	}
-					//}
-					foreach (var t in list)
+                   this.MoveAll();
+                    if (colInd.Next(1, 10000) == 555) this.HealthBlock();
+                    foreach (var t in list)
 					{
 						var tmp = t.Data as IEntity;
 						if (tmp.Command == EntityAction.Move)
@@ -297,37 +193,29 @@ namespace Tanki
 
 			if (entity is ITank)
 			{
-				//ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 				ITank tnk = tanks.FirstOrDefault(t => t.Tank_ID == (entity as ITank)?.Tank_ID);
 				if (tnk.HelthPoints > 0) tnk.HelthPoints--;
-				else
+				if(tnk.HelthPoints==0)
 				{
 					if (tnk.Lives > 0)
 					{
 						tnk.Lives--;
 						tnk.HelthPoints = 5;
-						tnk.Position = this.Reload(); /*tank.Position = tnk.Position;*/
-						if (tnk.Lives <= 0)
-						{
-							this.DeadCache.Add(tnk);
-							this.Destroy(tnk);
-							this.tanks.Remove(tnk);
-						}
+						tnk.Position = this.Reload();
 					}
-					//tank.Is_Alive = false;
-					//tnk.Is_Alive = false;
+                    if(tnk.Lives<=0)
+                    {
+                        this.DeadCache.Add(tnk);
+                        this.Destroy(tnk);
+                        this.tanks.Remove(tnk);
+                    }
 				}
 			}
 			else if (entity is IBullet)
 			{
-				//IBullet bullet = (IBullet)objects.FirstOrDefault(b => (b as IBullet)?.Parent_Id == (entity as IBullet)?.Parent_Id);
 				IBullet blt = bullets.FirstOrDefault(b => b.Parent_Id == (entity as IBullet)?.Parent_Id);
 				tanks.FirstOrDefault(t => t.Tank_ID == blt.Parent_Id).Can_Shoot = true;
-				//bullet.Is_Alive = false;
-				//blt.Is_Alive = false;
-				blt.Command = EntityAction.None;
-				this.bullets.Remove(blt);
-				//bullet.Command = EntityAction.None;
+				//this.bullets.Remove(blt);
 			}
 			else
 			{
@@ -335,9 +223,9 @@ namespace Tanki
 				IBlock blck = blocks.FirstOrDefault(bl => bl.Position == entity.Position);
 				if (blck.Can_Be_Destroyed)
 				{
-					if (blck.HelthPoints > 0) blck.HelthPoints--;
-					else this.blocks.Remove(blck);
-				}
+                    if (blck.HelthPoints > 0)  blck.HelthPoints--;
+                    if (blck.HelthPoints == 0) this.blocks.Remove(blck);
+                }
 			}
 
 		}
@@ -435,18 +323,10 @@ namespace Tanki
 		private void Move(IEntity entity)
 		{
 			var room = Owner as IRoom;
-			//IEntity tmp;
-			//if (entity is ITank) tmp = objects.FirstOrDefault(t => (t as ITank).Tank_ID == (entity as ITank).Tank_ID);
-
-			//var tmp = objects.FirstOrDefault(t => t == entity);
-
 			if (entity is ITank)
 			{
-				//ITank tank = (ITank)objects.FirstOrDefault(t => (t as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 				ITank tank = tanks.FirstOrDefault(t => t?.Tank_ID == (entity as ITank)?.Tank_ID);
 				tank.Direction = entity.Direction;
-				//var tank = tmp as ITank;
-
 				switch (entity.Direction)
 				{
 					case Direction.Left:
@@ -498,6 +378,12 @@ namespace Tanki
 						}
 						break;
 				}
+                var hp = blocks.FirstOrDefault(obj => obj.Position.IntersectsWith(tank.Position) == true);
+                if (hp != null)
+                {
+                    blocks.Remove(hp);
+                    tank.HelthPoints = 6;
+                }
 				tank.Command = EntityAction.None;
 			}
 			else if (entity is IBullet)
@@ -544,6 +430,8 @@ namespace Tanki
 			list.AddRange(tanks);
 			var x = list.FirstOrDefault(s => (s as ITank)?.Tank_ID == (entity as ITank)?.Tank_ID);
 			list.Remove(x);
+            var t = list.FindAll(s => (s as IBlock)?.blockType == BlockType.Health);
+            foreach (var item in t) list.Remove(item);
 			var tmp = list.FirstOrDefault(obj => obj.Position.IntersectsWith(entity.Position));
 
 			//if (entity is IBullet)
@@ -568,6 +456,15 @@ namespace Tanki
 			else
 				return false;
 		}
+        public void HealthBlock()
+        {
+            var block = new GameObjectFactory().CreateBlock();
+            block.blockType = BlockType.Health;
+            block.Position = this.Reload();
+            block.HelthPoints = 1;
+            block.Can_Be_Destroyed = true;
+            this.blocks.Add(block);
+        }
 		/// <summary>
 		/// Реализация попадания пули в другую сущность
 		/// </summary>
@@ -580,6 +477,7 @@ namespace Tanki
 				if (tmp.Tank_ID != bullet.Parent_Id)
 				{
 					this.Death(bullet);
+                    bullets.Remove(bullet);
 					this.Death(tmp);
 				}
 			}
@@ -587,7 +485,8 @@ namespace Tanki
 			if (tmp2 != null)
 			{
 				this.Death(bullet);
-				this.Death(tmp2);
+                bullets.Remove(bullet);
+                this.Death(tmp2);
 			}
 
 		}
