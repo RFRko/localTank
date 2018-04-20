@@ -45,7 +45,8 @@ namespace Tanki
 				{ BlockType.Brick, Resources.wall },
 				{ BlockType.Brick2, Resources.wall1 },
 				{ BlockType.Concrete, Resources.wall3 },
-				{ BlockType.Tree, Resources.tree }
+				{ BlockType.Tree, Resources.tree },
+				{ BlockType.Health, Resources.life }
 			};
 
 			ExplImages = new List<Bitmap>()
@@ -70,7 +71,10 @@ namespace Tanki
 			InitializeComponent();
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
-			timerSpeed = 100;
+			Message.ForeColor = Color.White;
+			Message.TextAlign = ContentAlignment.MiddleCenter;
+			Message.Font = new Font("Comic Sans", 20);
+			Message.Text = "Wating other players..";
 		}
 
 		private IClientEngine ClientEngine;
@@ -79,7 +83,6 @@ namespace Tanki
 		private Dictionary<Direction, Bitmap> Player;
 		private Dictionary<BlockType, Bitmap> Blocks;
 		private List<Bitmap> ExplImages;
-		private Int32 timerSpeed;
 
 		private Action<IMap> onMapChanged;
 		private Action<ITank> DeathAnimation;
@@ -221,15 +224,16 @@ namespace Tanki
 		}
 		private void onDeathAnimation(ITank tankToDestroy)
 		{
-			//Graphics g = Graphics.FromImage(Resources.explosion1);
-			//new Thread(() => {
-			//	foreach (var i in ExplImages)
-			//	{
-			//		g.DrawImage(i, tankToDestroy.Position);
-			//		Invalidate(tankToDestroy.Position);
-			//		Thread.Sleep(100);
-			//	}
-			//}).Start();
+
+		}
+		private void onGameOwer (object Sender, ErrorData data)
+		{
+			Message.Text = data.errorText;
+		}
+		private void onDeath(object Sender, ErrorData data)
+		{
+			Message.ForeColor = Color.Red;
+			Message.Text = data.errorText;
 		}
 		private void ErrorHandler(object sender, ErrorData e)
 		{

@@ -28,13 +28,24 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.Message = new System.Windows.Forms.Label();
 			this.SuspendLayout();
+			// 
+			// Message
+			// 
+			this.Message.AutoSize = true;
+			this.Message.Location = new System.Drawing.Point(0, 0);
+			this.Message.Name = "Message";
+			this.Message.Size = new System.Drawing.Size(0, 13);
+			this.Message.TabIndex = 0;
+			this.Message.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// GameForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(284, 261);
+			this.Controls.Add(this.Message);
 			this.DoubleBuffered = true;
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;
@@ -46,9 +57,12 @@
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyUp);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
+
+		private System.Windows.Forms.Label Message;
 	}
 }

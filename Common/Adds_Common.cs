@@ -73,7 +73,8 @@
 		/// <summary> Oбъект отправляемый клиентом на сервер</summary>
 		Entity,
 		/// <summary> Событие о уничтожении танка</summary>
-		TankDeath
+		TankDeath,
+		RequestLogOff
 	}
 	/// <summary>
 	/// Состояние игры
@@ -93,5 +94,6 @@
 		Brick2,
 		Concrete,
 		Tree,
+		Health
 	}
 }

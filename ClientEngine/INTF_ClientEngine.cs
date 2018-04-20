@@ -21,8 +21,11 @@ namespace Tanki
 		Guid GetPassport();
 		void GetRoomList();
 		void StopGame();
+		void exit();
 
 
+		event EventHandler<ErrorData> onDeath;
+		event EventHandler<ErrorData> onGameOwer;
 		event EventHandler<RoomStatChangeData> OnRoomsStatChanged;
         event EventHandler<GameStateChangeData> OnMapChanged;
 		event EventHandler<ErrorData> OnError;
