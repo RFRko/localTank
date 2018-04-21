@@ -226,7 +226,7 @@ namespace Tanki
 						if(stopWatch.Elapsed.Seconds == 10)
 						{
 							//тут ставь точку и смотри count
-							stopWatch.Stop();
+                            stopWatch.Stop();
 						}
 						Map = package.Data as IMap;
 						if(First_Map)
