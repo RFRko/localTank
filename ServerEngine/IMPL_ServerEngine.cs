@@ -138,7 +138,15 @@ namespace Tanki
 		}
 		private void MoveAll()
 		{
-            Parallel.ForEach(bullets, x => this.Move(x));
+            try
+            {
+                Parallel.ForEach(bullets, x => this.Move(x));
+            }
+            catch (AggregateException)
+            {
+
+            }
+            
             //         for (int i = 0; i < this.bullets.Count; i++)
             //{
             //	if (bullets[i].Command == EntityAction.Move)
@@ -177,6 +185,7 @@ namespace Tanki
 					if (this.CheckWin())
 					{
 						var room = Owner as IRoom;
+                        this.status = GameStatus.EndGame;
 						room.Status = GameStatus.EndGame;
 						this.SendEndGame();
 					}
@@ -414,7 +423,11 @@ namespace Tanki
 				}
 				this.HitTarget(bullet);
 				if (!this.bulletOnBoard(bullet))
-					this.Death(bullet);
+                {
+                    this.Death(bullet);
+                    bullets.Remove(bullet);
+                }
+					
 			}
 
 		}
