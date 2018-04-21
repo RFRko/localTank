@@ -246,6 +246,13 @@ namespace Tanki
 		/// <param name="list">Список пакетов переданый движку на обработку</param>
 		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
+
+			//foreach(var i in list)
+			//{
+			//	if (i.MesseggeType == MesseggeType.RequestLogOff)
+			//		Disconect(i.Sender_Passport);
+			//}
+
 			object locker = new object();
 			if (this.status == GameStatus.Start)
 			{
@@ -288,6 +295,12 @@ namespace Tanki
 				}
 			}
 		}
+
+		private void Disconect(Guid passprt)
+		{
+			//Игрок закрыл игровую форму и вернулся в лоби
+		}
+
 		/// <summary>
 		/// Метод реализирующий обработку "убитой" сущности
 		/// </summary>
@@ -640,6 +653,7 @@ namespace Tanki
 		private void SendEndGame()
 		{
 			IPackage pack = new Package();
+			//pack.Data = Имя победителя 
 			pack.MesseggeType = MesseggeType.EndGame;
 			var adress = Owner as IRoom;
 			Owner.Sender.SendMessage(pack, adress.Gamers);
@@ -672,7 +686,7 @@ namespace Tanki
 			obj.Size = room.GameSetings.ObjectsSize;
 			obj.Tank_ID = gamer.Passport;
 			obj.Name = gamer.Name;
-			obj.Lives = 3;
+			obj.Lives = 1;
 			obj.HelthPoints = 5;
 			//obj.Is_Alive = true;
 			obj.Can_Be_Destroyed = true;

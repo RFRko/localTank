@@ -23,9 +23,9 @@ namespace Tanki
 		void StopGame();
 		void exit();
 
-
+		event EventHandler<ErrorData> onEndGame;
+		event EventHandler<ErrorData> onGameStart;
 		event EventHandler<ErrorData> onDeath;
-		event EventHandler<ErrorData> onGameOwer;
 		event EventHandler<RoomStatChangeData> OnRoomsStatChanged;
         event EventHandler<GameStateChangeData> OnMapChanged;
 		event EventHandler<ErrorData> OnError;
