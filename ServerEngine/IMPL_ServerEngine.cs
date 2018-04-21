@@ -115,7 +115,7 @@ namespace Tanki
 		/// Метод реализирующий проверку, выполнено ли условие победы в игре
 		/// </summary>
 		/// <returns>Возвращает закончена ли игра</returns>
-		private bool CheckWin()
+		private bool CheckWin(out IEntity winner)
 		{
 			var t = Owner as IRoom;
 			switch (t.GameSetings.GameType)
@@ -127,13 +127,14 @@ namespace Tanki
 						if (tank.Lives > 0)
 							cnt++;
 					}
-					if (cnt == 1) return true;
+                    if (cnt == 1) {winner=tanks.FirstOrDefault(z=>z.Lives==1); return true; }
 					break;
 				case GameType.FragPerTime:
 					break;
 				case GameType.FlagDefence:
 					break;
 			}
+            winner = null;
 			return false;
 		}
 		private void MoveAll()
@@ -169,6 +170,7 @@ namespace Tanki
 			object locker = new object();
 			if (this.status == GameStatus.Start)
 			{
+                IEntity winner;
 				lock (locker)
 				{
 					list = from t in list
@@ -189,12 +191,12 @@ namespace Tanki
 							this.Fire(tmp);
 						}
 					}
-					if (this.CheckWin())
+					if (this.CheckWin(out winner))
 					{
 						var room = Owner as IRoom;
                         this.status = GameStatus.EndGame;
 						room.Status = GameStatus.EndGame;
-						this.SendEndGame();
+						this.SendEndGame(winner);
 					}
 					this.Send();
 				}
@@ -562,13 +564,13 @@ namespace Tanki
 		/// <summary>
 		/// Метод реализирующий уведомление игроков о конце игры
 		/// </summary>
-		private void SendEndGame()
+		private void SendEndGame(IEntity winner)
 		{
 			IPackage pack = new Package();
-			//pack.Data = Имя победителя 
+            pack.Data = winner;
 			pack.MesseggeType = MesseggeType.EndGame;
 			var adress = Owner as IRoom;
-			Owner.Sender.SendMessage(pack, adress.Gamers);
+		    Owner.Sender.SendMessage(pack, adress.Gamers);
 		}
 		private void SendStartGame()
 		{
