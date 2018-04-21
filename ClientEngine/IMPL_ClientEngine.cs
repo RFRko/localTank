@@ -32,9 +32,9 @@ namespace Tanki
 		private volatile ITank _Entity = null;
 		private string _ErrorText = null;
 		private Size _MapSize;
-		private bool st_g = false;
-		private int count = 0;
-		Stopwatch stopWatch = new Stopwatch();
+		//private bool st_g = false;
+		//private int count = 0;
+		//Stopwatch stopWatch = new Stopwatch();
 
 		private Int32 timerSpeed = 50;
         private Timer _timer = null;
@@ -222,12 +222,12 @@ namespace Tanki
 			{
 				case MesseggeType.Map:
 					{
-						if (st_g)  count++;
-						if(stopWatch.Elapsed.Seconds == 10)
-						{
-							//тут ставь точку и смотри count
-                            stopWatch.Stop();
-						}
+						//if (st_g)  count++;
+						//if(stopWatch.Elapsed.Seconds == 10)
+						//{
+						//	//тут ставь точку и смотри count
+						//	stopWatch.Stop();
+						//}
 						Map = package.Data as IMap;
 						if(First_Map)
 						{
@@ -262,10 +262,9 @@ namespace Tanki
 						var tank = package.Data as ITank;
 						if (tank.Tank_ID == client.Passport)
 						{
-							_CancelationSource.Cancel();
-							_timer.Dispose();
+							//StopGame();
 							onDeath?.BeginInvoke(this,
-							new ErrorData() { errorText = "Ты убит" + (string)package.Data }, null, null);
+							new ErrorData(), null, null);
 						}
 						OnTankDeath?.BeginInvoke(this, new DestroyableTank()
 						{ tankToDestroy = tank }, null, null);
@@ -273,17 +272,22 @@ namespace Tanki
 					}
 				case MesseggeType.StartGame:
 					{
-						st_g = true;
-						stopWatch.Start();
+						//st_g = true;
+						//stopWatch.Start();
 						_ifReadyToSendEntity.Set();
 						_timerCancelator = _CancelationSource.Token;
 						_timer = new Timer(SendByTimerCallback, _timerCancelator, 0, timerSpeed);
+						Thread.Sleep(500);
+						onGameStart?.BeginInvoke(this, new ErrorData()
+						{ errorText = "" }, null, null);
+
 						break;
 					}
 				case MesseggeType.EndGame:
 					{
-						onGameOwer?.BeginInvoke(this, 
-							new ErrorData() { errorText = "Победил: " + (string)package.Data } , null, null);
+						//StopGame();
+						onEndGame?.BeginInvoke(this,
+							new ErrorData(), null, null);
 						break;
 					}
 				case MesseggeType.Error:
@@ -295,9 +299,9 @@ namespace Tanki
 			}
 		}
 
-
+		public event EventHandler<ErrorData> onGameStart;
+		public event EventHandler<ErrorData> onEndGame;
 		public event EventHandler<ErrorData> onDeath;
-		public event EventHandler<ErrorData> onGameOwer;
 		public event EventHandler<RoomStatChangeData> OnRoomsStatChanged; //событие обновления IEnumerable<IRoomStat>
 		public event EventHandler<GameStateChangeData> OnMapChanged; //событие обновления IMap
 		public event EventHandler<ErrorData> OnError; //сообщение об ошибке

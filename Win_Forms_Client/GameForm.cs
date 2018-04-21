@@ -20,7 +20,13 @@ namespace Tanki
 			clientEngine.OnMapChanged += OnMapChangeHandler;
 			clientEngine.OnTankDeath += OnTankDeath;
 			clientEngine.OnError += ErrorHandler;
+			clientEngine.onGameStart += OnGameStart;
+			clientEngine.onDeath += onDeath;
+			clientEngine.onEndGame += OnEndGame;
 
+			Endgame += _EndGame;
+			Ondeath += _onDeath;
+			GameStart += _GameStart;
 			onMapChanged += onMapChangedProc;
 			DeathAnimation += onDeathAnimation;
 
@@ -46,7 +52,7 @@ namespace Tanki
 				{ BlockType.Brick2, Resources.wall1 },
 				{ BlockType.Concrete, Resources.wall3 },
 				{ BlockType.Tree, Resources.tree },
-				{ BlockType.Health, Resources.life }
+				{ BlockType.Health, Resources.life2 }
 			};
 
 			ExplImages = new List<Bitmap>()
@@ -71,9 +77,6 @@ namespace Tanki
 			InitializeComponent();
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
-			Message.ForeColor = Color.White;
-			Message.TextAlign = ContentAlignment.MiddleCenter;
-			Message.Font = new Font("Comic Sans", 20);
 			Message.Text = "Wating other players..";
 		}
 
@@ -86,6 +89,9 @@ namespace Tanki
 
 		private Action<IMap> onMapChanged;
 		private Action<ITank> DeathAnimation;
+		private Action<string> GameStart;
+		private Action<string> Ondeath;
+		private Action<string> Endgame;
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
@@ -135,7 +141,10 @@ namespace Tanki
 				var size = new Size(step * i.HelthPoints, i.Size / 5);
 				var pnt = new Point(i.Position.Location.X, i.Position.Location.Y + i.Size + (i.Size / 5));
 				var hpRect = new Rectangle(pnt, size);
-				var border = new Rectangle(pnt, new Size(step * ClientEngine.MaxHealthPoints, i.Size / 5));
+				Rectangle border;
+				if (i.HelthPoints == 6)
+					border = new Rectangle(pnt, new Size(step * 6, i.Size / 5));
+				else border = new Rectangle(pnt, new Size(step * ClientEngine.MaxHealthPoints, i.Size / 5));
 
 				if (i.HelthPoints > ClientEngine.MaxHealthPoints)
 					Brush = new SolidBrush(Color.Purple);
@@ -202,6 +211,26 @@ namespace Tanki
 		}
 
 
+		private void OnEndGame(object Sender, ErrorData data)
+		{
+			this.Invoke(Endgame, "");
+		}
+		private void _EndGame(string data)
+		{
+			var gameover = new GameOver(true, "Winer: ");
+			gameover.ShowDialog();
+			if (gameover.exit)
+				Close();
+		}
+		private void OnGameStart(object Sender, ErrorData data)
+		{
+			this.Invoke(GameStart, data.errorText);
+		}
+		private void _GameStart(string data)
+		{
+			Message.Text = "";
+			Message.Visible = false;
+		}
 		private void OnMapChangeHandler(object Sender, GameStateChangeData data)
 		{
 			try
@@ -226,14 +255,16 @@ namespace Tanki
 		{
 
 		}
-		private void onGameOwer (object Sender, ErrorData data)
-		{
-			Message.Text = data.errorText;
-		}
 		private void onDeath(object Sender, ErrorData data)
 		{
-			Message.ForeColor = Color.Red;
-			Message.Text = data.errorText;
+			this.Invoke(Ondeath, data.errorText);
+		}
+		private void _onDeath(string message)
+		{
+			var gameover = new GameOver(false, "You are dead");
+			gameover.ShowDialog();
+			if (gameover.exit)
+				Close();
 		}
 		private void ErrorHandler(object sender, ErrorData e)
 		{
@@ -243,6 +274,8 @@ namespace Tanki
 			MessageBox.Show(message, caption, buttons);
 			Close();
 		}
+
+
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
             if (ClientEngine.Entity == null) return;
@@ -290,15 +323,15 @@ namespace Tanki
 		private void GameForm_KeyUp(object sender, KeyEventArgs e)
 		{
             if (ClientEngine.Entity == null) return;
-
 			var newEntity = ClientEngine.Entity;
+
 			newEntity.Command = EntityAction.None;
 			ClientEngine.Entity = newEntity;
 		}
 
 		private void GameForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			ClientEngine.StopGame();
+			//ClientEngine.StopGame();
 		}
 	}
 }

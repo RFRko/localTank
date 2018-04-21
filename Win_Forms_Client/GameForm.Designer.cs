@@ -33,10 +33,12 @@
 			// 
 			// Message
 			// 
-			this.Message.AutoSize = true;
+			this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Message.Font = new System.Drawing.Font("Comic Sans MS", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Message.ForeColor = System.Drawing.Color.White;
 			this.Message.Location = new System.Drawing.Point(0, 0);
 			this.Message.Name = "Message";
-			this.Message.Size = new System.Drawing.Size(0, 13);
+			this.Message.Size = new System.Drawing.Size(284, 261);
 			this.Message.TabIndex = 0;
 			this.Message.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
@@ -57,7 +59,6 @@
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyUp);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 

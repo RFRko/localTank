@@ -48,7 +48,7 @@ namespace Tanki
 					}
 				case MesseggeType.RequestLogOff:
 					{
-						Disconect();
+						Disconect(msg);
 						break;
 					}
 				default: return;
@@ -220,9 +220,9 @@ namespace Tanki
 
 
         }
-		private void Disconect()
+		private void Disconect(IPackage package)
 		{
-
+			//Клиент закрыл приложение
 		}
 
 
