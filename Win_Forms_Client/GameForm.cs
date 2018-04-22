@@ -5,8 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tanki.Properties;
 
@@ -75,9 +73,23 @@ namespace Tanki
 
 
 			InitializeComponent();
+
 			this.ClientSize = size;
 			this.BackColor = Color.Black;
-			Message.Text = "Wating other players..";
+
+			Message.Text = "Wating for other players..";
+			Message.Location = new Point(
+				ClientSize.Width / 2 - Message.Size.Width / 2,
+				ClientSize.Height / 2 - Message.Size.Height);
+
+			ToLobby_btn.Visible = false;
+			ToLobby_btn.Enabled = false;
+
+			WatchGame_btn.Visible = false;
+			WatchGame_btn.Enabled = false;
+			WatchGame_btn.Location = new Point(
+				ClientSize.Width / 2 + 5, 
+				ClientSize.Height / 2 + 30);
 		}
 
 		private IClientEngine ClientEngine;
@@ -93,10 +105,28 @@ namespace Tanki
 		private Action<string> Ondeath;
 		private Action<string> Endgame;
 
+		private bool animation = false;
+		private ITank deadTank = null;
+		private int imagecount;
+		private int animationSpeed = 20;
+		private int dillay;
+
+
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
 			if (Map == null) return;
+
+			if (animation)
+			{
+				if (imagecount == 0) animation = false;
+				if (animationSpeed % animationSpeed == 0)
+				{
+					e.Graphics.DrawImage(ExplImages[imagecount], deadTank.Position.Location.X, deadTank.Position.Location.Y, deadTank.Size, deadTank.Size);
+					imagecount--;
+				}
+				else animationSpeed--;
+			}
 
 			Draw_Blocks(e);
 			Draw_Bullets(e);
@@ -134,17 +164,17 @@ namespace Tanki
 		private void Draw_HP_Lines(PaintEventArgs e)
 		{
 			SolidBrush Brush;
+			int step;
 
 			foreach (var i in Map.Tanks)
 			{
-				var step = i.Size / ClientEngine.MaxHealthPoints;
-				var size = new Size(step * i.HelthPoints, i.Size / 5);
+				if (i.HelthPoints > ClientEngine.MaxHealthPoints)
+					step = i.Size / i.HelthPoints;
+				else step = i.Size / ClientEngine.MaxHealthPoints;
+				var size = new Size((step * i.HelthPoints) + 1, i.Size / 5);
 				var pnt = new Point(i.Position.Location.X, i.Position.Location.Y + i.Size + (i.Size / 5));
 				var hpRect = new Rectangle(pnt, size);
-				Rectangle border;
-				if (i.HelthPoints == 6)
-					border = new Rectangle(pnt, new Size(step * 6, i.Size / 5));
-				else border = new Rectangle(pnt, new Size(step * ClientEngine.MaxHealthPoints, i.Size / 5));
+				Rectangle border = new Rectangle(pnt, new Size(i.Size, i.Size / 5));
 
 				if (i.HelthPoints > ClientEngine.MaxHealthPoints)
 					Brush = new SolidBrush(Color.Purple);
@@ -181,7 +211,7 @@ namespace Tanki
 				e.Graphics.DrawString
 				(
 					name,
-					new Font("Comic Sans", i.Size / 4),
+					new Font("Comic Sans MS", i.Size / 4),
 					new SolidBrush(Color.Yellow),
 					new Point
 					(
@@ -213,18 +243,37 @@ namespace Tanki
 
 		private void OnEndGame(object Sender, ErrorData data)
 		{
-			this.Invoke(Endgame, "");
+			this.Invoke(Endgame, data.errorText);
 		}
 		private void _EndGame(string data)
 		{
-			var gameover = new GameOver(true, "Winer: ");
-			gameover.ShowDialog();
-			if (gameover.exit)
-				Close();
+			Message.Text = "Game Ower. Winer: " + data;
+			Message.ForeColor = Color.Green;
+			Message.Location = new Point(
+				ClientSize.Width / 2 - Message.Size.Width / 2,
+				ClientSize.Height / 2 - Message.Size.Height);
+			Message.Visible = true;
+
+			ToLobby_btn.Click += (i, s) => { this.Close(); };
+			ToLobby_btn.Enabled = true;
+			ToLobby_btn.Visible = true;
+			ToLobby_btn.Location = new Point(
+				ClientSize.Width / 2 - ToLobby_btn.Size.Width / 2,
+				ClientSize.Height / 2 + 30);
+
+			WatchGame_btn.Enabled = false;
+			WatchGame_btn.Visible = false;
 		}
 		private void OnGameStart(object Sender, ErrorData data)
 		{
-			this.Invoke(GameStart, data.errorText);
+			try
+			{
+				this.Invoke(GameStart, data.errorText);
+			}
+			catch (Exception)
+			{
+
+			}
 		}
 		private void _GameStart(string data)
 		{
@@ -253,7 +302,11 @@ namespace Tanki
 		}
 		private void onDeathAnimation(ITank tankToDestroy)
 		{
+			imagecount = ExplImages.Count - 1;
+			dillay = (imagecount * 100) * 2;
 
+			deadTank = tankToDestroy;
+			animation = true;
 		}
 		private void onDeath(object Sender, ErrorData data)
 		{
@@ -261,10 +314,32 @@ namespace Tanki
 		}
 		private void _onDeath(string message)
 		{
-			var gameover = new GameOver(false, "You are dead");
-			gameover.ShowDialog();
-			if (gameover.exit)
-				Close();
+			Message.Text = "You are dead";
+			Message.ForeColor = Color.Red;
+			Message.Location = new Point(
+				ClientSize.Width / 2 - Message.Size.Width / 2,
+				ClientSize.Height / 2 - Message.Size.Height);
+			Message.Visible = true;
+			
+			ToLobby_btn.Click += (i, s) => { this.Close(); };
+			ToLobby_btn.Enabled = true;
+			ToLobby_btn.Visible = true;
+			ToLobby_btn.Location = new Point(
+				ClientSize.Width / 2 - ToLobby_btn.Size.Width - 5,
+				ClientSize.Height / 2 + 30);
+
+
+			WatchGame_btn.Enabled = true;
+			WatchGame_btn.Visible = true;
+			WatchGame_btn.Click += (i, s) => 
+			{
+				ToLobby_btn.Visible = false;
+				WatchGame_btn.Visible = false;
+				ToLobby_btn.Enabled = false;
+				WatchGame_btn.Enabled = false;
+				Message.Text = "";
+				Message.Visible = false;
+			};
 		}
 		private void ErrorHandler(object sender, ErrorData e)
 		{

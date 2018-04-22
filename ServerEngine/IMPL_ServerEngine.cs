@@ -178,7 +178,7 @@ namespace Tanki
 						   select t;
 
                    this.MoveAll();
-                    if (colInd.Next(1, 10000) == 555) this.HealthBlock();
+                    if (colInd.Next(1, 1000) == 555) this.HealthBlock();
                     foreach (var t in list)
 					{
 						var tmp = t.Data as IEntity;
@@ -582,9 +582,9 @@ namespace Tanki
 		private void Destroy(ITank tank)
 		{
 			var room = Owner as IRoom;
-			var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
+			//var adress = new Addresssee(room.Gamers.FirstOrDefault(g => g.Passport == tank.Tank_ID).RemoteEndPoint);
 			IPackage pack = new Package() { Data = tank, MesseggeType = MesseggeType.TankDeath };
-			Owner.Sender.SendMessage(pack, adress);
+			Owner.Sender.SendMessage(pack, room.Gamers);
 		}
 
 		// Нужно вызывать эту чепуху при новом игроке в комнате, метод ниже мне не подходит, по причине - мне не нужен ендпоинт, мне нужен гуид

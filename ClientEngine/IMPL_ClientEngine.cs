@@ -36,7 +36,7 @@ namespace Tanki
 		//private int count = 0;
 		//Stopwatch stopWatch = new Stopwatch();
 
-		private Int32 timerSpeed = 50;
+		private Int32 timerSpeed = 40;
         private Timer _timer = null;
 		private ManualResetEvent _ifReadyToSendEntity;
 		private ManualResetEvent _ifReadyToSetEntity;
@@ -287,7 +287,7 @@ namespace Tanki
 					{
 						//StopGame();
 						onEndGame?.BeginInvoke(this,
-							new ErrorData(), null, null);
+							new ErrorData() { errorText = (package.Data as ITank).Name }, null, null);
 						break;
 					}
 				case MesseggeType.Error:
