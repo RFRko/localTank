@@ -221,13 +221,13 @@ namespace Tanki
 				if (tnk.HelthPoints > 0) tnk.HelthPoints--;
 				if(tnk.HelthPoints==0)
 				{
-					if (tnk.Lives > 0)
+					if (tnk.Lives > 1)
 					{
 						tnk.Lives--;
 						tnk.HelthPoints = 5;
 						tnk.Position = this.Reload();
 					}
-                    if(tnk.Lives<=0)
+                    if(tnk.Lives<=1)
                     {
                         this.DeadCache.Add(tnk);
                         this.Destroy(tnk);
@@ -417,22 +417,22 @@ namespace Tanki
 				switch (bullet.Direction)
 				{
 					case Direction.Left:
-						pos = new Point(bullet.Position.X - room.GameSetings.GameSpeed, bullet.Position.Y);
+						pos = new Point(bullet.Position.X - room.GameSetings.GameSpeed-3, bullet.Position.Y);
 						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
 						break;
 
 					case Direction.Right:
-						pos = new Point(bullet.Position.X + room.GameSetings.GameSpeed, bullet.Position.Y);
+						pos = new Point(bullet.Position.X + room.GameSetings.GameSpeed+3, bullet.Position.Y);
 						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
 						break;
 
 					case Direction.Up:
-						pos = new Point(bullet.Position.X, bullet.Position.Y - room.GameSetings.GameSpeed);
+						pos = new Point(bullet.Position.X, bullet.Position.Y - room.GameSetings.GameSpeed-3);
 						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
 						break;
 
 					case Direction.Down:
-						pos = new Point(bullet.Position.X, bullet.Position.Y + room.GameSetings.GameSpeed);
+						pos = new Point(bullet.Position.X, bullet.Position.Y + room.GameSetings.GameSpeed+3);
 						bullet.Position = new Rectangle(pos, new Size(room.GameSetings.Bullet_size, room.GameSetings.Bullet_size));
 						break;
 				}
