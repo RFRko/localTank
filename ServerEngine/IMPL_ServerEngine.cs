@@ -127,7 +127,11 @@ namespace Tanki
 						if (tank.Lives > 0)
 							cnt++;
 					}
-                    if (cnt == 1) {winner=tanks.FirstOrDefault(z=>z.Lives==1); return true; }
+                    if (cnt == 1)
+                    {
+                        winner = tanks.FirstOrDefault(z=>z.Lives>0);
+                        return true;
+                    }
 					break;
 				case GameType.FragPerTime:
 					break;
@@ -173,7 +177,7 @@ namespace Tanki
                 IEntity winner;
 				lock (locker)
 				{
-					list = from t in list
+					list = from t in list.AsParallel()
 						   where !(from dead in DeadCache select dead.Tank_ID).Contains((t.Data as ITank).Tank_ID) 
 						   select t;
 
@@ -223,11 +227,15 @@ namespace Tanki
 				{
 					if (tnk.Lives > 1)
 					{
-						tnk.Lives--;
+                        tnk.Position = this.Reload();
+                        tnk.Lives--;
 						tnk.HelthPoints = 5;
-						tnk.Position = this.Reload();
 					}
-                    if(tnk.Lives<=1)
+                    else if (tnk.Lives == 1)
+                    {
+                        tnk.Lives--;
+                    }
+                    if(tnk.Lives<=0)
                     {
                         this.DeadCache.Add(tnk);
                         this.Destroy(tnk);
@@ -600,7 +608,7 @@ namespace Tanki
 			obj.Size = room.GameSetings.ObjectsSize;
 			obj.Tank_ID = gamer.Passport;
 			obj.Name = gamer.Name;
-			obj.Lives = 1;
+			obj.Lives = 3;
 			obj.HelthPoints = 5;
 			//obj.Is_Alive = true;
 			obj.Can_Be_Destroyed = true;

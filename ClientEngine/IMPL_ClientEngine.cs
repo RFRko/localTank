@@ -287,7 +287,7 @@ namespace Tanki
 					{
 						//StopGame();
 						onEndGame?.BeginInvoke(this,
-							new ErrorData() { errorText = (package.Data as ITank).Name }, null, null);
+							new ErrorData() { errorText = (package?.Data as ITank).Name }, null, null);
 						break;
 					}
 				case MesseggeType.Error:
